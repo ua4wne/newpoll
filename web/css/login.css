@@ -1,0 +1,57 @@
+body,
+html {
+    margin: 0;
+    padding: 0;
+    text-align: center;
+}
+
+.login_form {
+    margin: 0 auto;
+    max-width:  500px;
+    border: 1px solid #8e92a4;
+    border-radius: 5px;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    background: #fff;
+}
+
+.login_form input[type=text], input[type=password] {
+    margin: 0 auto;
+    width: 90%;
+}
+
+.login_form label {
+    margin-left: 20px;
+}
+
+.login_form h3{
+    font-weight: bold;
+}
+
+.login_form button {
+    margin: 0 auto;
+    width: 90%;
+}
+
+div.required label.control-label:before {
+    content: "*";
+    color: red;
+}
+
+.navbar-brand img{margin-top:-10px;}
+
+@media(max-width:700px) {
+    .login_form {
+        max-width:  300px;
+    }
+    .login_form input[type=text], input[type=password] {
+        width: 80%;
+    }
+    .login_form label {
+        margin-left: 10px;
+    }
+    .login_form button {
+        margin: 0 auto;
+        width: 80%;
+    }
+}
