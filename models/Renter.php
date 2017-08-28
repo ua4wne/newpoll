@@ -37,9 +37,9 @@ class Renter extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['title', 'area', 'agent', 'encounter', 'place_id', 'division_id', 'created_at', 'updated_at'], 'required'],
+            [['title', 'area', 'agent', 'encounter', 'place_id', 'division_id'], 'required'],
             [['koeff'], 'number'],
-            [['place_id', 'status', 'division_id', 'created_at', 'updated_at'], 'integer'],
+            [['place_id', 'status', 'division_id'], 'integer'],
             [['title'], 'string', 'max' => 100],
             [['area', 'phone1', 'phone2', 'encounter'], 'string', 'max' => 20],
             [['agent'], 'string', 'max' => 50],
@@ -67,5 +67,18 @@ class Renter extends \yii\db\ActiveRecord
             'created_at' => 'Created At',
             'updated_at' => 'Updated At',
         ];
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getDivision()
+    {
+        return $this->hasOne(Division::className(), ['id' => 'division_id']);
+    }
+
+    public function getPlace()
+    {
+        return $this->hasOne(Place::className(), ['id' => 'place_id']);
     }
 }

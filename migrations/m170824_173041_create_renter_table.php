@@ -28,8 +28,8 @@ class m170824_173041_create_renter_table extends Migration
             'place_id' => $this->integer()->notNull(),
             'status' => $this->smallInteger()->notNull()->defaultValue(1),
             'division_id' => $this->integer()->notNull(),
-            'created_at' => $this->integer()->notNull(),
-            'updated_at' => $this->integer()->notNull(),
+            'created_at' => $this->dateTime()->notNull(),
+            'updated_at' => $this->dateTime()->notNull(),
         ], $tableOptions);
     }
 

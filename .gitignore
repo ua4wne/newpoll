@@ -1,6 +1,4 @@
-/.BackUP
-/assets
-/runtime
+/yii
 # phpstorm project files
 .idea
 

@@ -293,6 +293,14 @@ AppAsset::register($this);
                                            <li id="menu-academico-avaliacoes" ><a href="/energy/billing">Расчет потребления</a></li>
                                        </ul>
                                    </li>
+                                   <li id="menu-academico" ><a href="#"><i class="fa fa-gear" aria-hidden="true"></i><span> Настройки</span> <span class="fa fa-angle-right" style="float: right"></span><div class="clearfix"></div></a>
+                                       <ul id="menu-academico-sub" >
+                                           <li id="menu-academico-boletim" ><a href="/energy/main">Счетчики общие</a></li>
+                                           <li id="menu-academico-avaliacoes" ><a href="/energy/renters">Счетчики арендаторов</a></li>
+                                           <li id="menu-academico-avaliacoes" ><a href="/energy/init">Начальные показания</a></li>
+                                           <li id="menu-academico-avaliacoes" ><a href="/energy/billing">Расчет потребления</a></li>
+                                       </ul>
+                                   </li>
                                </ul>
 								</div>
 							  </div>
