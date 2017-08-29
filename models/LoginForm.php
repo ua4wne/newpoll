@@ -16,7 +16,7 @@ class LoginForm extends Model
     public $username;
     public $password;
     public $rememberMe = false;
-   //public $verifyCode;
+    //public $verifyCode;
     private $_user = false;
 
 
@@ -42,19 +42,10 @@ class LoginForm extends Model
         return [
             'username' => 'Логин',
             'password' => 'Пароль',
-            'rememberMe' => 'Запомнить'
+            'rememberMe' => 'Запомнить',
+            //'verifyCode' => 'Verification Code',
         ];
     }
-
-    /**
-     * @return array customized attribute labels
-     */
-    /*public function attributeLabels()
-    {
-        return [
-            'verifyCode' => 'Verification Code',
-        ];
-    }*/
 
     /**
      * Validates the password.
@@ -63,13 +54,15 @@ class LoginForm extends Model
      * @param string $attribute the attribute currently being validated
      * @param array $params the additional name-value pairs given in the rule
      */
-    public function validatePassword($attribute, $params)
+    public function validatePassword($attribute)
     {
         if (!$this->hasErrors()) {
             $user = $this->getUser();
 
             if (!$user || !$user->validatePassword($this->password)) {
-                $this->addError($attribute, 'Incorrect username or password.');
+                $this->addError($attribute, 'Неверное имя пользователя или пароль.');
+            }elseif ($user && $user->status == User::STATUS_BLOCKED) {
+                $this->addError('username', 'Ваш аккаунт заблокирован. Обратитесь к администратору.');
             }
         }
     }
