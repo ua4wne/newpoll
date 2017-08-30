@@ -1,7 +1,9 @@
 <?php
 
-namespace app\models;
+namespace app\modules\main\models;
 
+use app\models\Division;
+use app\models\Place;
 use Yii;
 
 /**

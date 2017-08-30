@@ -4,7 +4,7 @@ use yii\helpers\Html;
 
 
 /* @var $this yii\web\View */
-/* @var $model app\models\Renter */
+/* @var $model \app\modules\main\models\Renter */
 
 $this->title = 'Новый арендатор';
 $this->params['breadcrumbs'][] = ['label' => 'Арендаторы', 'url' => ['index']];

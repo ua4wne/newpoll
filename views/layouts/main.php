@@ -198,7 +198,7 @@ AppAsset::register($this);
 										<ul class="dropdown-menu drp-mnu">
 											<li> <a href="#"><i class="fa fa-cog"></i> Settings</a> </li>
 											<li> <a href="#"><i class="fa fa-user"></i> Profile</a> </li>
-											<li> <?= Html::a("<i class=\"fa fa-sign-out\"></i>Выход", 'site/logout', [
+											<li> <?= Html::a("<i class=\"fa fa-sign-out\"></i>Выход", '/user/default/logout', [
                                                         'data' => [
                                                             'method' => 'post'
                                                         ],
@@ -252,17 +252,17 @@ AppAsset::register($this);
 						<div style="border-top:1px ridge rgba(255, 255, 255, 0.15)"></div>
                            <div class="menu">
                                <ul id="menu" >
-                                   <li><a href="/"><i class="fa fa-tachometer"></i> <span>Главная</span><div class="clearfix"></div></a></li>
+                                   <li><a href="/main/default/index"><i class="fa fa-tachometer"></i> <span>Главная</span><div class="clearfix"></div></a></li>
                                    <li id="menu-academico" ><a href="#"><i class="fa fa-file-text-o"></i>  <span>Документы</span> <span class="fa fa-angle-right pull-right" </span><div class="clearfix"></div></a>
                                        <ul id="menu-academico-sub" >
-                                           <li id="menu-academico-boletim" ><a href="/billing">Расчет потребления</a></li>
+                                           <li id="menu-academico-boletim" ><a href="/billing/index">Расчет потребления</a></li>
                                            <li id="menu-academico-avaliacoes" ><a href="/billing/renter">Расчет по арендатору</a></li>
                                        </ul>
                                    </li>
                                    <li id="menu-academico" ><a href="#"><i class="fa fa-book" aria-hidden="true"></i><span> Контакты</span> <span class="fa fa-angle-right" style="float: right"></span><div class="clearfix"></div></a>
                                        <ul id="menu-academico-sub" >
-                                           <li id="menu-academico-boletim" ><a href="/renter">Арендаторы</a></li>
-                                           <li id="menu-academico-avaliacoes" ><a href="/department">Наши юрлица</a></li>
+                                           <li id="menu-academico-boletim" ><a href="/main/renter">Арендаторы</a></li>
+                                           <li id="menu-academico-avaliacoes" ><a href="/main/department">Наши юрлица</a></li>
                                        </ul>
                                    </li>
                                    <li id="menu-academico" ><a href="#"><i class="fa fa-gear"></i>  <span>Маркетинг</span> <span class="fa fa-angle-right" style="float: right"></span><div class="clearfix"></div></a>

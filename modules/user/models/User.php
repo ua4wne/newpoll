@@ -1,6 +1,7 @@
 <?php
 
-namespace app\models;
+namespace app\modules\user\models;
+use app\models\ArrayHelper;
 use Yii;
 use yii\base\NotSupportedException;
 use yii\behaviors\TimestampBehavior;

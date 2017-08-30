@@ -1,14 +1,14 @@
 <?php
 
-namespace app\models;
+namespace app\modules\main\models;
 
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use app\models\Renter;
+use app\modules\main\models\Renter;
 
 /**
- * RenterSearch represents the model behind the search form about `app\models\Renter`.
+ * RenterSearch represents the model behind the search form about `app\modules\main\models\Renter`.
  */
 class RenterSearch extends Renter
 {

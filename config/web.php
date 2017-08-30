@@ -3,14 +3,21 @@ $params = require(__DIR__ . '/params.php');
 $db = require(__DIR__ . '/db.php');
 
 $config = [
-    'id' => 'basic',
+    'id' => 'newpoll',
+    'defaultRoute' => 'main/default/index',
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log'],
 	'language' => 'ru-RU',
     'modules' => [
-        'admin' => [
+        'admin' => [ //модуль для работы с админкой
             'class' => 'app\modules\admin\Module',
             'layout' => 'admin',
+        ],
+        'user' => [ //модуль для работы с пользователями
+            'class' => 'app\modules\user\Module',
+        ],
+        'main' => [ //главный модуль
+            'class' => 'app\modules\main\Module',
         ],
     ],
     'components' => [
@@ -23,11 +30,12 @@ $config = [
             'class' => 'yii\caching\FileCache',
         ],
         'user' => [
-            'identityClass' => 'app\models\User',
+            'identityClass' => 'app\modules\user\models\User',//'app\models\User',
             'enableAutoLogin' => true,
+            'loginUrl' => ['user/default/login'],
         ],
         'errorHandler' => [
-            'errorAction' => 'site/error',
+            'errorAction' => 'main/default/error',//'site/error',
         ],
         'authManager' => [
             'class' => 'yii\rbac\DbManager', //RBAC
@@ -54,12 +62,16 @@ $config = [
             'showScriptName' => false,
          //   'suffix' => '.html',
             'rules' => [
-                [
+                '' => 'main/default/index',
+                'contact' => 'main/contact/index',
+                '<_a:error>' => 'main/default/<_a>',
+                '<_a:(login|logout)>' => 'user/default/<_a>',
+            /*    [
                     'pattern' => '',
                     'route' => 'site/index',
                     'suffix' => ''
                 ],
-                '<action:(about|contact|login)>' => 'site/<action>',
+                '<action:(about|contact|login)>' => 'site/<action>', */
             //    '<action:\w+' => 'site/<action>',
             ],
         ],
@@ -77,7 +89,7 @@ $config = [
             ],
         ],
         'denyCallback' => function () {
-            return Yii::$app->response->redirect(['site/login']);
+            return Yii::$app->response->redirect(['/user/default/login']);
         },
     ],
     'params' => $params,

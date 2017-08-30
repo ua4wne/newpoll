@@ -2,6 +2,7 @@
 
 namespace app\models;
 
+use app\modules\main\models\Renter;
 use Yii;
 
 /**

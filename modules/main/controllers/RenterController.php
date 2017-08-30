@@ -1,10 +1,10 @@
 <?php
 
-namespace app\controllers;
+namespace app\modules\main\controllers;
 
 use Yii;
-use app\models\Renter;
-use app\models\RenterSearch;
+use app\modules\main\models\Renter;
+use app\modules\main\models\RenterSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
