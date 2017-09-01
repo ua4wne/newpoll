@@ -3,12 +3,12 @@
 use yii\helpers\Html;
 
 /* @var $this yii\web\View */
-/* @var $model app\models\Division */
+/* @var $model \app\modules\main\models\Division */
 
-$this->title = 'Update Division: ' . $model->name;
-$this->params['breadcrumbs'][] = ['label' => 'Divisions', 'url' => ['index']];
+$this->title = 'Обновление записи: ' . $model->name;
+$this->params['breadcrumbs'][] = ['label' => 'Наши юрлица', 'url' => ['index']];
 $this->params['breadcrumbs'][] = ['label' => $model->name, 'url' => ['view', 'id' => $model->id]];
-$this->params['breadcrumbs'][] = 'Update';
+$this->params['breadcrumbs'][] = 'Обновление записи';
 ?>
 <div class="division-update">
 

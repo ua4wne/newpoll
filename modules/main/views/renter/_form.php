@@ -24,13 +24,13 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'encounter')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'koeff')->textInput() ?>
+    <?= $form->field($model, 'koeff')->textInput(['value' => Yii::$app->params['renter_koeff']]) ?>
 
-    <?= $form->field($model, 'place_id')->textInput() ?>
+    <?//= $form->field($model, 'place_id')->textInput() ?>
+    <?= $form->field($model, 'place_id')->dropDownList($place) ?>
 
-    <?= $form->field($model, 'status')->textInput() ?>
-
-    <?= $form->field($model, 'division_id')->textInput() ?>
+    <?//= $form->field($model, 'division_id')->textInput() ?>
+    <?= $form->field($model, 'division_id')->dropDownList($division) ?>
 
     <div class="form-group">
         <?= Html::submitButton($model->isNewRecord ? 'Создать' : 'Обновить', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>

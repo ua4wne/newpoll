@@ -3,12 +3,12 @@
 use yii\helpers\Html;
 
 /* @var $this yii\web\View */
-/* @var $model app\models\Ecounter */
+/* @var $model \app\modules\admin\models\Ecounter */
 
-$this->title = 'Update Ecounter: ' . $model->name;
-$this->params['breadcrumbs'][] = ['label' => 'Ecounters', 'url' => ['index']];
+$this->title = 'Обновление записи: ' . $model->name;
+$this->params['breadcrumbs'][] = ['label' => 'Электросчетчики', 'url' => ['index']];
 $this->params['breadcrumbs'][] = ['label' => $model->name, 'url' => ['view', 'id' => $model->id]];
-$this->params['breadcrumbs'][] = 'Update';
+$this->params['breadcrumbs'][] = 'Обновление записи';
 ?>
 <div class="ecounter-update">
 

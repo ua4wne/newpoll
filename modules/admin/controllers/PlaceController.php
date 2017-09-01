@@ -1,19 +1,21 @@
 <?php
 
-namespace app\controllers;
+namespace app\modules\admin\controllers;
 
+use app\modules\admin\models\Ecounter;
 use Yii;
-use app\models\Division;
+use app\modules\admin\models\Place;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
 /**
- * DivisionController implements the CRUD actions for Division model.
+ * PlaceController implements the CRUD actions for Place model.
  */
-class DivisionController extends Controller
+class PlaceController extends Controller
 {
+    public $layout = '@app/views/layouts/main.php';
     /**
      * @inheritdoc
      */
@@ -30,13 +32,15 @@ class DivisionController extends Controller
     }
 
     /**
-     * Lists all Division models.
+     * Lists all Place models.
      * @return mixed
      */
     public function actionIndex()
     {
+        $query = Place::find();
         $dataProvider = new ActiveDataProvider([
-            'query' => Division::find(),
+            'query' => $query,
+         //   'totalCount' => $query->count('renters')
         ]);
 
         return $this->render('index', [
@@ -45,7 +49,7 @@ class DivisionController extends Controller
     }
 
     /**
-     * Displays a single Division model.
+     * Displays a single Place model.
      * @param integer $id
      * @return mixed
      */
@@ -57,25 +61,32 @@ class DivisionController extends Controller
     }
 
     /**
-     * Creates a new Division model.
+     * Creates a new Place model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
     public function actionCreate()
     {
-        $model = new Division();
+        $model = new Place();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
+            $ecounters = Ecounter::find()->select(['id','name'])->where(['!=','name','Главный'])->asArray()->all();
+            $data = array();
+            foreach($ecounters as $ecounter)
+            {
+                $data[$ecounter['id']] = $ecounter['name']; //массив для заполнения данных в select формы
+            }
             return $this->render('create', [
                 'model' => $model,
+                'ecounter' => $data,
             ]);
         }
     }
 
     /**
-     * Updates an existing Division model.
+     * Updates an existing Place model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id
      * @return mixed
@@ -87,14 +98,21 @@ class DivisionController extends Controller
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
+            $ecounters = Ecounter::find()->select(['id','name'])->where(['!=','name','Главный'])->asArray()->all();
+            $data = array();
+            foreach($ecounters as $ecounter)
+            {
+                $data[$ecounter['id']] = $ecounter['name']; //массив для заполнения данных в select формы
+            }
             return $this->render('update', [
                 'model' => $model,
+                'ecounter' => $data,
             ]);
         }
     }
 
     /**
-     * Deletes an existing Division model.
+     * Deletes an existing Place model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param integer $id
      * @return mixed
@@ -107,15 +125,15 @@ class DivisionController extends Controller
     }
 
     /**
-     * Finds the Division model based on its primary key value.
+     * Finds the Place model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param integer $id
-     * @return Division the loaded model
+     * @return \app\modules\main\models\Place the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = Division::findOne($id)) !== null) {
+        if (($model = Place::findOne($id)) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');

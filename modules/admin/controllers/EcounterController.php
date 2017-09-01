@@ -1,9 +1,9 @@
 <?php
 
-namespace app\controllers;
+namespace app\modules\admin\controllers;
 
 use Yii;
-use app\models\Ecounter;
+use app\modules\admin\models\Ecounter;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -14,6 +14,7 @@ use yii\filters\VerbFilter;
  */
 class EcounterController extends Controller
 {
+    public $layout = '@app/views/layouts/main.php';
     /**
      * @inheritdoc
      */

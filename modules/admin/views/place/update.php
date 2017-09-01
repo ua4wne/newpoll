@@ -3,12 +3,12 @@
 use yii\helpers\Html;
 
 /* @var $this yii\web\View */
-/* @var $model app\models\Place */
+/* @var $model \app\modules\admin\models\Place */
 
-$this->title = 'Update Place: ' . $model->name;
+$this->title = 'Обновление записи: ' . $model->name;
 $this->params['breadcrumbs'][] = ['label' => 'Places', 'url' => ['index']];
 $this->params['breadcrumbs'][] = ['label' => $model->name, 'url' => ['view', 'id' => $model->id]];
-$this->params['breadcrumbs'][] = 'Update';
+$this->params['breadcrumbs'][] = 'Обновление записи';
 ?>
 <div class="place-update">
 
@@ -16,6 +16,7 @@ $this->params['breadcrumbs'][] = 'Update';
 
     <?= $this->render('_form', [
         'model' => $model,
+        'ecounter' => $ecounter,
     ]) ?>
 
 </div>

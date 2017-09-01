@@ -1,7 +1,8 @@
 <?php
 
-namespace app\models;
+namespace app\modules\admin\models;
 
+use app\modules\admin\models\Ecounter;
 use app\modules\main\models\Renter;
 use Yii;
 
@@ -27,13 +28,36 @@ class Place extends \yii\db\ActiveRecord
         return 'place';
     }
 
+    public function beforeSave($insert)
+    {
+        if (parent::beforeSave($insert)) {
+            if ($insert) {
+                $this->created_at = date('Y-m-d H:i:s');
+                //$this->updated_at = date('Y-m-d H:i:s');
+            }
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public function afterSave($insert, $changedAttributes)
+    {
+        parent::afterSave($insert, $changedAttributes);
+        if ($insert) {
+            Yii::$app->session->setFlash('success', 'Запись добавлена!');
+        } else {
+            Yii::$app->session->setFlash('success', 'Запись обновлена!');
+        }
+    }
+
     /**
      * @inheritdoc
      */
     public function rules()
     {
         return [
-            [['name', 'ecounter_id', 'created_at'], 'required'],
+            [['name'], 'required'],
             [['ecounter_id'], 'integer'],
             [['created_at', 'updated_at'], 'safe'],
             [['name'], 'string', 'max' => 50],
@@ -48,10 +72,11 @@ class Place extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'name' => 'Name',
-            'ecounter_id' => 'Ecounter ID',
-            'created_at' => 'Created At',
-            'updated_at' => 'Updated At',
+            'name' => 'Наименование',
+            'ecounter_id' => 'Общий эл. счетчик',
+            'ecounter.name' => 'Общий эл. счетчик',
+            'created_at' => 'Дата создания',
+            'updated_at' => 'Дата обновления',
         ];
     }
 

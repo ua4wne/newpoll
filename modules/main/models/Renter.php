@@ -2,8 +2,8 @@
 
 namespace app\modules\main\models;
 
-use app\models\Division;
-use app\models\Place;
+use app\modules\main\models\Division;
+use app\modules\admin\models\Place;
 use Yii;
 
 /**
@@ -31,6 +31,29 @@ class Renter extends \yii\db\ActiveRecord
     public static function tableName()
     {
         return 'renter';
+    }
+
+    public function beforeSave($insert)
+    {
+        if (parent::beforeSave($insert)) {
+            if ($insert) {
+                $this->created_at = date('Y-m-d H:i:s');
+                //$this->updated_at = date('Y-m-d H:i:s');
+            }
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public function afterSave($insert, $changedAttributes)
+    {
+        parent::afterSave($insert, $changedAttributes);
+        if ($insert) {
+            Yii::$app->session->setFlash('success', 'Запись добавлена!');
+        } else {
+            Yii::$app->session->setFlash('success', 'Запись обновлена!');
+        }
     }
 
     /**
@@ -63,11 +86,13 @@ class Renter extends \yii\db\ActiveRecord
             'phone2' => 'Телефон №2',
             'encounter' => 'Счетчик',
             'koeff' => 'Коэффициент',
-            'place_id' => 'Place ID',
+            'place_id' => 'Территория',
+            'place.name' => 'Территория',
             'status' => 'Статус',
-            'division_id' => 'Division ID',
-            'created_at' => 'Created At',
-            'updated_at' => 'Updated At',
+            'division_id' => 'Закреплен за',
+            'division.name' => 'Закреплен за',
+            'created_at' => 'Дата создания',
+            'updated_at' => 'Дата обновления',
         ];
     }
 

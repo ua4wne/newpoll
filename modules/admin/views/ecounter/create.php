@@ -4,13 +4,13 @@ use yii\helpers\Html;
 
 
 /* @var $this yii\web\View */
-/* @var $model app\models\Division */
+/* @var $model \app\modules\admin\models\Ecounter */
 
-$this->title = 'Create Division';
-$this->params['breadcrumbs'][] = ['label' => 'Divisions', 'url' => ['index']];
+$this->title = 'Новая запись';
+$this->params['breadcrumbs'][] = ['label' => 'Новый счетчик', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="division-create">
+<div class="ecounter-create">
 
     <h1><?= Html::encode($this->title) ?></h1>
 

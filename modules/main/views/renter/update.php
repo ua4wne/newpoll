@@ -5,10 +5,10 @@ use yii\helpers\Html;
 /* @var $this yii\web\View */
 /* @var $model \app\modules\main\models\Renter */
 
-$this->title = 'Update Renter: ' . $model->title;
+$this->title = 'Обновление записи: ' . $model->title;
 $this->params['breadcrumbs'][] = ['label' => 'Renters', 'url' => ['index']];
 $this->params['breadcrumbs'][] = ['label' => $model->title, 'url' => ['view', 'id' => $model->id]];
-$this->params['breadcrumbs'][] = 'Update';
+$this->params['breadcrumbs'][] = 'Обновление записи';
 ?>
 <div class="renter-update">
 
@@ -16,6 +16,8 @@ $this->params['breadcrumbs'][] = 'Update';
 
     <?= $this->render('_form', [
         'model' => $model,
+        'place' => $place,
+        'division' => $division,
     ]) ?>
 
 </div>

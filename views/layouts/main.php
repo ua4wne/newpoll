@@ -185,7 +185,7 @@ AppAsset::register($this);
 									<li class="dropdown profile_details_drop">
 										<a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
 											<div class="profile_img">
-												<span class="prfil-img"><img src="images/in4.jpg" alt=""> </span>
+												<span class="prfil-img"><img src="/images/in4.jpg" alt=""> </span>
 												<div class="user-name">
 													<p><?= Yii::$app->user->identity->fname .' '.Yii::$app->user->identity->lname?></p>
 													<span>Administrator</span>
@@ -212,9 +212,13 @@ AppAsset::register($this);
 				     <div class="clearfix"> </div>
 				</div>
 <!--heder end here-->
-		<ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="/">Home</a> <i class="fa fa-angle-right"></i></li>
-            </ol>
+		    <?php echo Breadcrumbs::widget(['links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [], ]); ?>
+           <?php if( Yii::$app->session->hasFlash('success') ): ?>
+               <div class="alert alert-success alert-dismissible" role="alert">
+                   <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                   <?php echo Yii::$app->session->getFlash('success'); ?>
+               </div>
+           <?php endif;?>
        <?= $content; ?>
 
         <!-- script-for sticky-nav -->
@@ -237,9 +241,9 @@ AppAsset::register($this);
 </div>
 <!--inner block end here-->
 <!--copy rights start here-->
-<div class="copyrights">
+<!-- <div class="copyrights navbar-fixed-bottom">
 	 <p>© 2016 Pooled. All Rights Reserved | Design by  <a href="http://w3layouts.com/" target="_blank">W3layouts</a> </p>
-</div>
+<!-- </div> -->
 <!--COPY rights end here-->
 </div>
 </div>
@@ -262,7 +266,7 @@ AppAsset::register($this);
                                    <li id="menu-academico" ><a href="#"><i class="fa fa-book" aria-hidden="true"></i><span> Контакты</span> <span class="fa fa-angle-right" style="float: right"></span><div class="clearfix"></div></a>
                                        <ul id="menu-academico-sub" >
                                            <li id="menu-academico-boletim" ><a href="/main/renter">Арендаторы</a></li>
-                                           <li id="menu-academico-avaliacoes" ><a href="/main/department">Наши юрлица</a></li>
+                                           <li id="menu-academico-avaliacoes" ><a href="/main/division">Наши юрлица</a></li>
                                        </ul>
                                    </li>
                                    <li id="menu-academico" ><a href="#"><i class="fa fa-gear"></i>  <span>Маркетинг</span> <span class="fa fa-angle-right" style="float: right"></span><div class="clearfix"></div></a>
@@ -295,10 +299,10 @@ AppAsset::register($this);
                                    </li>
                                    <li id="menu-academico" ><a href="#"><i class="fa fa-gear" aria-hidden="true"></i><span> Настройки</span> <span class="fa fa-angle-right" style="float: right"></span><div class="clearfix"></div></a>
                                        <ul id="menu-academico-sub" >
-                                           <li id="menu-academico-boletim" ><a href="/energy/main">Счетчики общие</a></li>
-                                           <li id="menu-academico-avaliacoes" ><a href="/energy/renters">Счетчики арендаторов</a></li>
-                                           <li id="menu-academico-avaliacoes" ><a href="/energy/init">Начальные показания</a></li>
-                                           <li id="menu-academico-avaliacoes" ><a href="/energy/billing">Расчет потребления</a></li>
+                                           <li id="menu-academico-boletim" ><a href="/admin/ecounter">Счетчики общие</a></li>
+                                           <li id="menu-academico-avaliacoes" ><a href="/admin/place">Территории</a></li>
+                                           <li id="menu-academico-avaliacoes" ><a href="/admin/user">Пользователи</a></li>
+                                           <li id="menu-academico-avaliacoes" ><a href="/admin/describer">Подписчики</a></li>
                                        </ul>
                                    </li>
                                </ul>

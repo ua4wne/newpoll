@@ -1,6 +1,6 @@
 <?php
 
-namespace app\models;
+namespace app\modules\main\models;
 
 use app\modules\main\models\Renter;
 use Yii;
@@ -25,13 +25,36 @@ class Division extends \yii\db\ActiveRecord
         return 'division';
     }
 
+    public function beforeSave($insert)
+    {
+        if (parent::beforeSave($insert)) {
+            if ($insert) {
+                $this->created_at = date('Y-m-d H:i:s');
+                //$this->updated_at = date('Y-m-d H:i:s');
+            }
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public function afterSave($insert, $changedAttributes)
+    {
+        parent::afterSave($insert, $changedAttributes);
+        if ($insert) {
+            Yii::$app->session->setFlash('success', 'Запись добавлена!');
+        } else {
+            Yii::$app->session->setFlash('success', 'Запись обновлена!');
+        }
+    }
+
     /**
      * @inheritdoc
      */
     public function rules()
     {
         return [
-            [['name', 'created_at'], 'required'],
+            [['name'], 'required'],
             [['created_at', 'updated_at'], 'safe'],
             [['name'], 'string', 'max' => 50],
         ];
@@ -44,9 +67,9 @@ class Division extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'name' => 'Name',
-            'created_at' => 'Created At',
-            'updated_at' => 'Updated At',
+            'name' => 'Наименование',
+            'created_at' => 'Дата создания',
+            'updated_at' => 'Дата обновления',
         ];
     }
 
