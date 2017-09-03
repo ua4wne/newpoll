@@ -74,6 +74,7 @@ class RenterController extends Controller
             $divisions = Division::find()->select(['id','name'])->asArray()->all();
             $data = array();
             $data1 = array();
+            $statsel = array ('1' => 'Действующий','0' => 'Не действующий');
             foreach($places as $place)
             {
                 $data[$place['id']] = $place['name']; //массив для заполнения данных в select формы
@@ -86,6 +87,7 @@ class RenterController extends Controller
                 'model' => $model,
                 'place' => $data,
                 'division' => $data1,
+                'statsel' => $statsel,
             ]);
         }
     }
@@ -107,6 +109,7 @@ class RenterController extends Controller
             $divisions = Division::find()->select(['id','name'])->asArray()->all();
             $data = array();
             $data1 = array();
+            $statsel = array ('1' => 'Действующий','0' => 'Не действующий');
             foreach($places as $place)
             {
                 $data[$place['id']] = $place['name']; //массив для заполнения данных в select формы
@@ -119,6 +122,7 @@ class RenterController extends Controller
                 'model' => $model,
                 'place' => $data,
                 'division' => $data1,
+                'statsel' => $statsel,
             ]);
         }
     }
