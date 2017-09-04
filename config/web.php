@@ -8,7 +8,6 @@ $config = [
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log'],
 	'language' => 'ru-RU',
-    'timeZone' => 'Europe/Moscow',
     'modules' => [
         'admin' => [ //модуль для работы с админкой
             'class' => 'app\modules\admin\Module',
