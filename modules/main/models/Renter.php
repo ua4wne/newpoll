@@ -70,7 +70,7 @@ class Renter extends \yii\db\ActiveRecord
             [['area', 'phone1', 'phone2', 'encounter'], 'string', 'max' => 20],
             [['agent'], 'string', 'max' => 50],
             [['encounter'], 'unique'],
-            [['division_id'], 'exist', 'skipOnError' => true, 'targetClass' => Division::className(), 'targetAttribute' => ['division_id' => 'id']],
+        //    [['division_id'], 'exist', 'skipOnError' => true, 'targetClass' => Division::className(), 'targetAttribute' => ['division_id' => 'id']],
             [['place_id'], 'exist', 'skipOnError' => true, 'targetClass' => Place::className(), 'targetAttribute' => ['place_id' => 'id']],
         ];
     }
@@ -107,8 +107,18 @@ class Renter extends \yii\db\ActiveRecord
         return $this->hasOne(Division::className(), ['id' => 'division_id']);
     }
 
+    /* Геттер для названия подразделения */
+    public function getDivisionName() {
+        return $this->division->name;
+    }
+
     public function getPlace()
     {
         return $this->hasOne(Place::className(), ['id' => 'place_id']);
+    }
+
+    /* Геттер для названия территории */
+    public function getPlaceName() {
+        return $this->place->name;
     }
 }

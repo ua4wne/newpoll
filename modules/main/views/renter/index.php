@@ -33,10 +33,18 @@ $this->params['breadcrumbs'][] = $this->title;
              'encounter',
              'koeff',
             // 'place_id',
-            [
+            'place.name',
+            /*[
                 'attribute' => 'place_id',
+                'filter' => [
+                    1 => 'МС Выставка',
+                    2 => 'Складской комплекс',
+                    3 => 'МС ОП',
+                    4 => 'МС ОПГС',
+                    5 => 'Парковка большая',
+                ],
                 'value' => 'place.name',
-            ],
+            ],*/
             // 'status',
             /**
              * Произвольная колонка с определенной логикой отображения и фильтром в виде выпадающего списка
@@ -77,10 +85,11 @@ $this->params['breadcrumbs'][] = $this->title;
                 },
             ],
             // 'division_id',
-            [
+            'division.name',
+            /*[
                 'attribute' => 'division_id',
                 'value' => 'division.name',
-            ],
+            ],*/
             // 'created_at',
             // 'updated_at',
 

@@ -8,6 +8,8 @@ use app\modules\main\models\RenterSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use app\modules\main\models\Division;
+use app\modules\admin\models\Place;
 
 /**
  * RenterController implements the CRUD actions for Renter model.
@@ -68,8 +70,22 @@ class RenterController extends Controller
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
+            $divisions = Division::find()->select(['id','name'])->asArray()->all();
+            $places = Place::find()->select(['id','name'])->asArray()->all();
+            $data = array();
+            $data1 = array();
+            $statsel = array ('1' => 'Действующий','0' => 'Не действующий');
+            foreach($places as $place) {
+                $data[$place['id']] = $place['name']; //массив для заполнения данных в select формы
+            }
+            foreach($divisions as $division) {
+                $data1[$division['id']] = $division['name']; //массив для заполнения данных в select формы
+            }
             return $this->render('create', [
                 'model' => $model,
+                'place' => $data,
+                'division' => $data1,
+                'statsel' => $statsel,
             ]);
         }
     }
@@ -87,8 +103,22 @@ class RenterController extends Controller
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
+            $divisions = Division::find()->select(['id','name'])->asArray()->all();
+            $places = Place::find()->select(['id','name'])->asArray()->all();
+            $data = array();
+            $data1 = array();
+            $statsel = array ('1' => 'Действующий','0' => 'Не действующий');
+            foreach($places as $place) {
+                $data[$place['id']] = $place['name']; //массив для заполнения данных в select формы
+            }
+            foreach($divisions as $division) {
+                $data1[$division['id']] = $division['name']; //массив для заполнения данных в select формы
+            }
             return $this->render('update', [
                 'model' => $model,
+                'place' => $data,
+                'division' => $data1,
+                'statsel' => $statsel,
             ]);
         }
     }

@@ -12,6 +12,11 @@ use app\modules\main\models\Renter;
  */
 class RenterSearch extends \app\modules\main\models\Renter
 {
+    public function attributes()
+    {
+        // делаем поле зависимости доступным для поиска
+        return array_merge(parent::attributes(), ['division.name','place.name']);
+    }
     /**
      * @inheritdoc
      */
@@ -21,6 +26,7 @@ class RenterSearch extends \app\modules\main\models\Renter
             [['id', 'place_id', 'status', 'division_id', 'created_at', 'updated_at'], 'integer'],
             [['title', 'area', 'agent', 'phone1', 'phone2', 'encounter'], 'safe'],
             [['koeff'], 'number'],
+            [['division.name','place.name'], 'safe'],
         ];
     }
 
@@ -42,7 +48,7 @@ class RenterSearch extends \app\modules\main\models\Renter
      */
     public function search($params)
     {
-        $query = \app\modules\main\models\Renter::find()->where(['status' => 1]);
+        $query = Renter::find()->where(['status' => 1]);
 
         // add conditions that should always apply here
 
@@ -52,12 +58,30 @@ class RenterSearch extends \app\modules\main\models\Renter
                 'pageSize' => Yii::$app->params['page_size'],
             ],
         ]);
+        /*$dataProvider->setSort([
+            'attributes' => [
+                'divisionName' => [
+                    'asc' => ['division.name' => SORT_ASC],
+                    'desc' => ['division.name' => SORT_DESC],
+                    'label' => 'Закреплен за'
+                ],
+                'placeName' => [
+                    'asc' => ['place.name' => SORT_ASC],
+                    'desc' => ['place.name' => SORT_DESC],
+                    'label' => 'Территория'
+                ]
+            ]]);*/
 
         $this->load($params);
 
         if (!$this->validate()) {
             // uncomment the following line if you do not want to return any records when validation fails
             // $query->where('0=1');
+            /**
+             * Жадная загрузка данных модели Страны
+             * для работы сортировки.
+             */
+            $query->joinWith(['division']);
             return $dataProvider;
         }
 
@@ -78,6 +102,16 @@ class RenterSearch extends \app\modules\main\models\Renter
             ->andFilterWhere(['like', 'phone1', $this->phone1])
             ->andFilterWhere(['like', 'phone2', $this->phone2])
             ->andFilterWhere(['like', 'encounter', $this->encounter]);
+        $query->andFilterWhere(['LIKE', 'division.name', $this->getAttribute('division.name')]);
+        $query->andFilterWhere(['LIKE', 'place.name', $this->getAttribute('place.name')]);
+        // Фильтр по подразделению
+        $query->joinWith(['division' => function ($q) {
+            $q->where('division.name LIKE "%' . $this->divisionName . '%"');
+        }]);
+        // Фильтр по территории
+        $query->joinWith(['place' => function ($q) {
+            $q->where('place.name LIKE "%' . $this->placeName . '%"');
+        }]);
 
         return $dataProvider;
     }
