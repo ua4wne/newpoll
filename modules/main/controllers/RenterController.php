@@ -4,8 +4,6 @@ namespace app\modules\main\controllers;
 
 use Yii;
 use app\modules\main\models\Renter;
-use app\modules\admin\models\Place;
-use app\modules\main\models\Division;
 use app\modules\main\models\RenterSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -70,24 +68,8 @@ class RenterController extends Controller
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
-            $places = Place::find()->select(['id','name'])->asArray()->all();
-            $divisions = Division::find()->select(['id','name'])->asArray()->all();
-            $data = array();
-            $data1 = array();
-            $statsel = array ('1' => 'Действующий','0' => 'Не действующий');
-            foreach($places as $place)
-            {
-                $data[$place['id']] = $place['name']; //массив для заполнения данных в select формы
-            }
-            foreach($divisions as $division)
-            {
-                $data1[$division['id']] = $division['name']; //массив для заполнения данных в select формы
-            }
             return $this->render('create', [
                 'model' => $model,
-                'place' => $data,
-                'division' => $data1,
-                'statsel' => $statsel,
             ]);
         }
     }
@@ -105,24 +87,8 @@ class RenterController extends Controller
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
-            $places = Place::find()->select(['id','name'])->asArray()->all();
-            $divisions = Division::find()->select(['id','name'])->asArray()->all();
-            $data = array();
-            $data1 = array();
-            $statsel = array ('1' => 'Действующий','0' => 'Не действующий');
-            foreach($places as $place)
-            {
-                $data[$place['id']] = $place['name']; //массив для заполнения данных в select формы
-            }
-            foreach($divisions as $division)
-            {
-                $data1[$division['id']] = $division['name']; //массив для заполнения данных в select формы
-            }
             return $this->render('update', [
                 'model' => $model,
-                'place' => $data,
-                'division' => $data1,
-                'statsel' => $statsel,
             ]);
         }
     }
@@ -144,7 +110,7 @@ class RenterController extends Controller
      * Finds the Renter model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param integer $id
-     * @return Renter the loaded model
+     * @return \app\modules\main\models\Renter the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)

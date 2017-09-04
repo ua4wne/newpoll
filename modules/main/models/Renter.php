@@ -2,8 +2,9 @@
 
 namespace app\modules\main\models;
 
-use app\modules\main\models\Division;
+//use app\modules\main\models\Division;
 use app\modules\admin\models\Place;
+use app\modules\main\models\Division;
 use Yii;
 
 /**
@@ -69,6 +70,8 @@ class Renter extends \yii\db\ActiveRecord
             [['area', 'phone1', 'phone2', 'encounter'], 'string', 'max' => 20],
             [['agent'], 'string', 'max' => 50],
             [['encounter'], 'unique'],
+            [['division_id'], 'exist', 'skipOnError' => true, 'targetClass' => Division::className(), 'targetAttribute' => ['division_id' => 'id']],
+            [['place_id'], 'exist', 'skipOnError' => true, 'targetClass' => Place::className(), 'targetAttribute' => ['place_id' => 'id']],
         ];
     }
 

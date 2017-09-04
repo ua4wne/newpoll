@@ -10,7 +10,7 @@ use app\modules\main\models\Renter;
 /**
  * RenterSearch represents the model behind the search form about `app\modules\main\models\Renter`.
  */
-class RenterSearch extends Renter
+class RenterSearch extends \app\modules\main\models\Renter
 {
     /**
      * @inheritdoc
@@ -42,7 +42,7 @@ class RenterSearch extends Renter
      */
     public function search($params)
     {
-        $query = Renter::find()->where(['status' => 1]);
+        $query = \app\modules\main\models\Renter::find()->where(['status' => 1]);
 
         // add conditions that should always apply here
 
@@ -50,12 +50,6 @@ class RenterSearch extends Renter
             'query' => $query,
             'pagination' => [
                 'pageSize' => Yii::$app->params['page_size'],
-            ],
-            'sort' => [
-                'attributes' => [
-                    'area' => SORT_ASC,
-                    //'title' => SORT_ASC,
-                ]
             ],
         ]);
 
@@ -69,20 +63,20 @@ class RenterSearch extends Renter
 
         // grid filtering conditions
         $query->andFilterWhere([
-            //'id' => $this->id,
+            'id' => $this->id,
             'koeff' => $this->koeff,
             'place_id' => $this->place_id,
-         //   'status' => $this->status,
+            'status' => $this->status,
             'division_id' => $this->division_id,
-         //   'created_at' => $this->created_at,
-         //   'updated_at' => $this->updated_at,
+            'created_at' => $this->created_at,
+            'updated_at' => $this->updated_at,
         ]);
 
         $query->andFilterWhere(['like', 'title', $this->title])
             ->andFilterWhere(['like', 'area', $this->area])
-           // ->andFilterWhere(['like', 'agent', $this->agent])
-           // ->andFilterWhere(['like', 'phone1', $this->phone1])
-           // ->andFilterWhere(['like', 'phone2', $this->phone2])
+            ->andFilterWhere(['like', 'agent', $this->agent])
+            ->andFilterWhere(['like', 'phone1', $this->phone1])
+            ->andFilterWhere(['like', 'phone2', $this->phone2])
             ->andFilterWhere(['like', 'encounter', $this->encounter]);
 
         return $dataProvider;
