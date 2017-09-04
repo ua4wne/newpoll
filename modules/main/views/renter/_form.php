@@ -26,6 +26,8 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'koeff')->textInput(['value' => Yii::$app->params['renter_koeff']]) ?>
 
+    <?= $form->field($model, 'status')->dropDownList($statsel) ?>
+
     <?//= $form->field($model, 'place_id')->textInput() ?>
     <?= $form->field($model, 'place_id')->dropDownList($place) ?>
 

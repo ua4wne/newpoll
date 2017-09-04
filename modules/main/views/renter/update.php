@@ -18,6 +18,7 @@ $this->params['breadcrumbs'][] = 'Обновление записи';
         'model' => $model,
         'place' => $place,
         'division' => $division,
+        'statsel' => $statsel,
     ]) ?>
 
 </div>

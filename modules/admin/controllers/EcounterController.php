@@ -38,6 +38,15 @@ class EcounterController extends Controller
     {
         $dataProvider = new ActiveDataProvider([
             'query' => Ecounter::find(),
+            'pagination' => [
+                'pageSize' => Yii::$app->params['page_size'],
+            ],
+            'sort' => [
+                'attributes' => [
+                    'area' => SORT_ASC,
+                    //'title' => SORT_ASC,
+                ]
+            ],
         ]);
 
         return $this->render('index', [

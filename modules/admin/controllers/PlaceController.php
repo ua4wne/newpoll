@@ -40,6 +40,15 @@ class PlaceController extends Controller
         $query = Place::find();
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
+            'pagination' => [
+                'pageSize' => Yii::$app->params['page_size'],
+            ],
+            'sort' => [
+                'attributes' => [
+                    'area' => SORT_ASC,
+                    //'title' => SORT_ASC,
+                ]
+            ],
          //   'totalCount' => $query->count('renters')
         ]);
 
