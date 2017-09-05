@@ -291,10 +291,10 @@ AppAsset::register($this);
                                    </li>
                                    <li id="menu-academico" ><a href="#"><i class="fa fa-lightbulb-o" aria-hidden="true"></i><span> Энергоучет</span> <span class="fa fa-angle-right" style="float: right"></span><div class="clearfix"></div></a>
                                        <ul id="menu-academico-sub" >
-                                           <li id="menu-academico-boletim" ><a href="/energy/main">Счетчики общие</a></li>
-                                           <li id="menu-academico-avaliacoes" ><a href="/energy/renters">Счетчики арендаторов</a></li>
-                                           <li id="menu-academico-avaliacoes" ><a href="/energy/init">Начальные показания</a></li>
-                                           <li id="menu-academico-avaliacoes" ><a href="/energy/billing">Расчет потребления</a></li>
+                                           <li id="menu-academico-boletim" ><a href="/main/main-counter">Счетчики общие</a></li>
+                                           <li id="menu-academico-avaliacoes" ><a href="/main/renters-counter">Счетчики арендаторов</a></li>
+                                           <li id="menu-academico-avaliacoes" ><a href="/main/init-counter">Начальные показания</a></li>
+                                           <li id="menu-academico-avaliacoes" ><a href="/main/billing">Расчет потребления</a></li>
                                        </ul>
                                    </li>
                                    <li id="menu-academico" ><a href="#"><i class="fa fa-gear" aria-hidden="true"></i><span> Настройки</span> <span class="fa fa-angle-right" style="float: right"></span><div class="clearfix"></div></a>

@@ -48,7 +48,7 @@ class RenterSearch extends \app\modules\main\models\Renter
      */
     public function search($params)
     {
-        $query = Renter::find()->where(['status' => 1]);
+        $query = Renter::find(); //->where(['status' => 1]);
 
         // add conditions that should always apply here
 

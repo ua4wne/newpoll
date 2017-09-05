@@ -49,7 +49,7 @@ class PlaceController extends Controller
                     //'title' => SORT_ASC,
                 ]
             ],
-         //   'totalCount' => $query->count('renters')
+         //   'totalCount' => $query->count('renterenergy')
         ]);
 
         return $this->render('index', [

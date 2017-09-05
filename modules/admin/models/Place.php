@@ -16,7 +16,7 @@ use Yii;
  * @property string $updated_at
  *
  * @property Ecounter $ecounter
- * @property \app\models\Renter[] $renters
+ * @property \app\models\Renter[] $renterenergy
  */
 class Place extends \yii\db\ActiveRecord
 {

@@ -13,7 +13,7 @@ use Yii;
  * @property string $created_at
  * @property string $updated_at
  *
- * @property Renter[] $renters
+ * @property Renter[] $renterenergy
  */
 class Division extends \yii\db\ActiveRecord
 {
