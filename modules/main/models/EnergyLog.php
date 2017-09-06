@@ -72,14 +72,29 @@ class EnergyLog extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'renter_id' => 'Renter ID',
+            'renter_id' => 'Арендатор',
             'year' => 'Год',
             'month' => 'Месяц',
-            'encount' => 'Текущие показания',
+            'encount' => 'Текущие показания, кВт',
             'delta' => 'Потребление',
             'price' => 'Цена',
             'created_at' => 'Дата создания',
             'updated_at' => 'Дата обновления',
         ];
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getRenter()
+    {
+        return $this->hasOne(Renter::className(), ['renter_id' => 'id']);
+    }
+
+    //проверка корректности данных счетчика
+    public function CheckCountVal($val){
+        $previous = explode('-', date('Y-m', strtotime("$this->year-$this->smonth-01 -1 month"))); //определяем предыдущий период
+        $y = $previous[0];
+        $m = $previous[1];
     }
 }
