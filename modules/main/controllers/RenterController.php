@@ -19,7 +19,7 @@ class RenterController extends Controller
     /**
      * @inheritdoc
      */
-    /*public function behaviors()
+    public function behaviors()
     {
         return [
             'verbs' => [
@@ -29,7 +29,7 @@ class RenterController extends Controller
                 ],
             ],
         ];
-    }*/
+    }
 
     /**
      * Lists all Renter models.

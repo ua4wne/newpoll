@@ -32,7 +32,7 @@ class EnergyLog extends \yii\db\ActiveRecord
         if (parent::beforeSave($insert)) {
             if ($insert) {
                 $this->created_at = date('Y-m-d H:i:s');
-                //$this->updated_at = date('Y-m-d H:i:s');
+                $this->updated_at = date('Y-m-d H:i:s');
             }
             return true;
         } else {
@@ -56,7 +56,7 @@ class EnergyLog extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['renter_id', 'year', 'month', 'encount', 'delta', 'price'], 'required'],
+            [['renter_id', 'year', 'month', 'encount'], 'required'],
             [['renter_id'], 'integer'],
             [['encount', 'delta', 'price'], 'number'],
             [['created_at', 'updated_at'], 'safe'],
@@ -88,13 +88,7 @@ class EnergyLog extends \yii\db\ActiveRecord
      */
     public function getRenter()
     {
-        return $this->hasOne(Renter::className(), ['renter_id' => 'id']);
+        return $this->hasOne(Renter::className(), ['id' => 'renter_id']);
     }
 
-    //проверка корректности данных счетчика
-    public function CheckCountVal($val){
-        $previous = explode('-', date('Y-m', strtotime("$this->year-$this->smonth-01 -1 month"))); //определяем предыдущий период
-        $y = $previous[0];
-        $m = $previous[1];
-    }
 }

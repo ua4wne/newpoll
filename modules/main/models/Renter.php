@@ -39,7 +39,7 @@ class Renter extends \yii\db\ActiveRecord
         if (parent::beforeSave($insert)) {
             if ($insert) {
                 $this->created_at = date('Y-m-d H:i:s');
-                //$this->updated_at = date('Y-m-d H:i:s');
+                $this->updated_at = date('Y-m-d H:i:s');
             }
             return true;
         } else {
@@ -120,5 +120,13 @@ class Renter extends \yii\db\ActiveRecord
     /* Геттер для названия территории */
     public function getPlaceName() {
         return $this->place->name;
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getEnergyLog()
+    {
+        return $this->hasMany(EnergyLog::className(), ['renter_id' => 'id']);
     }
 }

@@ -11,7 +11,6 @@ $this->params['breadcrumbs'][] = ['label' => 'Счетчики арендато�
 ?>
 <div class="energy-index">
     <h1>Ввод показаний счетчиков</h1>
-<?php echo date('Y-m', strtotime("$year-$smonth-01 -1 month")); ?>
     <?php $form = ActiveForm::begin(); ?>
 
         <?//= $form->field($model, 'renter_id') ?>
