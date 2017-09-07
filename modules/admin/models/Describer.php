@@ -1,28 +1,26 @@
 <?php
 
-namespace app\modules\main\models;
+namespace app\modules\admin\models;
 
-use app\modules\main\models\Renter;
 use Yii;
 
 /**
- * This is the model class for table "division".
+ * This is the model class for table "describer".
  *
  * @property integer $id
- * @property string $name
+ * @property string $email
+ * @property integer $status
  * @property string $created_at
  * @property string $updated_at
- *
- * @property Renter[] $renterenergy
  */
-class Division extends \yii\db\ActiveRecord
+class Describer extends \yii\db\ActiveRecord
 {
     /**
      * @inheritdoc
      */
     public static function tableName()
     {
-        return 'division';
+        return 'describer';
     }
 
     public function beforeSave($insert)
@@ -54,9 +52,10 @@ class Division extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['name'], 'required'],
+            [['email'], 'required'],
+            [['status'], 'integer'],
             [['created_at', 'updated_at'], 'safe'],
-            [['name'], 'string', 'max' => 50],
+            [['email'], 'email'],
         ];
     }
 
@@ -67,17 +66,10 @@ class Division extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'name' => 'Наименование',
+            'email' => 'Email',
+            'status' => 'Статус',
             'created_at' => 'Дата создания',
             'updated_at' => 'Дата обновления',
         ];
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getRenters()
-    {
-        return $this->hasMany(Renter::className(), ['division_id' => 'id']);
     }
 }

@@ -2,18 +2,17 @@
 
 namespace app\modules\admin\controllers;
 
-use app\modules\admin\models\Ecounter;
 use Yii;
-use app\modules\admin\models\Place;
-use yii\data\ActiveDataProvider;
+use app\modules\admin\models\Describer;
+use app\modules\admin\models\DescriberSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
 /**
- * PlaceController implements the CRUD actions for Place model.
+ * DescriberController implements the CRUD actions for Describer model.
  */
-class PlaceController extends Controller
+class DescriberController extends Controller
 {
     public $layout = '@app/views/layouts/main.php';
     /**
@@ -32,33 +31,22 @@ class PlaceController extends Controller
     }
 
     /**
-     * Lists all Place models.
+     * Lists all Describer models.
      * @return mixed
      */
     public function actionIndex()
     {
-        $query = Place::find();
-        $dataProvider = new ActiveDataProvider([
-            'query' => $query,
-            'pagination' => [
-                'pageSize' => Yii::$app->params['page_size'],
-            ],
-            'sort' => [
-                'attributes' => [
-                    'area' => SORT_ASC,
-                    //'title' => SORT_ASC,
-                ]
-            ],
-         //   'totalCount' => $query->count('renterenergy')
-        ]);
+        $searchModel = new DescriberSearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
+            'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
         ]);
     }
 
     /**
-     * Displays a single Place model.
+     * Displays a single Describer model.
      * @param integer $id
      * @return mixed
      */
@@ -70,32 +58,27 @@ class PlaceController extends Controller
     }
 
     /**
-     * Creates a new Place model.
+     * Creates a new Describer model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
     public function actionCreate()
     {
-        $model = new Place();
+        $model = new Describer();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
-            $ecounters = Ecounter::find()->select(['id','name'])->where(['!=','name','Главный'])->asArray()->all();
-            $data = array();
-            foreach($ecounters as $ecounter)
-            {
-                $data[$ecounter['id']] = $ecounter['name']; //массив для заполнения данных в select формы
-            }
+            $statsel = array('0'=>'Не активный', '1' => 'Активный');
             return $this->render('create', [
                 'model' => $model,
-                'ecounter' => $data,
+                'statsel' => $statsel,
             ]);
         }
     }
 
     /**
-     * Updates an existing Place model.
+     * Updates an existing Describer model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id
      * @return mixed
@@ -107,21 +90,16 @@ class PlaceController extends Controller
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
-            $ecounters = Ecounter::find()->select(['id','name'])->where(['!=','name','Главный'])->asArray()->all();
-            $data = array();
-            foreach($ecounters as $ecounter)
-            {
-                $data[$ecounter['id']] = $ecounter['name']; //массив для заполнения данных в select формы
-            }
+            $statsel = array('0'=>'Не активный', '1' => 'Активный');
             return $this->render('update', [
                 'model' => $model,
-                'ecounter' => $data,
+                'statsel' => $statsel,
             ]);
         }
     }
 
     /**
-     * Deletes an existing Place model.
+     * Deletes an existing Describer model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param integer $id
      * @return mixed
@@ -134,15 +112,15 @@ class PlaceController extends Controller
     }
 
     /**
-     * Finds the Place model based on its primary key value.
+     * Finds the Describer model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param integer $id
-     * @return \app\modules\main\models\Place the loaded model
+     * @return Describer the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = Place::findOne($id)) !== null) {
+        if (($model = Describer::findOne($id)) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');

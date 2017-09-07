@@ -35,7 +35,7 @@ class AppAsset extends AssetBundle
         'js/morris.js',
     ];
     public $jsOptions = [
-        'position' => \yii\web\View::POS_HEAD,
+        //'position' => \yii\web\View::POS_HEAD, //влияет на работу фильтрации в таблицах представлений - виджет GridView!!!
     ];
     public $depends = [
         'yii\web\YiiAsset',

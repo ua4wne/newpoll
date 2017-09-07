@@ -2,27 +2,29 @@
 
 namespace app\modules\main\models;
 
-use app\modules\main\models\Renter;
 use Yii;
 
 /**
- * This is the model class for table "division".
+ * This is the model class for table "energy_log".
  *
  * @property integer $id
- * @property string $name
+ * @property integer $renter_id
+ * @property string $year
+ * @property string $month
+ * @property double $encount
+ * @property double $delta
+ * @property double $price
  * @property string $created_at
  * @property string $updated_at
- *
- * @property Renter[] $renterenergy
  */
-class Division extends \yii\db\ActiveRecord
+class EnergyLog extends \yii\db\ActiveRecord
 {
     /**
      * @inheritdoc
      */
     public static function tableName()
     {
-        return 'division';
+        return 'energy_log';
     }
 
     public function beforeSave($insert)
@@ -54,9 +56,12 @@ class Division extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['name'], 'required'],
+            [['renter_id', 'year', 'month', 'encount', 'delta', 'price'], 'required'],
+            [['renter_id'], 'integer'],
+            [['encount', 'delta', 'price'], 'number'],
             [['created_at', 'updated_at'], 'safe'],
-            [['name'], 'string', 'max' => 50],
+            [['year'], 'string', 'max' => 4],
+            [['month'], 'string', 'max' => 2],
         ];
     }
 
@@ -67,7 +72,12 @@ class Division extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'name' => 'Наименование',
+            'renter_id' => 'Арендатор',
+            'year' => 'Год',
+            'month' => 'Месяц',
+            'encount' => 'Текущие показания, кВт',
+            'delta' => 'Потребление',
+            'price' => 'Цена',
             'created_at' => 'Дата создания',
             'updated_at' => 'Дата обновления',
         ];
@@ -76,8 +86,15 @@ class Division extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getRenters()
+    public function getRenter()
     {
-        return $this->hasMany(Renter::className(), ['division_id' => 'id']);
+        return $this->hasOne(Renter::className(), ['renter_id' => 'id']);
+    }
+
+    //проверка корректности данных счетчика
+    public function CheckCountVal($val){
+        $previous = explode('-', date('Y-m', strtotime("$this->year-$this->smonth-01 -1 month"))); //определяем предыдущий период
+        $y = $previous[0];
+        $m = $previous[1];
     }
 }

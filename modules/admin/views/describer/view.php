@@ -4,18 +4,18 @@ use yii\helpers\Html;
 use yii\widgets\DetailView;
 
 /* @var $this yii\web\View */
-/* @var $model \app\modules\main\models\Renter */
+/* @var $model app\modules\admin\models\Describer */
 
-$this->title = $model->title;
-$this->params['breadcrumbs'][] = ['label' => 'Арендаторы', 'url' => ['index']];
+$this->title = $model->email;
+$this->params['breadcrumbs'][] = ['label' => 'Получатели', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="renter-view">
+<div class="describer-view">
 
     <h1><?= Html::encode($this->title) ?></h1>
 
     <p>
-        <?= Html::a('Новый арендатор', ['create'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a('Новый получатель', ['create'], ['class' => 'btn btn-success']) ?>
         <?= Html::a('Обновить', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
         <?= Html::a('Удалить', ['delete', 'id' => $model->id], [
             'class' => 'btn btn-danger',
@@ -30,16 +30,8 @@ $this->params['breadcrumbs'][] = $this->title;
         'model' => $model,
         'attributes' => [
             'id',
-            'title',
-            'area',
-            'agent',
-            'phone1',
-            'phone2',
-            'encounter',
-            'koeff',
-            'place.name',
+            'email:email',
             'status',
-            'division.name',
             'created_at',
             'updated_at',
         ],
