@@ -69,10 +69,10 @@ class RenterSearch extends Renter
 
         // grid filtering conditions
         $query->andFilterWhere([
-            //'id' => $this->id,
+        //    'id' => $this->id,
             'koeff' => $this->koeff,
             'place_id' => $this->place_id,
-         //   'status' => $this->status,
+            'status' => $this->status,
             'division_id' => $this->division_id,
          //   'created_at' => $this->created_at,
          //   'updated_at' => $this->updated_at,
