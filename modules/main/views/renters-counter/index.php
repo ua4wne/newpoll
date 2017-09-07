@@ -13,15 +13,10 @@ $this->params['breadcrumbs'][] = ['label' => 'Счетчики арендато�
     <h1>Ввод показаний счетчиков</h1>
     <?php $form = ActiveForm::begin(); ?>
 
-        <?//= $form->field($model, 'renter_id') ?>
         <?= $form->field($model, 'renter_id')->dropDownList($renters) ?>
         <?= $form->field($model, 'year')->textInput(['value'=>$year]) ?>
         <?= $form->field($model, 'month')->dropDownList($month,['options' =>[ $smonth => ['Selected' => true]]]) ?>
         <?= $form->field($model, 'encount') ?>
-        <?//= $form->field($model, 'delta') ?>
-        <?//= $form->field($model, 'price') ?>
-        <?//= $form->field($model, 'created_at') ?>
-        <?//= $form->field($model, 'updated_at') ?>
     
         <div class="form-group">
             <?= Html::submitButton('Сохранить', ['class' => 'btn btn-primary']) ?>

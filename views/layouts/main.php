@@ -299,7 +299,12 @@ AppAsset::register($this);
                                        <ul id="menu-academico-sub" >
                                            <li id="menu-academico-boletim" ><a href="/main/main-counter">Счетчики общие</a></li>
                                            <li id="menu-academico-avaliacoes" ><a href="/main/renters-counter">Счетчики арендаторов</a></li>
-                                           <li id="menu-academico-avaliacoes" ><a href="/main/init-counter">Начальные показания</a></li>
+                                           <li id="menu-academico-avaliacoes" ><a href="#"><span>Начальные показания</span><span class="fa fa-angle-right" style="float: right"></span><div class="clearfix"></div></a>
+                                               <ul id="menu-academico-sub" >
+                                                   <li id="menu-academico-avaliacoes" style="float:left; width: 200px;"><a href="/main/init-main">Счетчики общие</a></li>
+                                                   <li id="menu-academico-avaliacoes" style="float:left; width: 200px;"><a href="/main/init-counter">Счетчики арендаторов</a></li>
+                                               </ul>
+                                           </li>
                                            <li id="menu-academico-avaliacoes" ><a href="/main/billing">Расчет потребления</a></li>
                                        </ul>
                                    </li>
