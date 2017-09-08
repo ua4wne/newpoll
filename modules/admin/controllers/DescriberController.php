@@ -8,6 +8,7 @@ use app\modules\admin\models\DescriberSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use app\models\BaseModel;
 
 /**
  * DescriberController implements the CRUD actions for Describer model.
@@ -67,6 +68,8 @@ class DescriberController extends Controller
         $model = new Describer();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            $msg = 'Добавлен новый подписчик <strong>'. $model->email .'</strong>.';
+            BaseModel::AddEventLog('info',$msg);
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
             $statsel = array('0'=>'Не активный', '1' => 'Активный');
@@ -88,6 +91,11 @@ class DescriberController extends Controller
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            if($model->status)
+                $msg = 'Подписчик <strong>'. $model->email .'</strong> был активирован.';
+            else
+                $msg = 'Подписчик <strong>'. $model->email .'</strong> был деактивирован.';
+            BaseModel::AddEventLog('info',$msg);
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
             $statsel = array('0'=>'Не активный', '1' => 'Активный');
@@ -106,7 +114,11 @@ class DescriberController extends Controller
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
+        //$this->findModel($id)->delete();
+        $row = Describer::findOne($id);
+        $row->delete();
+        $msg = 'Подписчик <strong>'. $row->email .'</strong> был удален из системы.';
+        BaseModel::AddEventLog('info',$msg);
 
         return $this->redirect(['index']);
     }

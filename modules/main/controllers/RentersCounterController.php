@@ -7,6 +7,7 @@ use Yii;
 use yii\web\Controller;
 use app\modules\main\models\EnergyLog;
 use app\modules\main\models\Renter;
+use app\models\BaseModel;
 
 class RentersCounterController extends Controller
 {
@@ -34,15 +35,21 @@ class RentersCounterController extends Controller
            $result = $this->CheckCountVal($model->renter_id,$model->encount,$model->year,$model->month);
            if($result===self::NOT_VAL){
                Yii::$app->session->setFlash('error', 'Отсутствует показание счетчика за предыдущий месяц!');
+               $msg = 'Отсутствует показание счетчика арендатора <strong>'. $model->renter->title .'</strong> за предыдущий месяц!';
+               BaseModel::AddEventLog('error',$msg);
            }
            elseif($result===self::MORE_VAL){
                Yii::$app->session->setFlash('error', 'Предыдущее показание счетчика больше, чем текущее!');
+               $msg = 'Предыдущее показание счетчика арендатора <strong>'. $model->renter->title .'</strong> больше, чем текущее!';
+               BaseModel::AddEventLog('error',$msg);
            }
            else{
                //удаляем, если имеется запись за текущий месяц, чтобы не было дублей
                EnergyLog::deleteAll(['renter_id'=>$model->renter_id,'year'=>$model->year,'month'=>$model->month]);
                $model->delta = $this->previous - $model->encount;
                $model->price = $model->delta * $model->renter->koeff;
+               $msg = 'Данные счетчика арендатора <strong>'. $model->renter->title .'</strong> успешно добавлены.';
+               BaseModel::AddEventLog('info',$msg);
                $model->save();
            }
            $model->encount = '';

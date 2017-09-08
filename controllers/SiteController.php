@@ -8,7 +8,7 @@ use yii\web\Controller;
 use yii\web\Response;
 use yii\web\ForbiddenHttpException;
 use yii\filters\VerbFilter;
-use app\models\EntryForm;
+use app\models\BaseModel;
 
 class SiteController extends Controller
 {
@@ -58,9 +58,9 @@ class SiteController extends Controller
         return $this->render('say', ['message' => $message]);
     }
     
-    public function actionEntry()
+    /*public function actionEntry()
     {
-        $model = new EntryForm();
+        $model = new BaseModel();
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
             // данные в $model удачно проверены
 
@@ -71,7 +71,7 @@ class SiteController extends Controller
             // либо страница отображается первый раз, либо есть ошибка в данных
             return $this->render('entry', ['model' => $model]);
         }
-    }
+    }*/
 
     /**
      * Displays about page.

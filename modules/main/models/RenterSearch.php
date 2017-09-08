@@ -10,7 +10,7 @@ use app\modules\main\models\Renter;
 /**
  * RenterSearch represents the model behind the search form about `app\modules\main\models\Renter`.
  */
-class RenterSearch extends \app\modules\main\models\Renter
+class RenterSearch extends Renter
 {
     public function attributes()
     {

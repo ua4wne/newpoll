@@ -2,6 +2,7 @@
 
 namespace app\modules\admin\models;
 
+use app\models\BaseModel;
 use Yii;
 
 /**
@@ -13,7 +14,7 @@ use Yii;
  * @property string $created_at
  * @property string $updated_at
  */
-class Describer extends \yii\db\ActiveRecord
+class Describer extends BaseModel
 {
     /**
      * @inheritdoc
@@ -21,29 +22,6 @@ class Describer extends \yii\db\ActiveRecord
     public static function tableName()
     {
         return 'describer';
-    }
-
-    public function beforeSave($insert)
-    {
-        if (parent::beforeSave($insert)) {
-            if ($insert) {
-                $this->created_at = date('Y-m-d H:i:s');
-                $this->updated_at = date('Y-m-d H:i:s');
-            }
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    public function afterSave($insert, $changedAttributes)
-    {
-        parent::afterSave($insert, $changedAttributes);
-        if ($insert) {
-            Yii::$app->session->setFlash('success', 'Запись добавлена!');
-        } else {
-            Yii::$app->session->setFlash('success', 'Запись обновлена!');
-        }
     }
 
     /**

@@ -2,6 +2,7 @@
 
 namespace app\modules\main\models;
 
+use app\models\BaseModel;
 use Yii;
 use app\modules\admin\models\Ecounter;
 
@@ -20,7 +21,7 @@ use app\modules\admin\models\Ecounter;
  *
  * @property Ecounter $ecounter
  */
-class MainLog extends \yii\db\ActiveRecord
+class MainLog extends BaseModel
 {
     /**
      * @inheritdoc
@@ -28,29 +29,6 @@ class MainLog extends \yii\db\ActiveRecord
     public static function tableName()
     {
         return 'main_log';
-    }
-
-    public function beforeSave($insert)
-    {
-        if (parent::beforeSave($insert)) {
-            if ($insert) {
-                $this->created_at = date('Y-m-d H:i:s');
-                $this->updated_at = date('Y-m-d H:i:s');
-            }
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    public function afterSave($insert, $changedAttributes)
-    {
-        parent::afterSave($insert, $changedAttributes);
-        if ($insert) {
-            Yii::$app->session->setFlash('success', 'Запись добавлена!');
-        } else {
-            Yii::$app->session->setFlash('success', 'Запись обновлена!');
-        }
     }
 
     /**

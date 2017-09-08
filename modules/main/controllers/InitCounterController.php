@@ -5,6 +5,7 @@ use Yii;
 use yii\web\Controller;
 use app\modules\main\models\EnergyLog;
 use app\modules\main\models\Renter;
+use app\models\BaseModel;
 
 class InitCounterController extends Controller
 {
@@ -26,7 +27,12 @@ class InitCounterController extends Controller
             //удаляем, если имеется запись за текущий месяц, чтобы не было дублей
             EnergyLog::deleteAll(['renter_id'=>$model->renter_id,'year'=>$model->year,'month'=>$model->month]);
             $model->price = $model->delta * $model->renter->koeff;
+            if($model->isNewRecord)
+                $msg = 'Добавлены начальные данные счетчика арендатора <strong>'. $model->renter->title .'</strong>.';
+            else
+                $msg = 'Начальные данные счетчика арендатора <strong>'. $model->renter->title .'</strong> были обновлены.';
             $model->save();
+            BaseModel::AddEventLog('info',$msg);
             $model->encount = '';
             $model->delta = 0;
         }

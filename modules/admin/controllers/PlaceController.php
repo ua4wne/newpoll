@@ -9,6 +9,7 @@ use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use app\models\BaseModel;
 
 /**
  * PlaceController implements the CRUD actions for Place model.
@@ -79,6 +80,8 @@ class PlaceController extends Controller
         $model = new Place();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            $msg = 'Добавлена новая территория <strong>'. $model->name .'</strong>.';
+            BaseModel::AddEventLog('info',$msg);
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
             $ecounters = Ecounter::find()->select(['id','name'])->where(['!=','name','Главный'])->asArray()->all();
@@ -105,6 +108,8 @@ class PlaceController extends Controller
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            $msg = 'Обновлены данные по территории <strong>'. $model->name .'</strong>.';
+            BaseModel::AddEventLog('info',$msg);
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
             $ecounters = Ecounter::find()->select(['id','name'])->where(['!=','name','Главный'])->asArray()->all();
@@ -128,7 +133,11 @@ class PlaceController extends Controller
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
+        //$this->findModel($id)->delete();
+        $row = Place::findOne($id);
+        $row->delete();
+        $msg = 'Территория <strong>'. $row->name .'</strong> была удалена из системы.';
+        BaseModel::AddEventLog('info',$msg);
 
         return $this->redirect(['index']);
     }

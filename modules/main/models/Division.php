@@ -2,6 +2,7 @@
 
 namespace app\modules\main\models;
 
+use app\models\BaseModel;
 use app\modules\main\models\Renter;
 use Yii;
 
@@ -15,7 +16,7 @@ use Yii;
  *
  * @property Renter[] $renterenergy
  */
-class Division extends \yii\db\ActiveRecord
+class Division extends BaseModel
 {
     /**
      * @inheritdoc
@@ -23,29 +24,6 @@ class Division extends \yii\db\ActiveRecord
     public static function tableName()
     {
         return 'division';
-    }
-
-    public function beforeSave($insert)
-    {
-        if (parent::beforeSave($insert)) {
-            if ($insert) {
-                $this->created_at = date('Y-m-d H:i:s');
-                $this->updated_at = date('Y-m-d H:i:s');
-            }
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    public function afterSave($insert, $changedAttributes)
-    {
-        parent::afterSave($insert, $changedAttributes);
-        if ($insert) {
-            Yii::$app->session->setFlash('success', 'Запись добавлена!');
-        } else {
-            Yii::$app->session->setFlash('success', 'Запись обновлена!');
-        }
     }
 
     /**

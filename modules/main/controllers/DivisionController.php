@@ -4,6 +4,7 @@ namespace app\modules\main\controllers;
 
 use Yii;
 use app\modules\main\models\Division;
+use app\models\BaseModel;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -75,6 +76,8 @@ class DivisionController extends Controller
         $model = new Division();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            $msg = 'Добавлено новое юрлицо <strong>'. $model->name .'</strong>.';
+            BaseModel::AddEventLog('info',$msg);
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
             return $this->render('create', [
@@ -94,6 +97,8 @@ class DivisionController extends Controller
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            $msg = 'Данные юрлица <strong>'. $model->name .'</strong> были обновлены.';
+            BaseModel::AddEventLog('info',$msg);
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
             return $this->render('update', [
@@ -110,8 +115,11 @@ class DivisionController extends Controller
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
-
+        $row = Division::findOne($id);
+     //   $this->findModel($id)->delete();
+        $row->delete();
+        $msg = 'Данные юрлица <strong>'. $row->name .'</strong> были удалены.';
+        BaseModel::AddEventLog('info',$msg);
         return $this->redirect(['index']);
     }
 

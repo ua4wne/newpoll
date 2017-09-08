@@ -8,6 +8,7 @@ use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use app\models\BaseModel;
 
 /**
  * EcounterController implements the CRUD actions for Ecounter model.
@@ -76,6 +77,8 @@ class EcounterController extends Controller
         $model = new Ecounter();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            $msg = 'Добавлен новый общий счетчик <strong>'. $model->name .'</strong>.';
+            BaseModel::AddEventLog('info',$msg);
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
             return $this->render('create', [
@@ -95,6 +98,8 @@ class EcounterController extends Controller
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            $msg = 'Данные общего счетчика <strong>'. $model->name .'</strong> были обновлены.';
+            BaseModel::AddEventLog('info',$msg);
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
             return $this->render('update', [
@@ -111,7 +116,11 @@ class EcounterController extends Controller
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
+        //$this->findModel($id)->delete();
+        $row = Ecounter::findOne($id);
+        $row->delete();
+        $msg = 'Общий счетчик <strong>'. $row->name .'</strong> был удален из системы.';
+        BaseModel::AddEventLog('info',$msg);
 
         return $this->redirect(['index']);
     }

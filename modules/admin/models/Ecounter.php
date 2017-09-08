@@ -2,6 +2,7 @@
 
 namespace app\modules\admin\models;
 
+use app\models\BaseModel;
 use app\modules\admin\models\Place;
 use Yii;
 
@@ -18,7 +19,7 @@ use Yii;
  *
  * @property Place[] $places
  */
-class Ecounter extends \yii\db\ActiveRecord
+class Ecounter extends BaseModel
 {
     /**
      * @inheritdoc
@@ -26,29 +27,6 @@ class Ecounter extends \yii\db\ActiveRecord
     public static function tableName()
     {
         return 'ecounter';
-    }
-
-    public function beforeSave($insert)
-    {
-        if (parent::beforeSave($insert)) {
-            if ($insert) {
-                $this->created_at = date('Y-m-d H:i:s');
-                $this->updated_at = date('Y-m-d H:i:s');
-            }
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    public function afterSave($insert, $changedAttributes)
-    {
-        parent::afterSave($insert, $changedAttributes);
-        if ($insert) {
-            Yii::$app->session->setFlash('success', 'Запись добавлена!');
-        } else {
-            Yii::$app->session->setFlash('success', 'Запись обновлена!');
-        }
     }
 
     /**

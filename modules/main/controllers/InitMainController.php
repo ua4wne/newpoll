@@ -6,6 +6,7 @@ use Yii;
 use yii\web\Controller;
 use app\modules\admin\models\Ecounter;
 use app\modules\main\models\MainLog;
+use app\models\BaseModel;
 
 class InitMainController extends Controller
 {
@@ -29,7 +30,12 @@ class InitMainController extends Controller
             $model->encount = $model->encount * $model->ecounter->koeff;
             $model->delta = $model->delta * $model->ecounter->koeff;
             $model->price = $model->delta * $model->ecounter->tarif;
+            if($model->isNewRecord)
+                $msg = 'Добавлены начальные данные счетчика <strong>'. $model->ecounter->name .'</strong> ';
+            else
+                $msg = 'Начальные данные счетчика <strong>'. $model->ecounter->name .'</strong> были обновлены.';
             $model->save();
+            BaseModel::AddEventLog('info',$msg);
             $model->encount = '';
             $model->delta = 0;
         }

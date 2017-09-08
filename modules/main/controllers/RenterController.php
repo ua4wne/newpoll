@@ -10,6 +10,7 @@ use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use app\modules\main\models\Division;
 use app\modules\admin\models\Place;
+use app\models\BaseModel;
 
 /**
  * RenterController implements the CRUD actions for Renter model.
@@ -68,6 +69,8 @@ class RenterController extends Controller
         $model = new Renter();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            $msg = 'Добавлен новый арендатор <strong>'. $model->title .'</strong>.';
+            BaseModel::AddEventLog('info',$msg);
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
             $divisions = Division::find()->select(['id','name'])->asArray()->all();
@@ -101,6 +104,8 @@ class RenterController extends Controller
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            $msg = 'Данные арендатора <strong>'. $model->title .'</strong> были обновлены.';
+            BaseModel::AddEventLog('info',$msg);
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
             $divisions = Division::find()->select(['id','name'])->asArray()->all();
@@ -131,7 +136,11 @@ class RenterController extends Controller
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
+        //$this->findModel($id)->delete();
+        $row = Renter::findOne($id);
+        $row->delete();
+        $msg = 'Данные арендатора <strong>'. $row->title .'</strong> были удалены.';
+        BaseModel::AddEventLog('info',$msg);
 
         return $this->redirect(['index']);
     }
