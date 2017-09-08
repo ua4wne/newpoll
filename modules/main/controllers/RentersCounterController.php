@@ -4,12 +4,10 @@ namespace app\modules\main\controllers;
 
 use Codeception\Exception\TestRuntimeException;
 use Yii;
-use yii\web\Controller;
-use app\modules\main\models\EnergyLog;
-use app\modules\main\models\Renter;
 use app\models\BaseModel;
+use app\modules\main\models\EnergyLog;
 
-class RentersCounterController extends Controller
+class RentersCounterController extends BaseRcounterController
 {
     const NOT_VAL = 0; //нет значений
     const MORE_VAL = 1; //предыдущее значение больше текущего
@@ -32,6 +30,7 @@ class RentersCounterController extends Controller
             $select[$renter['id']] = $renter['title'].' ('.$renter['area'].')'; //массив для заполнения данных в select формы
         }
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+            //$model->encount = $model->encount * $model->ecounter->koeff;
            $result = $this->CheckCountVal($model->renter_id,$model->encount,$model->year,$model->month);
            if($result===self::NOT_VAL){
                Yii::$app->session->setFlash('error', 'Отсутствует показание счетчика за предыдущий месяц!');
@@ -39,14 +38,14 @@ class RentersCounterController extends Controller
                BaseModel::AddEventLog('error',$msg);
            }
            elseif($result===self::MORE_VAL){
-               Yii::$app->session->setFlash('error', 'Предыдущее показание счетчика больше, чем текущее!');
+               Yii::$app->session->setFlash('error', 'Предыдущее показание счетчика больше, чем текущее! ' . $this->previous. '>' .$model->encount);
                $msg = 'Предыдущее показание счетчика арендатора <strong>'. $model->renter->title .'</strong> больше, чем текущее!';
                BaseModel::AddEventLog('error',$msg);
            }
            else{
                //удаляем, если имеется запись за текущий месяц, чтобы не было дублей
                EnergyLog::deleteAll(['renter_id'=>$model->renter_id,'year'=>$model->year,'month'=>$model->month]);
-               $model->delta = $this->previous - $model->encount;
+               $model->delta = $model->encount - $this->previous;
                $model->price = $model->delta * $model->renter->koeff;
                $msg = 'Данные счетчика арендатора <strong>'. $model->renter->title .'</strong> успешно добавлены.';
                BaseModel::AddEventLog('info',$msg);
@@ -99,26 +98,16 @@ class RentersCounterController extends Controller
         $y = $period[0];
         $m = $period[1];
         //выбираем данные за предыдущий период
-        $this->previous = EnergyLog::find()->where(['renter_id'=>$id,'year'=>$y,'month'=>$m])->count();
-        if($this->previous) {
-            $prev = EnergyLog::find()->select('encount')->where(['renter_id'=>$id,'year'=>$y,'month'=>$m])->limit(1)->all();
-            if($prev > $val)
+        $numrow = EnergyLog::find()->where(['renter_id'=>$id,'year'=>$y,'month'=>$m])->count();
+        if($numrow) {
+            $row = EnergyLog::find()->select('encount')->where(['renter_id'=>$id,'year'=>$y,'month'=>$m])->limit(1)->all();
+            $this->previous = $row[0][encount];
+            if($this->previous > $val)
                 return self::MORE_VAL;
             else
                 return self::LESS_VAL;
         }
-            else return self::NOT_VAL;
-    }
-
-    //выборка всех действующих арендаторов
-    public function GetActiveRenters(){
-        return Renter::find()->select(['id','title','area'])->where(['status'=>1])->orderBy('title', SORT_ASC)->asArray()->all();
-    }
-
-    //выборка всех месяцев
-    public function GetMonths(){
-        return array('01'=>'Январь','02'=>'Февраль','03'=>'Март','04'=>'Апрель','05'=>'Май','06'=>'Июнь','07'=>'Июль',
-            '08'=>'Август','09'=>'Сентябрь','10'=>'Октябрь','11'=>'Ноябрь','12'=>'Декабрь',);
+        else return self::NOT_VAL;
     }
 
 }

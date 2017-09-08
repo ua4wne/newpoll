@@ -1,14 +1,11 @@
 <?php
 
 namespace app\modules\main\controllers;
-
 use Yii;
-use yii\web\Controller;
-use app\modules\admin\models\Ecounter;
 use app\modules\main\models\MainLog;
 use app\models\BaseModel;
 
-class InitMainController extends Controller
+class InitMainController extends BaseEcounterController
 {
     public function actionIndex()
     {
@@ -31,9 +28,9 @@ class InitMainController extends Controller
             $model->delta = $model->delta * $model->ecounter->koeff;
             $model->price = $model->delta * $model->ecounter->tarif;
             if($model->isNewRecord)
-                $msg = 'Добавлены начальные данные счетчика <strong>'. $model->ecounter->name .'</strong> ';
+                $msg = 'Добавлены начальные данные счетчика <strong>'. $model->ecounter->name .'</strong> за '. $this->SetMonth($model->month) . ' месяц ' . $model->year . ' года.';
             else
-                $msg = 'Начальные данные счетчика <strong>'. $model->ecounter->name .'</strong> были обновлены.';
+                $msg = 'Начальные данные счетчика <strong>'. $model->ecounter->name .'</strong> за '. $this->SetMonth($model->month) . ' месяц ' . $model->year . ' года были обновлены.';
             $model->save();
             BaseModel::AddEventLog('info',$msg);
             $model->encount = '';
@@ -48,17 +45,6 @@ class InitMainController extends Controller
             ]
         );
 
-    }
-
-    //выборка всех действующих арендаторов
-    public function GetCounters(){
-        return Ecounter::find()->select(['id','name','text'])->orderBy('name', SORT_ASC)->asArray()->all();
-    }
-
-    //выборка всех месяцев
-    public function GetMonths(){
-        return array('01'=>'Январь','02'=>'Февраль','03'=>'Март','04'=>'Апрель','05'=>'Май','06'=>'Июнь','07'=>'Июль',
-            '08'=>'Август','09'=>'Сентябрь','10'=>'Октябрь','11'=>'Ноябрь','12'=>'Декабрь',);
     }
 
 }
