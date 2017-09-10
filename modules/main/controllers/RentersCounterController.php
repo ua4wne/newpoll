@@ -38,7 +38,7 @@ class RentersCounterController extends BaseRcounterController
                BaseModel::AddEventLog('error',$msg);
            }
            elseif($result===self::MORE_VAL){
-               Yii::$app->session->setFlash('error', 'Предыдущее показание счетчика больше, чем текущее! ' . $this->previous. '>' .$model->encount);
+               Yii::$app->session->setFlash('error', 'Предыдущее показание счетчика больше, чем текущее! ');
                $msg = 'Предыдущее показание счетчика арендатора <strong>'. $model->renter->title .'</strong> больше, чем текущее!';
                BaseModel::AddEventLog('error',$msg);
            }
