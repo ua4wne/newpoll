@@ -1,11 +1,12 @@
 <?php
 
-namespace app\modules\main\controllers;
+namespace app\modules\main\controllers\energy;
 use Yii;
 use yii\web\Controller;
 use app\modules\main\models\EnergyLog;
 use app\modules\main\models\Renter;
 use app\models\BaseModel;
+use app\controllers\HelpController;
 
 class InitCounterController extends Controller
 {
@@ -14,7 +15,7 @@ class InitCounterController extends Controller
         $model = new EnergyLog();
         $renters = $this->GetActiveRenters();
         $select = array();
-        $month = $this->GetMonths();
+        $month = HelpController::GetMonths();
 
         $smonth = date("m");
         $year = date('Y');
@@ -48,12 +49,6 @@ class InitCounterController extends Controller
     //выборка всех действующих арендаторов
     public function GetActiveRenters(){
         return Renter::find()->select(['id','title','area'])->where(['status'=>1])->orderBy('title', SORT_ASC)->asArray()->all();
-    }
-
-    //выборка всех месяцев
-    public function GetMonths(){
-        return array('01'=>'Январь','02'=>'Февраль','03'=>'Март','04'=>'Апрель','05'=>'Май','06'=>'Июнь','07'=>'Июль',
-            '08'=>'Август','09'=>'Сентябрь','10'=>'Октябрь','11'=>'Ноябрь','12'=>'Декабрь',);
     }
 
 }

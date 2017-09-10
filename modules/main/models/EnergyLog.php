@@ -51,11 +51,12 @@ class EnergyLog extends BaseModel
         return [
             'id' => 'ID',
             'renter_id' => 'Арендатор',
+            'renter.name' => 'Арендатор',
             'year' => 'Год',
             'month' => 'Месяц',
-            'encount' => 'Текущие показания, кВт',
-            'delta' => 'Потребление',
-            'price' => 'Цена',
+            'encount' => 'Текущие показания, кВт.',
+            'delta' => 'Потребление, кВт.',
+            'price' => 'Цена, руб.',
             'created_at' => 'Дата создания',
             'updated_at' => 'Дата обновления',
         ];

@@ -1,6 +1,7 @@
 <?php
 
-namespace app\modules\main\controllers;
+namespace app\modules\main\controllers\energy;
+use app\modules\main\controllers\energy\BaseEcounterController;
 use Yii;
 use app\modules\main\models\MainLog;
 use app\models\BaseModel;

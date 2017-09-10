@@ -1,6 +1,6 @@
 <?php
 
-namespace app\modules\main\controllers;
+namespace app\modules\main\controllers\energy;
 
 use yii\web\Controller;
 use app\modules\main\models\Renter;

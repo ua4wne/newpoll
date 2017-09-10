@@ -1,7 +1,9 @@
 <?php
 
-namespace app\modules\main\controllers;
+namespace app\modules\main\controllers\energy;
 
+use app\modules\main\controllers\energy\BaseRcounterController;
+use app\modules\main\controllers\NotFoundHttpException;
 use Codeception\Exception\TestRuntimeException;
 use Yii;
 use app\models\BaseModel;
