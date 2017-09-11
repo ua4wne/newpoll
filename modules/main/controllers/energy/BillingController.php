@@ -1,11 +1,13 @@
 <?php
 
 namespace app\modules\main\controllers\energy;
+use app\models\Report;
 use Yii;
 use yii\data\ActiveDataProvider;
 use app\modules\main\models\EnergyLog;
 use \yii\web\Controller;
 use app\controllers\HelpController;
+
 
 class BillingController extends Controller
 {
@@ -40,6 +42,12 @@ class BillingController extends Controller
             'delta' => $delta,
             'price' => $price,
         ]);
+    }
+
+    //отправка почты получателям
+    public function actionSendMail()
+    {
+        Report::EnergyReport(true); //создание excel-файла отчета по потреблению арендаторами с сохранением на сервере
     }
 
 }
