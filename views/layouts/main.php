@@ -291,8 +291,8 @@ AppAsset::register($this);
                                    </li>
                                    <li id="menu-academico" ><a href="#"><i class="fa fa-table"></i>  <span>Посещение</span> <span class="fa fa-angle-right" style="float: right"></span><div class="clearfix"></div></a>
                                        <ul id="menu-academico-sub" >
-                                           <li id="menu-academico-boletim" ><a href="/registrations/renters">Присутствие на выставке</a></li>
-                                           <li id="menu-academico-avaliacoes" ><a href="/registrations/clients">Посещение выставки</a></li>
+                                           <li id="menu-academico-boletim" ><a href="/main/control/works">Присутствие на выставке</a></li>
+                                           <li id="menu-academico-avaliacoes" ><a href="/main/control/visits">Посещение выставки</a></li>
                                        </ul>
                                    </li>
                                    <li id="menu-academico" ><a href="#"><i class="fa fa-lightbulb-o" aria-hidden="true"></i><span> Энергоучет</span> <span class="fa fa-angle-right" style="float: right"></span><div class="clearfix"></div></a>

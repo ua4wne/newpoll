@@ -6,7 +6,7 @@ use app\modules\main\models\EnergyLog;
 use Yii;
 use yii\base\Model;
 use app\controllers\HelpController;
-use yii\db\Query;
+//use yii\db\Query;
 use PHPExcel;
 use PHPExcel_Style_Alignment;
 use PHPExcel_Style_Border;
@@ -153,14 +153,6 @@ class Report extends Model {
         if($save){
             $objWriter = new PHPExcel_Writer_Excel2007($objPHPExcel);
             $objWriter->save("./download/billing.xlsx");
-
-            if(file_exists('./download/billing.xlsx')){
-                header('Content-Type: application/application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-                $filename = "billing.xlsx";
-                header('Content-Disposition: attachment;filename='.$filename .' ');
-                header('Cache-Control: max-age=0');
-                $objWriter->save('php://output');
-            }
         }
         else{
             header('Content-Type: application/vnd.ms-excel');
@@ -170,7 +162,20 @@ class Report extends Model {
             $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
             $objWriter->save('php://output');
         }
+    }
 
+    public static function sendToMail($subj,$msg,$to,$file){
+        $mail = Yii::$app->mailer->compose()
+            ->setFrom(Yii::$app->params['supportEmail'])
+            ->setTo($to)
+            ->setSubject($subj)
+            //->setTextBody('Plain text content')
+            ->setHtmlBody($msg)
+            ->attach($file);
+        if($mail->send())
+            return 1;
+        else
+            return 0;
     }
 
 }

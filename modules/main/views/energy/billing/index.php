@@ -19,8 +19,8 @@ $this->params['breadcrumbs'][] = $this->title;
     <p class="text-info">ИТОГО: <?= $delta ?> кВт. На сумму в размере <?= $price ?> рублей</p>
 
     <p>
-        <?= Html::a('<span class="fa fa-facebook"></span> Отправить', ['send-mail'], ['class' => 'btn btn-success']) ?>
-        <?= Html::a('<span class="fa fa-facebook"></span> Скачать', ['report'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a('<span class="fa  fa-envelope-o"></span> Отправить', ['send-mail'], ['class' => 'btn btn-primary']) ?>
+        <?= Html::a('<span class="fa  fa-file-excel-o"></span> Скачать', ['report'], ['class' => 'btn btn-primary']) ?>
     </p>
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
