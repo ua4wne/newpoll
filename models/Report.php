@@ -2,6 +2,7 @@
 
 namespace app\models;
 
+use app\modules\main\models\EnergyLog;
 use Yii;
 use yii\base\Model;
 use app\controllers\HelpController;
@@ -11,11 +12,12 @@ use PHPExcel_Style_Alignment;
 use PHPExcel_Style_Border;
 use PHPExcel_Writer_Excel2007;
 use PHPExcel_IOFactory;
+use PHPExcel_Style_NumberFormat;
 
 class Report extends Model {
 
     public static function EnergyReport($save=FALSE){
-        $query = new Query();
+    //    $query = new Query();
         $styleArray = array(
             'font' => array(
                 'bold' => true,
@@ -23,6 +25,23 @@ class Report extends Model {
             'alignment' => array(
                 'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER,
             ),
+            'borders' => array(
+                'top' => array(
+                    'style' => PHPExcel_Style_Border::BORDER_THICK,
+                ),
+                'bottom' => array(
+                    'style' => PHPExcel_Style_Border::BORDER_THICK,
+                ),
+                'left' => array(
+                    'style' => PHPExcel_Style_Border::BORDER_THICK,
+                ),
+                'right' => array(
+                    'style' => PHPExcel_Style_Border::BORDER_THICK,
+                ),
+            )
+        );
+
+        $styleCell = array(
             'borders' => array(
                 'top' => array(
                     'style' => PHPExcel_Style_Border::BORDER_THIN,
@@ -68,11 +87,12 @@ class Report extends Model {
             ->setCellValue('B2', $y)
             ->setCellValue('A3', 'Месяц')
             ->setCellValue('B3', $m)
-            ->setCellValue('A4', 'Участок №')
-            ->setCellValue('B4', 'Территория')
-            ->setCellValue('C4', 'За кем закреплен')
-            ->setCellValue('D4', 'Арендатор')
-            ->setCellValue('E4', 'К оплате, руб');
+            ->setCellValue('A5', '№ п\п')
+            ->setCellValue('B5', 'Территория')
+            ->setCellValue('C5', 'За кем закреплен')
+            ->setCellValue('D5', 'Арендатор')
+            ->setCellValue('E5', 'К оплате, руб');
+
         $objPHPExcel->getActiveSheet()->mergeCells('A1:E1');
         $objPHPExcel->getActiveSheet()->getStyle('A1:E1')->getFont()->setBold(true);
         $objPHPExcel->getActiveSheet()->getStyle('A1:E1')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
@@ -84,13 +104,51 @@ class Report extends Model {
                 join renter as r on r.id = l.renter_id
                 join division as d on d.id = r.division_id
                 join place as p on p.id = r.place_id
-                where l.year=$y and l.month=$m GROUP BY rname ORDER BY pname, owner, rname";
+                where l.year=$y and l.month=$period[1] GROUP BY rname ORDER BY pname, owner, rname";
+        // подключение к базе данных
+        $connection = \Yii::$app->db;
+        // Составляем SQL запрос
+        $model = $connection->createCommand($query);
+        //Осуществляем запрос к базе данных, переменная $model содержит ассоциативный массив с данными
+        $rows = $model->queryAll();
+    //    return print_r($rows);
+
+        $k = 6;
+        $num = 1;
+        $pay = 0;
+        foreach($rows as $row){
+            $objPHPExcel->setActiveSheetIndex(0)
+                ->setCellValue('A'.$k, $num)
+                ->setCellValue('B'.$k, $row['pname'])
+                ->setCellValue('C'.$k, $row['owner'])
+                ->setCellValue('D'.$k, $row['rname'])
+                ->setCellValue('E'.$k, $row['price']);
+            $objPHPExcel->getActiveSheet()->getStyle('A'.$k)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+            $objPHPExcel->getActiveSheet()->getStyle('E'.$k)->getNumberFormat()->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_NUMBER_00);
+            $objPHPExcel->getActiveSheet()->getStyle('A'.$k)->applyFromArray($styleCell);
+            $objPHPExcel->getActiveSheet()->getStyle('B'.$k)->applyFromArray($styleCell);
+            $objPHPExcel->getActiveSheet()->getStyle('C'.$k)->applyFromArray($styleCell);
+            $objPHPExcel->getActiveSheet()->getStyle('D'.$k)->applyFromArray($styleCell);
+            $objPHPExcel->getActiveSheet()->getStyle('E'.$k)->applyFromArray($styleCell);
+            $k++;
+            $num++;
+            $pay+=$row['price'];
+        }
+
+        $objPHPExcel->setActiveSheetIndex(0)
+            ->setCellValue('D'.$k, 'ИТОГО:')
+            ->setCellValue('E'.$k, $pay);
+        $objPHPExcel->getActiveSheet()->getStyle('D'.$k.':E'.$k)->getFont()->setBold(true);
+        $objPHPExcel->getActiveSheet()->getStyle('D'.$k.':E'.$k)->applyFromArray($styleCell);
+        $objPHPExcel->getActiveSheet()->getStyle('E'.$k)->getNumberFormat()->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_NUMBER_00);
 
         $objPHPExcel->getActiveSheet()->getColumnDimension('A')->setAutoSize(true);
         $objPHPExcel->getActiveSheet()->getColumnDimension('B')->setAutoSize(true);
         $objPHPExcel->getActiveSheet()->getColumnDimension('C')->setAutoSize(true);
         $objPHPExcel->getActiveSheet()->getColumnDimension('D')->setAutoSize(true);
         $objPHPExcel->getActiveSheet()->getColumnDimension('E')->setAutoSize(true);
+
+        $objPHPExcel->getActiveSheet()->getStyle('A5:E5')->applyFromArray($styleArray);
 
         if($save){
             $objWriter = new PHPExcel_Writer_Excel2007($objPHPExcel);

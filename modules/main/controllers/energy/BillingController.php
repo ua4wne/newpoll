@@ -50,4 +50,9 @@ class BillingController extends Controller
         Report::EnergyReport(true); //создание excel-файла отчета по потреблению арендаторами с сохранением на сервере
     }
 
+    public function actionReport()
+    {
+        Report::EnergyReport(false); //выгрузка excel-файла отчета по потреблению арендаторами без сохранения на сервере
+    }
+
 }
