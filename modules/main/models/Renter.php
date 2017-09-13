@@ -107,4 +107,9 @@ class Renter extends BaseModel
     {
         return $this->hasMany(EnergyLog::className(), ['renter_id' => 'id']);
     }
+
+    public function getRentLog()
+    {
+        return $this->hasMany(RentLog::className(), ['renter_id' => 'id']);
+    }
 }

@@ -37,7 +37,7 @@ class VisitsController extends Controller
     {
         $start = date('Y-m').'-01';
         $now = date('Y-m-d');
-        $query = Visit::find()->where(['between', 'data', $start, $now])->orderBy('data');
+        $query = Visit::find()->where(['between', 'data', $start, $now]);
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
             'pagination' => [

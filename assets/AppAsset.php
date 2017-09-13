@@ -33,6 +33,7 @@ class AppAsset extends AssetBundle
     //    'js/bootstrap.min.js',
         'js/raphael-min.js',
         'js/morris.js',
+        'js/control.js',
     ];
     public $jsOptions = [
         //'position' => \yii\web\View::POS_HEAD, //влияет на работу фильтрации в таблицах представлений - виджет GridView!!!
