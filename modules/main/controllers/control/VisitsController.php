@@ -35,8 +35,14 @@ class VisitsController extends Controller
      */
     public function actionIndex()
     {
+        $start = date('Y-m').'-01';
+        $now = date('Y-m-d');
+        $query = Visit::find()->where(['between', 'data', $start, $now])->orderBy('data');
         $dataProvider = new ActiveDataProvider([
-            'query' => Visit::find(),
+            'query' => $query,
+            'pagination' => [
+                'pageSize' => Yii::$app->params['page_size'],
+            ],
         ]);
 
         return $this->render('index', [
@@ -44,19 +50,7 @@ class VisitsController extends Controller
         ]);
     }
 
-    /**
-     * Displays a single Visit model.
-     * @param integer $id
-     * @return mixed
-     */
-    public function actionView($id)
-    {
-        return $this->render('view', [
-            'model' => $this->findModel($id),
-        ]);
-    }
-
-    /**
+     /**
      * Creates a new Visit model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
@@ -65,60 +59,28 @@ class VisitsController extends Controller
     {
         $model = new Visit();
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+            $hours = $model->hours;
+            $created_at = date('Y-m-d H:i:s');
+            $updated_at = date('Y-m-d H:i:s');
+            // подключение к базе данных
+            $connection = \Yii::$app->db;
+
+            foreach($hours as $hour){
+                $query="insert into visit(data,hours,ucount,created_at,updated_at) values('$model->data','$hour',$model->ucount,'$created_at','$updated_at')";
+                $connection->createCommand($query)->execute();
+            }
+            $insert_id = \Yii::$app->db->getLastInsertID();
+            if(isset($insert_id))
+                Yii::$app->session->setFlash('success', 'Записи успешно добавлены!');
+            else
+                Yii::$app->session->setFlash('error', 'При добавлении записей возникли ошибки!');
+            return $this->redirect(['index']);
+            //return $this->redirect(['view', 'id' => $model->id]);
         } else {
             return $this->render('create', [
                 'model' => $model,
             ]);
-        }
-    }
-
-    /**
-     * Updates an existing Visit model.
-     * If update is successful, the browser will be redirected to the 'view' page.
-     * @param integer $id
-     * @return mixed
-     */
-    public function actionUpdate($id)
-    {
-        $model = $this->findModel($id);
-
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
-        } else {
-            return $this->render('update', [
-                'model' => $model,
-            ]);
-        }
-    }
-
-    /**
-     * Deletes an existing Visit model.
-     * If deletion is successful, the browser will be redirected to the 'index' page.
-     * @param integer $id
-     * @return mixed
-     */
-    public function actionDelete($id)
-    {
-        $this->findModel($id)->delete();
-
-        return $this->redirect(['index']);
-    }
-
-    /**
-     * Finds the Visit model based on its primary key value.
-     * If the model is not found, a 404 HTTP exception will be thrown.
-     * @param integer $id
-     * @return Visit the loaded model
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    protected function findModel($id)
-    {
-        if (($model = Visit::findOne($id)) !== null) {
-            return $model;
-        } else {
-            throw new NotFoundHttpException('The requested page does not exist.');
         }
     }
 }

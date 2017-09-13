@@ -34,7 +34,7 @@ class Visit extends BaseModel
             [['data', 'hours', 'ucount'], 'required'],
             [['data', 'created_at', 'updated_at'], 'safe'],
             [['ucount'], 'integer'],
-            [['hours'], 'string', 'max' => 2],
+            //[['hours'], 'string', 'max' => 2],
         ];
     }
 
