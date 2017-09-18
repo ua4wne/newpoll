@@ -16,17 +16,18 @@ use kartik\datetime\DateTimePicker;
     <?//= $form->field($model, 'data')->textInput() ?>
 
     <?= $form->field($model, 'data')->widget(DateTimePicker::className(),[
-    'name' => 'data',
-    'type' => DateTimePicker::TYPE_COMPONENT_PREPEND,
-    'options' => ['placeholder' => 'Ввод даты/времени...'],
-    'convertFormat' => true,
-    'value' => date("Y-m-d"),
-    'pluginOptions' => [
-    'format' => 'yyyy-MM-dd',
-    'autoclose'=>true,
-    'weekStart'=>1, //неделя начинается с понедельника
-    'startDate' => '2015-01-01', //самая ранняя возможная дата
-    'todayBtn'=>true, //снизу кнопка "сегодня"
+        'name' => 'data',
+        'type' => DateTimePicker::TYPE_COMPONENT_PREPEND,
+        'options' => ['placeholder' => 'Ввод даты/времени...'],
+        'value'=> date("yyyy-MM-dd",$model->data),
+        'convertFormat' => true,
+        'value' => date("Y-m-d"),
+        'pluginOptions' => [
+        'format' => 'yyyy-MM-dd',
+        'autoclose'=>true,
+        'weekStart'=>1, //неделя начинается с понедельника
+        'startDate' => '2015-01-01', //самая ранняя возможная дата
+        'todayBtn'=>true, //снизу кнопка "сегодня"
     ]
     ]) ?>
 

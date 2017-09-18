@@ -17,6 +17,7 @@ use kartik\datetime\DateTimePicker;
         'name' => 'data',
         'type' => DateTimePicker::TYPE_COMPONENT_PREPEND,
         'options' => ['placeholder' => 'Ввод даты/времени...'],
+        'value'=> date("yyyy-MM-dd",$model->data),
         'convertFormat' => true,
         'pluginOptions' => [
             'format' => 'yyyy-MM-dd',

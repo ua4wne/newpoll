@@ -284,9 +284,9 @@ AppAsset::register($this);
                                    <li id="menu-academico" ><a href="#"><i class="fa fa-bar-chart"></i>  <span>Отчеты</span> <span class="fa fa-angle-right" style="float: right"></span><div class="clearfix"></div></a>
                                        <ul id="menu-academico-sub" >
                                            <li id="menu-academico-boletim" ><a href="/reports/ankets">Анкетирование</a></li>
-                                           <li id="menu-academico-avaliacoes" ><a href="/reports/clients">Посещаемость выставки</a></li>
-                                           <li id="menu-academico-avaliacoes" ><a href="/reports/renters">Присутствие на выставке</a></li>
-                                           <li id="menu-academico-avaliacoes" ><a href="/reports/energy">Потребление эл. энергии</a></li>
+                                           <li id="menu-academico-avaliacoes" ><a href="/main/control/visit-report">Посещаемость выставки</a></li>
+                                           <li id="menu-academico-avaliacoes" ><a href="/main/control/work-report">Присутствие на выставке</a></li>
+                                           <li id="menu-academico-avaliacoes" ><a href="/main/energy/report">Потребление эл. энергии</a></li>
                                        </ul>
                                    </li>
                                    <li id="menu-academico" ><a href="#"><i class="fa fa-table"></i>  <span>Посещение</span> <span class="fa fa-angle-right" style="float: right"></span><div class="clearfix"></div></a>

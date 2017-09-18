@@ -54,4 +54,23 @@ $(document).ready(function(){
         if($("#rentlog-alltime").prop("checked"))
             $("#rentlog-alltime").prop("checked", false);
     });
+
+    $('#workreport-allrent').click(function() {
+        if($("#workreport-allrent").prop("checked")) {
+            $('#workreport-renter_id option').each(function(){
+                $(this).prop("selected", true);
+            });
+        }
+        else {
+            $("#workreport-renter_id").prop("disabled", false);
+            $('#workreport-renter_id option').each(function(){
+                $(this).prop("selected", false);
+            });
+        }
+    });
+
+    $('#workreport-renter_id').click(function() {
+        if($("#workreport-allrent").prop("checked"))
+            $("#workreport-allrent").prop("checked", false);
+    });
 });

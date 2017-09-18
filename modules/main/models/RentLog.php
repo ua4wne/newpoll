@@ -36,19 +36,6 @@ class RentLog extends BaseModel
     public $alltime = false;
     public $allrent = false;
     public $notime = false;
-    /*public $data;
-    public $renter_id;
-    public $period1;
-    public $period2;
-    public $period3;
-    public $period4;
-    public $period5;
-    public $period6;
-    public $period7;
-    public $period8;
-    public $period9;
-    public $period10;
-    public $period11;*/
 
     /**
      * @inheritdoc
@@ -66,7 +53,7 @@ class RentLog extends BaseModel
         return [
             [['renter_id', 'data'], 'required'],
             [['period1', 'period2', 'period3', 'period4', 'period5', 'period6', 'period7', 'period8', 'period9', 'period10', 'period11'], 'integer'],
-            [['data', 'created_at', 'updated_at'], 'safe'],
+            [['data', 'period', 'created_at', 'updated_at'], 'safe'],
             [['alltime','allrent','notime'], 'boolean'],
             //[['renter_id'], 'exist', 'skipOnError' => true, 'targetClass' => Renter::className(), 'targetAttribute' => ['renter_id' => 'id']],
         ];
@@ -105,14 +92,109 @@ class RentLog extends BaseModel
     /**
      * @return \yii\db\ActiveQuery
      */
-    /*public function getRenter()
+    public function getRenter()
     {
         return $this->hasOne(Renter::className(), ['id' => 'renter_id']);
-    }*/
+    }
 
     //выборка всех действующих арендаторов выставки
     public function GetActiveRenters(){
         $place = (new Query())->select('id')->from('place')->where(['like', 'name', 'МС']); //выбираем площадки МС
         return Renter::find()->select(['id','title','area'])->where(['place_id'=>$place,'status'=>1])->orderBy('title', SORT_ASC)->asArray()->all();
+    }
+
+    //сохраняем данные по присутствию арендаторов на выставке в базу
+    public function SaveData(){
+        $fields = '';
+        $val = '';
+        /*if($this->allrent) //если стоит галка все арендаторы
+        {
+            $all=$this->GetActiveRenters();
+            $i=0;
+            foreach($all as $val){
+                $renters[$i]=$val->id;
+                $i++;
+            }
+        }
+        else*/
+            $renters=$this->renter_id;
+
+        if($this->alltime){
+            $fields=',period1,period2,period3,period4,period5,period6,period7,period8,period9,period10,period11';
+            $val=',1,1,1,1,1,1,1,1,1,1,1';
+        }
+        elseif($this->notime){
+            $fields=',period1,period2,period3,period4,period5,period6,period7,period8,period9,period10,period11';
+            $val=',0,0,0,0,0,0,0,0,0,0,0';
+        }
+        else {
+            $periods = $this->period;
+            foreach ($periods as $period){
+                switch($period) //определяем период
+                {
+                    case '10':
+                        $fields.=',period1'; //период
+                        $val.=',1'; //значение периода
+                        break;
+                    case '11':
+                        $fields.=',period2'; //период
+                        $val.=',1'; //значение периода
+                        break;
+                    case '12':
+                        $fields.=',period3'; //период
+                        $val.=',1'; //значение периода
+                        break;
+                    case '13':
+                        $fields.=',period4'; //период
+                        $val.=',1'; //значение периода
+                        break;
+                    case '14':
+                        $fields.=',period5'; //период
+                        $val.=',1'; //значение периода
+                        break;
+                    case '15':
+                        $fields.=',period6'; //период
+                        $val.=',1'; //значение периода
+                        break;
+                    case '16':
+                        $fields.=',period7'; //период
+                        $val.=',1'; //значение периода
+                        break;
+                    case '17':
+                        $fields.=',period8'; //период
+                        $val.=',1'; //значение периода
+                        break;
+                    case '18':
+                        $fields.=',period9'; //период
+                        $val.=',1'; //значение периода
+                        break;
+                    case '19':
+                        $fields.=',period10'; //период
+                        $val.=',1'; //значение периода
+                        break;
+                    case '20':
+                        $fields.=',period11'; //период
+                        $val.=',1'; //значение периода
+                        break;
+                }
+            }
+        }
+        $created_at = date('Y-m-d H:i:s');
+        $updated_at = date('Y-m-d H:i:s');
+        // подключение к базе данных
+        $connection = \Yii::$app->db;
+        foreach($renters as $renter){
+            //удаляем данные, если они есть
+            $query="delete from rent_log where renter_id=$renter and data='$this->data'";
+            $connection->createCommand($query)->execute();
+            //добавляем новые данные
+            $query="insert into rent_log(renter_id,data $fields,created_at,updated_at) values('$renter','$this->data' $val,'$created_at','$updated_at')";
+            $connection->createCommand($query)->execute();
+        }
+        $insert_id = \Yii::$app->db->getLastInsertID();
+        if(isset($insert_id))
+            return true;
+        else
+            return false;
     }
 }
