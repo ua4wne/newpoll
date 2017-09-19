@@ -13,14 +13,26 @@ class WorkReportController extends Controller
     public function actionIndex()
     {
         $model = new WorkReport();
-        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
-            $content = $this->GetReport($model->start,$model-finish, $model->renter_id);
+        if (Yii::$app->request->post('report')){
+            if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+                $content = $this->GetReport($model->start,$model->finish,$model->renter_id);
+                return $this->render('report',[
+                    'content' => $content,
+                    'start' => $model->start,
+                    'finish' => $model->finish,
+                    'firm' => $this->firm,
+                ]);
+            }
+        }
+        elseif (Yii::$app->request->post('export')) {
+            /*$content = $this->GetReport($model->start,$model->finish,$model->renter_id);
             return $this->render('report',[
                 'content' => $content,
                 'start' => $model->start,
                 'finish' => $model->finish,
                 'firm' => $this->firm,
-            ]);
+            ]);*/
+            return 'Export to Excel';
         }
         else{
             $model->start = date('Y-m').'-01';
@@ -38,13 +50,26 @@ class WorkReportController extends Controller
 
     }
 
+
     private function GetReport($start,$finish,$renters){
         if(count($renters)==1){
-            $model_renter = Renter::find()->select(['title','area'])->where(['id'=>$renters]);
-            $this->firm = "<p>Компания <b>".$model_renter->title."</b> участок <b>".$model_renter->area."</b></p>";
+            foreach($renters as $renter){
+                $model_renter = Renter::findOne($renter);
+            }
+            $this->firm = "<p>Компания <b>".$model_renter->title."</b> участок №<b>".$model_renter->area."</b></p>";
+            return WorkReport::OneRenterReport($renter,$start,$finish);
         }
         if(count($renters)>1){
+            return WorkReport::RentersReport($renters,$start,$finish);
+        }
+    }
 
+    private function ExportToExcel($start,$finish,$renters){
+        if(count($renters)==1){
+            return Report::OneRenterExport($renters,$start,$finish);
+        }
+        if(count($renters)>1){
+            return Report::RentersExport($renters,$start,$finish);
         }
     }
 

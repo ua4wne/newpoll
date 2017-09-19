@@ -17,12 +17,9 @@ $this->params['breadcrumbs'][] = $this->title;
     </div>
 
     <p>
-        <?//= Html::a('Новая запись', ['create'], ['class' => 'btn btn-success']) ?>
+        <?= $firm ?>
     </p>
-    <table class="table table-hover">
-        <tr><th>Дата\Период</th><th>10-11</th><th>11-12</th><th>12-13</th><th>13-14</th><th>14-15</th><th>15-16</th><th>16-17</th><th>17-18</th><th>18-19</th>
-            <th>19-20</th><th>20-21</th>
-        </tr>
+    <div class="agileinfo-grap table-bordered">
         <?= $content ?>
-    </table>
+    </div>
 </div>
