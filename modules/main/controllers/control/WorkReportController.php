@@ -14,6 +14,7 @@ class WorkReportController extends Controller
     {
         $model = new WorkReport();
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+            //return print_r($model);
             $content = $this->GetReport($model->start,$model-finish, $model->renter_id);
             return $this->render('report',[
                 'content' => $content,
@@ -40,8 +41,10 @@ class WorkReportController extends Controller
 
     private function GetReport($start,$finish,$renters){
         if(count($renters)==1){
-            $model_renter = Renter::find()->select(['title','area'])->where(['id'=>$renters]);
-            $this->firm = "<p>Компания <b>".$model_renter->title."</b> участок <b>".$model_renter->area."</b></p>";
+            foreach($renters as $renter){
+                $model_renter = Renter::findOne($renter);
+            }
+            $this->firm = "<p>Компания <b>".$model_renter->title."</b> участок № <b>".$model_renter->area."</b></p>";
         }
         if(count($renters)>1){
 
