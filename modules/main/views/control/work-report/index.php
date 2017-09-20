@@ -56,7 +56,6 @@ $this->params['breadcrumbs'][] = $this->title;
     <div class="form-group">
         <?= Html::submitButton('<span class="fa  fa-bar-chart-o"></span> Сформировать', ['name' => 'report','value' => 'report','class' => 'btn btn-primary']) ?>
         <?= Html::submitButton('<span class="fa  fa-file-excel-o"></span> Скачать', ['name' => 'export','value' => 'export','class' => 'btn btn-primary']) ?>
-        <?//= Html::a('<span class="fa  fa-file-excel-o"></span> Скачать', ['export'], ['class' => 'btn btn-primary']) ?>
     </div>
 
     <?php ActiveForm::end(); ?>

@@ -2,6 +2,7 @@
 
 namespace app\modules\main\controllers\control;
 
+use app\models\Report;
 use app\modules\main\models\Renter;
 use Yii;
 use yii\web\Controller;
@@ -25,14 +26,9 @@ class WorkReportController extends Controller
             }
         }
         elseif (Yii::$app->request->post('export')) {
-            /*$content = $this->GetReport($model->start,$model->finish,$model->renter_id);
-            return $this->render('report',[
-                'content' => $content,
-                'start' => $model->start,
-                'finish' => $model->finish,
-                'firm' => $this->firm,
-            ]);*/
-            return 'Export to Excel';
+            if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+                Report::RenterReport($model->renter_id,$model->start,$model->finish);
+            }
         }
         else{
             $model->start = date('Y-m').'-01';
