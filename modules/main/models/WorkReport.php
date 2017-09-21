@@ -92,7 +92,8 @@ class WorkReport extends Model
             $query.=" WHERE renter_id=". $renter ." AND rent_log.`data` BETWEEN '".$s."' AND '".$f."'";
             $query.=" GROUP BY renter.title, renter.area ORDER BY renter.area+0";
             $result = $connection->createCommand($query)->queryAll();
-            //return print_r($result);
+            if(count($result)==0)
+                continue;
             $content.='<tr><td>'.$result[0]['area'].'</td><td>'.$result[0]['title'].'</td>';
             $content.='<td>'.$result[0]['alltime'].'</td><td>'.$result[0]['alldata'].'</td>';
             if($result[0]['alldata'] > 0)

@@ -17,6 +17,8 @@ use app\models\BaseModel;
  */
 class Visit extends BaseModel
 {
+    public $start;
+    public $finish;
     /**
      * @inheritdoc
      */
@@ -32,7 +34,7 @@ class Visit extends BaseModel
     {
         return [
             [['data', 'hours', 'ucount'], 'required'],
-            [['data', 'created_at', 'updated_at'], 'safe'],
+            [['data', 'created_at', 'updated_at','start','finish'], 'safe'],
             [['ucount'], 'integer'],
             //[['hours'], 'string', 'max' => 2],
         ];
@@ -50,6 +52,8 @@ class Visit extends BaseModel
             'ucount' => 'Кол-во посетителей',
             'created_at' => 'Дата создания',
             'updated_at' => 'Дата обновления',
+            'start' => 'Начало периода',
+            'finish' => 'Конец периода',
         ];
     }
 }

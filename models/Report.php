@@ -13,6 +13,10 @@ use PHPExcel_Style_Border;
 use PHPExcel_Writer_Excel2007;
 use PHPExcel_IOFactory;
 use PHPExcel_Style_NumberFormat;
+use PHPExcel_Style_Color;
+use PHPExcel_RichText;
+use app\modules\main\models\Renter;
+use app\modules\main\models\RentLog;
 
 class Report extends Model {
 
@@ -176,6 +180,165 @@ class Report extends Model {
             return 1;
         else
             return 0;
+    }
+
+    public static function RenterReport($renters,$start,$finish){
+        $styleArray = array(
+            'font' => array(
+                'bold' => true,
+            ),
+            'alignment' => array(
+                'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER,
+            ),
+            'borders' => array(
+                'top' => array(
+                    'style' => PHPExcel_Style_Border::BORDER_THIN,
+                ),
+                'bottom' => array(
+                    'style' => PHPExcel_Style_Border::BORDER_THIN,
+                ),
+                'left' => array(
+                    'style' => PHPExcel_Style_Border::BORDER_THIN,
+                ),
+                'right' => array(
+                    'style' => PHPExcel_Style_Border::BORDER_THIN,
+                ),
+            )
+        );
+        // Create new PHPExcel object
+        $objPHPExcel = new PHPExcel();
+        //готовим файл excel
+        $objPHPExcel->setActiveSheetIndex(0);
+        $objPHPExcel->getActiveSheet()->setTitle('Время работы домов');
+        $k=1;
+        if(count($renters)==1){ //выбран один арендатор
+            foreach($renters as $renter){
+                $model_renter = Renter::findOne($renter);
+            }
+
+            $objPHPExcel->setActiveSheetIndex(0)
+                ->setCellValue('A'.$k, 'Учет времени присутствия на выставке за период с '.$start.' по '.$finish.'');
+            $objPHPExcel->getActiveSheet()->mergeCells('A'.$k.':L'.$k);
+            $objPHPExcel->getActiveSheet()->getStyle('A'.$k.':L'.$k)->getFont()->setBold(true);
+            $objPHPExcel->getActiveSheet()->getStyle('A'.$k.':L'.$k)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+            $k++;
+            $objPHPExcel->setActiveSheetIndex(0)
+                ->setCellValue('A'.$k, 'Компания "'.$model_renter->title.'"  участок '.$model_renter->area);
+            $objPHPExcel->getActiveSheet()->mergeCells('A'.$k.':L'.$k);
+            //$objPHPExcel->getActiveSheet()->getStyle('A'.$k.':L'.$k)->getFont()->setBold(true);
+            $objPHPExcel->getActiveSheet()->getStyle('A'.$k.':L'.$k)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+            $k++;
+            $objPHPExcel->setActiveSheetIndex(0)
+                ->setCellValue('A'.$k, 'Дата\Период');
+            $objPHPExcel->setActiveSheetIndex(0)
+                ->setCellValue('B'.$k, '10-11');
+            $objPHPExcel->setActiveSheetIndex(0)
+                ->setCellValue('C'.$k, '11-12');
+            $objPHPExcel->setActiveSheetIndex(0)
+                ->setCellValue('D'.$k, '12-13');
+            $objPHPExcel->setActiveSheetIndex(0)
+                ->setCellValue('E'.$k, '13-14');
+            $objPHPExcel->setActiveSheetIndex(0)
+                ->setCellValue('F'.$k, '14-15');
+            $objPHPExcel->setActiveSheetIndex(0)
+                ->setCellValue('G'.$k, '15-16');
+            $objPHPExcel->setActiveSheetIndex(0)
+                ->setCellValue('H'.$k, '16-17');
+            $objPHPExcel->setActiveSheetIndex(0)
+                ->setCellValue('I'.$k, '17-18');
+            $objPHPExcel->setActiveSheetIndex(0)
+                ->setCellValue('J'.$k, '18-19');
+            $objPHPExcel->setActiveSheetIndex(0)
+                ->setCellValue('K'.$k, '19-20');
+            $objPHPExcel->setActiveSheetIndex(0)
+                ->setCellValue('L'.$k, '20-21');
+            $objPHPExcel->getActiveSheet()->getStyle('A'.$k.':L'.$k)->applyFromArray($styleArray);
+            $k++;
+            //цикл по датам и периодам
+            $logs = RentLog::find()->select(['data', 'period1', 'period2', 'period3', 'period4', 'period5', 'period6', 'period7', 'period8', 'period9', 'period10', 'period11'])
+                ->where(['=', 'renter_id', $renter])->andWhere(['between', 'data', $start, $finish])->orderBy(['data' => SORT_ASC])->all();
+            foreach($logs as $log){
+                $objPHPExcel->setActiveSheetIndex(0)->setCellValue('A'.$k, $log->data);
+                for($j=1; $j<12; $j++)
+                {
+                    $period = 'period'.$j;
+                    if($log->$period==1)
+                        $objPHPExcel->setActiveSheetIndex(0)->setCellValueByColumnAndRow($j, $k, 'Да');
+                    else
+                    {
+                        $objRichText = new PHPExcel_RichText();
+                        $objRichText->createText('');
+                        $objNo = $objRichText->createTextRun('Нет');
+                        $objNo->getFont()->setColor( new PHPExcel_Style_Color( PHPExcel_Style_Color::COLOR_RED ) );
+                        $objPHPExcel->setActiveSheetIndex(0)->setCellValueByColumnAndRow($j, $k, $objRichText);
+                    }
+                }//for
+                $k++;
+            }
+        }
+        if(count($renters) > 1){ //выбрано более одного арендатора
+            $objPHPExcel->setActiveSheetIndex(0)
+                ->setCellValue('A'.$k, 'Учет времени присутствия на выставке за период с '.$start.' по '.$finish.'');
+            $objPHPExcel->getActiveSheet()->mergeCells('A'.$k.':E'.$k);
+            $objPHPExcel->getActiveSheet()->getStyle('A'.$k.':E'.$k)->getFont()->setBold(true);
+            $objPHPExcel->getActiveSheet()->getStyle('A'.$k.':E'.$k)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+            $k++;
+            $objPHPExcel->setActiveSheetIndex(0)
+                ->setCellValue('A'.$k, '№ участка');
+            $objPHPExcel->setActiveSheetIndex(0)
+                ->setCellValue('B'.$k, 'Название компании');
+            $objPHPExcel->setActiveSheetIndex(0)
+                ->setCellValue('C'.$k, 'Кол-во часов');
+            $objPHPExcel->setActiveSheetIndex(0)
+                ->setCellValue('D'.$k, 'Кол-во дней');
+            $objPHPExcel->setActiveSheetIndex(0)
+                ->setCellValue('E'.$k, 'В среднем часов в день');
+            $objPHPExcel->getActiveSheet()->getStyle('A'.$k.':E'.$k)->applyFromArray($styleArray);
+            $k++;
+            // подключение к базе данных
+            $connection = \Yii::$app->db;
+            foreach($renters as $renter) {
+                //группировка по датам и периодам
+                $query = "SELECT renter.title, renter.area, Sum(period1)+Sum(period2)+Sum(period3)+Sum(period4)+Sum(period5)+Sum(period6)+Sum(period7)+Sum(period8)+Sum(period9)+Sum(period10)+Sum(period11) AS alltime,";
+                $query .= "count(rent_log.data) AS alldata FROM rent_log INNER JOIN renter ON renter.id = rent_log.renter_id";
+                $query .= " WHERE renter_id=" . $renter . " AND rent_log.`data` BETWEEN '" . $start . "' AND '" . $finish . "'";
+                $query .= " GROUP BY renter.title, renter.area ORDER BY renter.area+0";
+                $result = $connection->createCommand($query)->queryAll();
+                if(count($result)==0)
+                    continue;
+                $objPHPExcel->setActiveSheetIndex(0)->setCellValue('A'.$k, $result[0]['area']);
+                $objPHPExcel->setActiveSheetIndex(0)->setCellValue('B'.$k, $result[0]['title']);
+                $objPHPExcel->setActiveSheetIndex(0)->setCellValue('C'.$k, $result[0]['alltime']);
+                $objPHPExcel->setActiveSheetIndex(0)->setCellValue('D'.$k, $result[0]['alldata']);
+                if($result[0]['alldata'] > 0)
+                    $avg=round($result[0]['alltime']/$result[0]['alldata'],2);
+                else
+                    $avg = 0;
+                $objPHPExcel->getActiveSheet()->getStyle('E'.$k)->getNumberFormat()
+                    ->setFormatCode('[Black][>=9]#,##0.00;[Red][<9]#,##0.00');
+                $objPHPExcel->getActiveSheet()->getCell('E'.$k)->setValue($avg);
+                $objPHPExcel->getActiveSheet()->getStyle('E'.$k)->getNumberFormat();
+                $k++;
+            }
+        }
+        $objPHPExcel->getActiveSheet()->getColumnDimension('A')->setAutoSize(true);
+        $objPHPExcel->getActiveSheet()->getColumnDimension('B')->setAutoSize(true);
+        $objPHPExcel->getActiveSheet()->getColumnDimension('C')->setAutoSize(true);
+        $objPHPExcel->getActiveSheet()->getColumnDimension('D')->setAutoSize(true);
+        $objPHPExcel->getActiveSheet()->getColumnDimension('E')->setAutoSize(true);
+        $objPHPExcel->getActiveSheet()->getColumnDimension('F')->setAutoSize(true);
+        $objPHPExcel->getActiveSheet()->getColumnDimension('G')->setAutoSize(true);
+        $objPHPExcel->getActiveSheet()->getColumnDimension('H')->setAutoSize(true);
+        $objPHPExcel->getActiveSheet()->getColumnDimension('I')->setAutoSize(true);
+        $objPHPExcel->getActiveSheet()->getColumnDimension('J')->setAutoSize(true);
+        $objPHPExcel->getActiveSheet()->getColumnDimension('K')->setAutoSize(true);
+        $objPHPExcel->getActiveSheet()->getColumnDimension('L')->setAutoSize(true);
+        header('Content-Type: application/vnd.ms-excel');
+        $filename = "presence.xls";
+        header('Content-Disposition: attachment;filename='.$filename .' ');
+        header('Cache-Control: max-age=0');
+        $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
+        $objWriter->save('php://output');
     }
 
 }
