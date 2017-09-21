@@ -12,7 +12,7 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
     <div class="visit-index">
         <h1>Задайте условия отбора</h1>
-        <?php $form = ActiveForm::begin(); ?>
+        <?php $form = ActiveForm::begin(['id' => 'search-form']); ?>
 
         <?= $form->field($model, 'start')->widget(DateTimePicker::className(),[
             'name' => 'start',
@@ -45,11 +45,42 @@ $this->params['breadcrumbs'][] = $this->title;
         ]) ?>
 
         <div class="form-group">
-            <?= Html::submitButton('<span class="fa  fa-bar-chart-o"></span> Сформировать', ['name' => 'report','value' => 'report','class' => 'btn btn-primary']) ?>
+            <?= Html::submitButton('<span class="fa  fa-bar-chart-o"></span> Сформировать', ['id' => 'visit-report','name' => 'report','value' => 'report','class' => 'btn btn-primary']) ?>
             <?= Html::submitButton('<span class="fa  fa-file-excel-o"></span> Скачать', ['name' => 'export','value' => 'export','class' => 'btn btn-primary']) ?>
         </div>
 
         <?php ActiveForm::end(); ?>
 
     </div>
-    <div id="chart_visit">График будет здесь</div>
+    <div id="chart_visit"></div>
+
+<?php
+$js = <<<JS
+ $('#visit-report').click(function(e){
+     e.preventDefault();
+     //var data = $("form").serialize();
+     var start = $('#searchform-start').val();
+     var finish = $('#searchform-finish').val();
+     $.ajax({
+     url: '/main/control/visit-report',
+     type: 'POST',
+     data: {'start':start,'finish':finish},
+     success: function(res){
+     //alert("Сервер вернул вот что: " + res);
+     Morris.Bar({
+          element: 'chart_visit',
+          data: JSON.parse(res),
+          xkey: 'y',
+          ykeys: ['a'],
+          labels: ['Кол-во']
+      });
+     },
+     error: function(){
+     alert('Error!');
+     }
+     });
+ });
+JS;
+
+$this->registerJs($js);
+?>
