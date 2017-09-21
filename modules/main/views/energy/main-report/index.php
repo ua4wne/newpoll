@@ -24,7 +24,12 @@ $this->params['breadcrumbs'][] = $this->title;
     <?php ActiveForm::end(); ?>
 
 </div>
-<div id="chart_visit"></div>
+<div class="agileinfo-grap">
+    <div class="pull-left" style="width: 70%;" id="chart-main"></div>
+    <div class="pull-right" style="width: 30%;" id="pie-chart"></div>
+    <div id="table-data"></div>
+</div>
+
 
 <?php
 $js = <<<JS
@@ -37,14 +42,43 @@ $js = <<<JS
      type: 'POST',
      data: {'year':year},
      success: function(res){
-     alert("Сервер вернул вот что: " + res);
-     Morris.Bar({
-          element: 'chart_visit',
-          data: JSON.parse(res),
-          xkey: 'm',
-          ykeys: ['d'],
-          labels: ['Кол-во']
-      });
+     //alert("Сервер вернул вот что: " + res);
+     $("#chart-main").empty();
+     $("#pie-chart").empty();
+         Morris.Line({
+              element: 'chart-main',
+              data: JSON.parse(res),
+              xkey: 'm',
+              ykeys: ['d','p'],
+              labels: ['Потребление,кВт.','Стоимость, руб.']
+          });
+         $.ajax({
+         url: '/main/energy/main-report/donut',
+         type: 'POST',
+         data: {'year':year},
+         success: function(res){
+         //alert("Сервер вернул вот что: " + res);            
+             Morris.Donut({
+              element: 'pie-chart',
+              data: JSON.parse(res)
+            });
+         },
+         error: function(){
+         alert('Error!');
+         }
+         });
+         $.ajax({
+         url: '/main/energy/main-report/table',
+         type: 'POST',
+         data: {'year':year},
+         success: function(res){
+         alert("Сервер вернул вот что: " + res);            
+             $("#table-data").html(res);
+         },
+         error: function(){
+         alert('Error!');
+         }
+         });
      },
      error: function(){
      alert('Error!');
