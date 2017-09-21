@@ -7,19 +7,16 @@ use app\modules\main\models\Visit;
 use app\modules\main\models\SearchForm;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
+use app\models\Report;
 
 class VisitReportController extends Controller
 {
     public function actionIndex()
     {
-        $start = date('Y-m').'-01';
-        $now = date('Y-m-d');
-        $month = date("m");
-        $year = date('Y');
-        $period = explode('-', date('Y-m', strtotime("$year-$month-01 -1 month"))); //определяем предыдущий период
-        $y = $period[0];
-        $m = $period[1];
-        $itog = '';
+        //$month = date("m");
+        //$period = explode('-', date('Y-m', strtotime("$year-$month-01 -1 month"))); //определяем предыдущий период
+        //$y = $period[0];
+        //$m = $period[1];
         //$query = Visit::find()->where(['between', 'data', $start, $now]);
 
         $model = new SearchForm();
@@ -27,8 +24,6 @@ class VisitReportController extends Controller
             $model->start = Yii::$app->request->post('start');
             $model->finish = Yii::$app->request->post('finish');
             $data = array();
-            //$tmp = array();
-        //    \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
             $query=Yii::$app->db->createCommand("select `data`, sum(ucount) as ucount from visit where `data` between '$model->start' and '$model->finish' group by `data`");
             $logs = $query->queryAll();
             //return print_r($logs);
@@ -40,23 +35,9 @@ class VisitReportController extends Controller
             }
             return json_encode($data);
         }
-        if (Yii::$app->request->post('report')){
+        if (Yii::$app->request->post('export')) {
             if ($model->load(Yii::$app->request->post()) && $model->validate()) {
-                $query="select `data`, sum(ucount) from visit where `data` between '$model->start' and '$model->finish' group by `data`";
-            }
-        }
-        elseif (Yii::$app->request->post('export')) {
-            if ($model->load(Yii::$app->request->post()) && $model->validate()) {
-                //Report::RenterReport($model->renter_id,$model->start,$model->finish);
-                $data = array();
-                \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
-                $query=Yii::$app->db->createCommand("select `data`, sum(ucount) as ucount from visit where `data` between '$model->start' and '$model->finish' group by `data`");
-                $logs = $query->queryAll();
-                //return print_r($logs);
-                foreach($logs as $log){
-                    $data[$log['data']] = $log['ucount'];
-                }
-                return $data;
+                Report::VisitReport($model->start,$model->finish);
             }
         }
         else{

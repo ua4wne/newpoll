@@ -263,7 +263,7 @@ AppAsset::register($this);
                            <div class="menu">
                                <ul id="menu" >
                                    <li><a href="/main/default/index"><i class="fa fa-tachometer"></i> <span>Главная</span><div class="clearfix"></div></a></li>
-                                   <li id="menu-academico" ><a href="#"><i class="fa fa-file-text-o"></i>  <span>Документы</span> <span class="fa fa-angle-right pull-right" </span><div class="clearfix"></div></a>
+                                   <li id="menu-academico" ><a href="#"><i class="fa fa-file-text-o"></i>  <span>Документы</span> <span class="fa fa-angle-right pull-right"></span><div class="clearfix"></div></a>
                                        <ul id="menu-academico-sub" >
                                            <li id="menu-academico-boletim" ><a href="/billing/index">Расчет потребления</a></li>
                                            <li id="menu-academico-avaliacoes" ><a href="/billing/renter">Расчет по арендатору</a></li>
@@ -286,7 +286,13 @@ AppAsset::register($this);
                                            <li id="menu-academico-boletim" ><a href="/reports/ankets">Анкетирование</a></li>
                                            <li id="menu-academico-avaliacoes" ><a href="/main/control/visit-report">Посещаемость выставки</a></li>
                                            <li id="menu-academico-avaliacoes" ><a href="/main/control/work-report">Присутствие на выставке</a></li>
-                                           <li id="menu-academico-avaliacoes" ><a href="/main/energy/report">Потребление эл. энергии</a></li>
+                                           <li id="menu-academico-avaliacoes" ><a href="#"><span>Потребление эл. энергии</span><span class="fa fa-angle-right" style="float: right"></span><div class="clearfix"></div></a>
+                                               <ul id="menu-academico-sub" >
+                                                   <li id="menu-academico-avaliacoes" style="float:left; width: 200px;"><a href="/main/energy/main-report">Счетчики общие</a></li>
+                                                   <li id="menu-academico-avaliacoes" style="float:left; width: 200px;"><a href="/main/energy/rent-counter">Счетчики арендаторов</a></li>
+                                                   <li id="menu-academico-avaliacoes" style="float:left; width: 200px;"><a href="/main/energy/own-counter">Собственное потребление</a></li>
+                                               </ul>
+                                           </li>
                                        </ul>
                                    </li>
                                    <li id="menu-academico" ><a href="#"><i class="fa fa-table"></i>  <span>Посещение</span> <span class="fa fa-angle-right" style="float: right"></span><div class="clearfix"></div></a>

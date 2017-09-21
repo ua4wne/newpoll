@@ -17,6 +17,7 @@ use PHPExcel_Style_Color;
 use PHPExcel_RichText;
 use app\modules\main\models\Renter;
 use app\modules\main\models\RentLog;
+use app\modules\main\models\Visit;
 
 class Report extends Model {
 
@@ -335,6 +336,130 @@ class Report extends Model {
         $objPHPExcel->getActiveSheet()->getColumnDimension('L')->setAutoSize(true);
         header('Content-Type: application/vnd.ms-excel');
         $filename = "presence.xls";
+        header('Content-Disposition: attachment;filename='.$filename .' ');
+        header('Cache-Control: max-age=0');
+        $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
+        $objWriter->save('php://output');
+    }
+
+    public static function VisitReport($start,$finish){
+
+        $styleArray = array(
+            'font' => array(
+                'bold' => true,
+            ),
+            'alignment' => array(
+                'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER,
+            ),
+            'borders' => array(
+                'top' => array(
+                    'style' => PHPExcel_Style_Border::BORDER_THIN,
+                ),
+                'bottom' => array(
+                    'style' => PHPExcel_Style_Border::BORDER_THIN,
+                ),
+                'left' => array(
+                    'style' => PHPExcel_Style_Border::BORDER_THIN,
+                ),
+                'right' => array(
+                    'style' => PHPExcel_Style_Border::BORDER_THIN,
+                ),
+            )
+        );
+        $objPHPExcel = new PHPExcel();
+        //готовим файл excel
+        $objPHPExcel->setActiveSheetIndex(0);
+        $objPHPExcel->getActiveSheet()->setTitle('Посетители выставки');
+        $k=1;
+        $objPHPExcel->setActiveSheetIndex(0)
+            ->setCellValue('A'.$k, 'Учет количества посетителей выставки за период с '.$start.' по '.$finish.'');
+        $objPHPExcel->getActiveSheet()->mergeCells('A'.$k.':L'.$k);
+        $objPHPExcel->getActiveSheet()->getStyle('A'.$k.':L'.$k)->getFont()->setBold(true);
+        $objPHPExcel->getActiveSheet()->getStyle('A'.$k.':L'.$k)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $k=5;
+        $objPHPExcel->getActiveSheet()->getStyle('A'.$k.':L'.$k)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+    //    $k++;
+        $objPHPExcel->setActiveSheetIndex(0)
+            ->setCellValue('A'.$k, 'Дата\Период');
+        $objPHPExcel->setActiveSheetIndex(0)
+            ->setCellValue('B'.$k, '10-11');
+        $objPHPExcel->setActiveSheetIndex(0)
+            ->setCellValue('C'.$k, '11-12');
+        $objPHPExcel->setActiveSheetIndex(0)
+            ->setCellValue('D'.$k, '12-13');
+        $objPHPExcel->setActiveSheetIndex(0)
+            ->setCellValue('E'.$k, '13-14');
+        $objPHPExcel->setActiveSheetIndex(0)
+            ->setCellValue('F'.$k, '14-15');
+        $objPHPExcel->setActiveSheetIndex(0)
+            ->setCellValue('G'.$k, '15-16');
+        $objPHPExcel->setActiveSheetIndex(0)
+            ->setCellValue('H'.$k, '16-17');
+        $objPHPExcel->setActiveSheetIndex(0)
+            ->setCellValue('I'.$k, '17-18');
+        $objPHPExcel->setActiveSheetIndex(0)
+            ->setCellValue('J'.$k, '18-19');
+        $objPHPExcel->setActiveSheetIndex(0)
+            ->setCellValue('K'.$k, '19-20');
+        $objPHPExcel->setActiveSheetIndex(0)
+            ->setCellValue('L'.$k, '20-21');
+        $objPHPExcel->getActiveSheet()->getStyle('A'.$k.':L'.$k)->applyFromArray($styleArray);
+        $k++;
+        $itog = 0; //общее кол-во посетителей
+        $dates = Visit::find()->select(['data'])->distinct()->orderBy(['data' => SORT_ASC])->all();
+        $cell = ['10'=>'B','11'=>'C','12'=>'D','13'=>'E','14'=>'F','15'=>'G','16'=>'H','17'=>'I','18'=>'J','19'=>'K','20'=>'L'];
+        foreach($dates as $date){
+            $logs=Visit::find()->select(['hours','ucount'])->where(['=','data',$date->data])->orderBy(['hours' => SORT_ASC])->all();
+            $objPHPExcel->setActiveSheetIndex(0)
+                ->setCellValue('A'.$k, $date->data);
+            //сначала заполняем все нулями
+            $objPHPExcel->setActiveSheetIndex(0)
+                ->setCellValue('B'.$k, 0);
+            $objPHPExcel->setActiveSheetIndex(0)
+                ->setCellValue('C'.$k, 0);
+            $objPHPExcel->setActiveSheetIndex(0)
+                ->setCellValue('D'.$k, 0);
+            $objPHPExcel->setActiveSheetIndex(0)
+                ->setCellValue('E'.$k, 0);
+            $objPHPExcel->setActiveSheetIndex(0)
+                ->setCellValue('F'.$k, 0);
+            $objPHPExcel->setActiveSheetIndex(0)
+                ->setCellValue('G'.$k, 0);
+            $objPHPExcel->setActiveSheetIndex(0)
+                ->setCellValue('H'.$k, 0);
+            $objPHPExcel->setActiveSheetIndex(0)
+                ->setCellValue('I'.$k, 0);
+            $objPHPExcel->setActiveSheetIndex(0)
+                ->setCellValue('J'.$k, 0);
+            $objPHPExcel->setActiveSheetIndex(0)
+                ->setCellValue('K'.$k, 0);
+            $objPHPExcel->setActiveSheetIndex(0)
+                ->setCellValue('L'.$k, 0);
+            foreach($logs as $log){
+                $itog = $itog+$log->ucount;
+                $objPHPExcel->setActiveSheetIndex(0)
+                    ->setCellValue($cell[$log->hours].$k, $log->ucount);
+            }
+            $k++;
+        }
+        $objPHPExcel->setActiveSheetIndex(0)
+            ->setCellValue('A3', 'Всего посетителей выставки - '.$itog);
+        $objPHPExcel->getActiveSheet()->mergeCells('A3:G3');
+        $objPHPExcel->getActiveSheet()->getStyle('A3:G3')->getFont()->setBold(true);
+        $objPHPExcel->getActiveSheet()->getColumnDimension('A')->setAutoSize(true);
+        $objPHPExcel->getActiveSheet()->getColumnDimension('B')->setAutoSize(true);
+        $objPHPExcel->getActiveSheet()->getColumnDimension('C')->setAutoSize(true);
+        $objPHPExcel->getActiveSheet()->getColumnDimension('D')->setAutoSize(true);
+        $objPHPExcel->getActiveSheet()->getColumnDimension('E')->setAutoSize(true);
+        $objPHPExcel->getActiveSheet()->getColumnDimension('F')->setAutoSize(true);
+        $objPHPExcel->getActiveSheet()->getColumnDimension('G')->setAutoSize(true);
+        $objPHPExcel->getActiveSheet()->getColumnDimension('H')->setAutoSize(true);
+        $objPHPExcel->getActiveSheet()->getColumnDimension('I')->setAutoSize(true);
+        $objPHPExcel->getActiveSheet()->getColumnDimension('J')->setAutoSize(true);
+        $objPHPExcel->getActiveSheet()->getColumnDimension('K')->setAutoSize(true);
+        $objPHPExcel->getActiveSheet()->getColumnDimension('L')->setAutoSize(true);
+        header('Content-Type: application/vnd.ms-excel');
+        $filename = "attendance.xls";
         header('Content-Disposition: attachment;filename='.$filename .' ');
         header('Cache-Control: max-age=0');
         $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
