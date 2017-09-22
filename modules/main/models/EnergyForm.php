@@ -2,9 +2,11 @@
 
 namespace app\modules\main\models;
 
+use app\modules\admin\models\Ecounter;
 use Yii;
 use yii\base\Model;
 use app\modules\main\models\MainLog;
+use yii\db\Query;
 
 /**
  * ContactForm is the model behind the contact form.
@@ -57,11 +59,27 @@ class EnergyForm extends Model
         //return print_r($data);
     }
 
+    public static function RentCountReport($year){
+        $counts = (new Query())->select('id')->from('ecounter')->where(['=', 'name', 'Главный']); //выбираем счетчики арендаторов
+        $data = array();
+        $query=Yii::$app->db->createCommand("select month, sum(delta) as delta, sum(price) as price from main_log where ecounter_id !=1 and year='$year' group by month order by month");
+        $logs = $query->queryAll();
+        //return print_r($logs);
+        foreach($logs as $log){
+            $tmp = array();
+            $tmp['m'] = $year.'-'.$log['month'];
+            $tmp['d'] = $log['delta'];
+            $tmp['p'] = $log['price'];
+            array_push($data,$tmp);
+        }
+        return json_encode($data);
+        //return print_r($data);
+    }
+
     public static function DonuteGraph($year){
         $data = array();
         $main=0;
         $encount=0;
-        $err=0;
         $query=Yii::$app->db->createCommand("select e.name,sum(l.delta) as delta from main_log l
                                             join ecounter e on e.id = l.ecounter_id
                                             where year='$year' group by ecounter_id");
@@ -86,24 +104,135 @@ class EnergyForm extends Model
         return json_encode($data);
     }
 
-    public static function GetTable($year){
+    public static function RentDonuteGraph($year){
         $data = array();
-        $content='<table class="table table-hover table-striped">
-            <tr><th>Счетчик</th><th>Январь</th><th>Февраль</th><th>Март</th><th>Апрель</th><th>Май</th><th>Июнь</th><th>Июль</th><th>Август</th><th>Сентябрь</th>
-                <th>Октябрь</th><th>Ноябрь</th><th>Декабрь</th>
-            </tr>';
-        $query=Yii::$app->db->createCommand("select e.name,sum(l.delta) as delta from main_log l
-                                            join ecounter e on e.id = l.ecounter_id
-                                            where year='$year' group by ecounter_id");
+     //   $encount=0;
+        $query=Yii::$app->db->createCommand("select p.name, round(sum(l.delta),2) as delta from energy_log l
+                                                join renter r on r.id = l.renter_id
+                                                join place p on p.id = r.place_id
+                                                where year='$year' group by p.name order by p.name");
         $logs = $query->queryAll();
         //return print_r($logs);
         foreach($logs as $log){
             $tmp = array();
-            $tmp['label'] = $log['name'];
-            $tmp['value'] = $log['delta'];
-            array_push($data,$tmp);
+            if($log['name']=='Главный'){
+                $main = $log['delta'];
+            }
+            else{
+                $tmp['label'] = $log['name'];
+                $tmp['value'] = $log['delta'];
+                array_push($data,$tmp);
+                //$encount = $encount + $log['delta'];
+            }
+        }
+        return json_encode($data);
+    }
+
+    public static function GetTable($year){
+        $data = array(1=>0,0,0,0,0,0,0,0,0,0,0,0); //показания общих счетчиков, нумерация с 1
+        $main = array(1=>0,0,0,0,0,0,0,0,0,0,0,0); //показания главного счетчика, нумерация с 1
+        $content='<table class="table table-hover table-striped">
+            <tr><th>Счетчик</th><th>Январь</th><th>Февраль</th><th>Март</th><th>Апрель</th><th>Май</th><th>Июнь</th><th>Июль</th><th>Август</th><th>Сентябрь</th>
+                <th>Октябрь</th><th>Ноябрь</th><th>Декабрь</th>
+            </tr>';
+        $models = Ecounter::find()->all();
+        foreach ($models as $model){
+            $content.='<tr><td>'.$model->name.'</td>';
+            $logs = MainLog::find()->select(['month','delta'])->where(['=','ecounter_id',$model->id])->andWhere(['=','year',$year])->orderBy('month', SORT_ASC)->all();
+            //return print_r($logs);
+            $k=1;
+            foreach($logs as $log){
+                if((int)$log->month == $k){
+                    $content .='<td>'.$log->delta.'</td>';
+                }
+                else
+                    $content .='<td>0</td>';
+                $k++;
+            }
+            while($k<13){
+                $content .='<td>0</td>';
+                $k++;
+            }
+            $content .='</tr>';
+            //считаем потери
+            $k=1;
+            if($model->name == 'Главный') {
+                foreach ($logs as $log) {
+                    if ((int)$log->month == $k)
+                        $main[$k] = $log->delta;
+                    $k++;
+                }
+            }
+            else{
+                foreach ($logs as $log) {
+                    if ((int)$log->month == $k)
+                        $data[$k] = $data[$k] + $log->delta;
+                    else
+                        $data[$k] = $data[$k] + 0;
+                    $k++;
+                }
+            }
         }
 
+        //выводим данные по потерям
+        $content .= '<tr><td>Потери</td>';
+        for($i=1; $i<13; $i++){
+            $val = $main[$i] - $data[$i];
+            if($val>0)
+                $content .= '<td class="danger">' . $val . '</td>';
+            else
+                $content .= '<td class="success">' . $val . '</td>';
+        }
+
+        $content.='</tr></table>';
+        return $content;
+    }
+
+    public static function GetRentTable($year){
+        $content='<table class="table table-hover table-striped">
+            <tr><th>Счетчик</th><th>Январь</th><th>Февраль</th><th>Март</th><th>Апрель</th><th>Май</th><th>Июнь</th><th>Июль</th><th>Август</th><th>Сентябрь</th>
+                <th>Октябрь</th><th>Ноябрь</th><th>Декабрь</th>
+            </tr>';
+        $query=Yii::$app->db->createCommand("select p.name, l.month, round(sum(l.delta),2) as delta from energy_log l
+                                                join renter r on r.id = l.renter_id
+                                                join place p on p.id = r.place_id
+                                                where year='$year' group by p.name, l.month order by p.name, l.month");
+        $logs = $query->queryAll();
+        //return print_r($logs);
+        $old = 'new';
+        $k=0;
+        foreach($logs as $log){
+            if($old != $log['name']){
+                if($k>1){
+                    while($k<13){
+                        $content .='<td>0</td>';
+                        $k++;
+                    }
+                    $content .='</tr>';
+                }
+                $k=1;
+                $content .= '<tr><td>'.$log['name'].'</td>';
+            }
+            if((int)$log['month'] == $k){
+                $content .='<td>'.$log['delta'].'</td>';
+            }
+            elseif((int)$log['month'] > $k){
+                while($k<(int)$log['month']){
+                    $content .='<td>0</td>';
+                    $k++;
+                }
+                $content .='<td>'. $log['delta']. '</td>';
+            }
+            else
+                $content .='<td>0</td>';
+            $k++;
+            $old = $log['name'];
+        }
+        while($k<13){
+            $content .='<td>0</td>';
+            $k++;
+        }
+        $content .='</tr>';
         $content.='</table>';
         return $content;
     }

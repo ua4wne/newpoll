@@ -67,7 +67,7 @@ $js = <<<JS
      data: {'start':start,'finish':finish},
      success: function(res){
      //alert("Сервер вернул вот что: " + res);
-     Morris.Bar({
+     Morris.Line({
           element: 'chart_visit',
           data: JSON.parse(res),
           xkey: 'y',

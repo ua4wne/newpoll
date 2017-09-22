@@ -7,7 +7,7 @@ use kartik\datetime\DateTimePicker;
 /* @var $this yii\web\View */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Потребление общих счетчиков';
+$this->title = 'Счетчики арендаторов';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="visit-index">
@@ -38,7 +38,7 @@ $js = <<<JS
      //var data = $("form").serialize();
      var year = $('#energyform-year').val();
      $.ajax({
-     url: '/main/energy/main-report',
+     url: '/main/energy/rent-counter',
      type: 'POST',
      data: {'year':year},
      success: function(res){
@@ -53,7 +53,7 @@ $js = <<<JS
               labels: ['Потребление,кВт.','Стоимость, руб.']
           });
          $.ajax({
-         url: '/main/energy/main-report/donut',
+         url: '/main/energy/rent-counter/donut',
          type: 'POST',
          data: {'year':year},
          success: function(res){
@@ -68,7 +68,7 @@ $js = <<<JS
          }
          });
          $.ajax({
-         url: '/main/energy/main-report/table',
+         url: '/main/energy/rent-counter/table',
          type: 'POST',
          data: {'year':year},
          success: function(res){
@@ -89,4 +89,3 @@ JS;
 
 $this->registerJs($js);
 ?>
-

@@ -101,9 +101,9 @@ class WorkReport extends Model
             else
                 $avg = 0;
             if($avg<9)
-                $content.='<td style="color:red">'.$avg.'</td></tr>';
+                $content.='<td class="danger">'.$avg.'</td></tr>';
             else
-                $content.='<td>'.$avg.'</td></tr>';
+                $content.='<td class="success">'.$avg.'</td></tr>';
         }
         $content.='</table>';
         return $content;
