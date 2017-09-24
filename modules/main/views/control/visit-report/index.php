@@ -52,7 +52,9 @@ $this->params['breadcrumbs'][] = $this->title;
         <?php ActiveForm::end(); ?>
 
     </div>
-    <div id="chart_visit"></div>
+    <div class="agileinfo-grap">
+        <div id="chart_visit"></div>
+    </div>
 
 <?php
 $js = <<<JS
@@ -67,6 +69,7 @@ $js = <<<JS
      data: {'start':start,'finish':finish},
      success: function(res){
      //alert("Сервер вернул вот что: " + res);
+      $("#chart_visit").empty();
      Morris.Line({
           element: 'chart_visit',
           data: JSON.parse(res),

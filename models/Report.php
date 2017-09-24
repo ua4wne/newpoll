@@ -406,7 +406,7 @@ class Report extends Model {
         $objPHPExcel->getActiveSheet()->getStyle('A'.$k.':L'.$k)->applyFromArray($styleArray);
         $k++;
         $itog = 0; //общее кол-во посетителей
-        $dates = Visit::find()->select(['data'])->distinct()->orderBy(['data' => SORT_ASC])->all();
+        $dates = Visit::find()->select(['data'])->distinct()->where(['between', 'data', $start, $finish])->orderBy(['data' => SORT_ASC])->all();
         $cell = ['10'=>'B','11'=>'C','12'=>'D','13'=>'E','14'=>'F','15'=>'G','16'=>'H','17'=>'I','18'=>'J','19'=>'K','20'=>'L'];
         foreach($dates as $date){
             $logs=Visit::find()->select(['hours','ucount'])->where(['=','data',$date->data])->orderBy(['hours' => SORT_ASC])->all();

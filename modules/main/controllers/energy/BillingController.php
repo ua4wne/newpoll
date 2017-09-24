@@ -35,7 +35,9 @@ class BillingController extends Controller
         ]);
 
         $delta = EnergyLog::find()->where(['year'=>$y,'month'=>$period[1]])->sum('delta');
+        $delta = round($delta,2);
         $price = EnergyLog::find()->where(['year'=>$y,'month'=>$period[1]])->sum('price');
+        $price = round($price,2);
 
         return $this->render('index',[
             'dataProvider' => $dataProvider,
@@ -80,6 +82,14 @@ class BillingController extends Controller
                 Yii::$app->session->setFlash('error', 'Возникли ошибки при отправке почты следующим получателям:<br>'.$err);
             return $this->redirect(['index']);
         }
+    }
+
+    public function actionCalculate(){
+        return 'Calculate';
+    }
+
+    public function actionRenterCalculate(){
+        return 'Renter Calculate';
     }
 
     public function actionReport()

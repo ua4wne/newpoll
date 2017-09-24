@@ -76,6 +76,34 @@ class EnergyForm extends Model
         //return print_r($data);
     }
 
+    public static function OwnCountReport($year){
+        $query = Yii::$app->db->createCommand("select l.month, sum(l.delta) as delta, sum(l.price) as price from main_log l
+                                                join ecounter e on e.id = l.ecounter_id where e.name !='Главный' and year='$year' group by l.month order by l.month");
+        $counts = $query->queryAll(); //выбираем показания общих счетчиков
+
+
+        $data = array();
+        $query=Yii::$app->db->createCommand("select l.month, round(sum(l.delta),2) as delta, round(sum(l.price),2) as price from energy_log l
+                                                    join renter r on r.id=l.renter_id
+                                                    join place p on p.id=r.place_id
+                                                    where year = '$year' group by l.month order by l.month"); //выбираем показания счетчиков арендаторов
+        $logs = $query->queryAll();
+        //return print_r($logs);
+        $tmp = array();
+        for($i=0;$i<count($counts);$i++){
+            $count = $counts[$i];
+            $log = $logs[$i];
+            if($count['id']==$log['ecounter_id'] && $count['month']==$log['month']){
+                $tmp['m'] = $year.'-'.$log['month'];
+                $tmp['d'] = $count['delta'] - $log['delta'];
+                $tmp['p'] = $count['price'] - $log['price'];
+                array_push($data,$tmp);
+            }
+        }
+        return json_encode($data);
+        //return print_r($data);
+    }
+
     public static function DonuteGraph($year){
         $data = array();
         $main=0;
@@ -123,6 +151,31 @@ class EnergyForm extends Model
                 $tmp['value'] = $log['delta'];
                 array_push($data,$tmp);
                 //$encount = $encount + $log['delta'];
+            }
+        }
+        return json_encode($data);
+    }
+
+    public static function OwnDonuteGraph($year){
+        $data = array();
+        $query = Yii::$app->db->createCommand("select e.name, e.id, sum(l.delta) as delta, sum(l.price) as price from main_log l
+                                              join ecounter e on e.id = l.ecounter_id where e.name !='Главный' and year='$year' group by e.id order by e.id");
+        $counts = $query->queryAll(); //выбираем показания общих счетчиков
+
+        $query=Yii::$app->db->createCommand("select p.ecounter_id, round(sum(l.delta),2) as delta, round(sum(l.price),2) as price from energy_log l
+                                            join renter r on r.id=l.renter_id
+                                            join place p on p.id=r.place_id
+                                            where year = '$year' group by p.ecounter_id order by p.ecounter_id, l.month");
+        $logs = $query->queryAll();
+        //return print_r($logs);
+        $tmp = array();
+        for($i=0;$i<count($counts);$i++){
+            $count = $counts[$i];
+            $log = $logs[$i];
+            if($count['id']==$log['ecounter_id']){
+                $tmp['label'] = $count['name'];
+                $tmp['value'] = $count['delta'] - $log['delta'];
+                array_push($data,$tmp);
             }
         }
         return json_encode($data);
@@ -227,6 +280,55 @@ class EnergyForm extends Model
                 $content .='<td>0</td>';
             $k++;
             $old = $log['name'];
+        }
+        while($k<13){
+            $content .='<td>0</td>';
+            $k++;
+        }
+        $content .='</tr>';
+        $content.='</table>';
+        return $content;
+    }
+
+    public static function GetOwnTable($year){
+        $content='<table class="table table-hover table-striped">
+            <tr><th>Счетчик</th><th>Январь</th><th>Февраль</th><th>Март</th><th>Апрель</th><th>Май</th><th>Июнь</th><th>Июль</th><th>Август</th><th>Сентябрь</th>
+                <th>Октябрь</th><th>Ноябрь</th><th>Декабрь</th>
+            </tr>';
+
+        $query = Yii::$app->db->createCommand("select e.name, e.id, l.month, l.delta, l.price from main_log l
+                                              join ecounter e on e.id = l.ecounter_id where e.name !='Главный' and year='$year' order by e.id, l.month");
+        $counts = $query->queryAll(); //выбираем показания общих счетчиков
+
+        $query=Yii::$app->db->createCommand("select p.ecounter_id, l.month, round(sum(l.delta),2) as delta, round(sum(l.price),2) as price from energy_log l
+                                            join renter r on r.id=l.renter_id
+                                            join place p on p.id=r.place_id
+                                            where year = '$year' group by p.ecounter_id, l.month order by p.ecounter_id, l.month");
+        $logs = $query->queryAll();
+        //return print_r($logs);
+        $old = 'new';
+        $k=1;
+        for($i=0;$i<count($counts);$i++){
+            $count = $counts[$i];
+            $log = $logs[$i];
+            if($old != $count['name']){
+                if($k > count($counts)/2){
+                    while($k<13){
+                        $content .='<td>0</td>';
+                        $k++;
+                    }
+                }
+                $content .= '<tr><td>'.$count['name'].'</td>';
+                $k=1;
+            }
+            if($count['id'] == $log['ecounter_id']){
+                if((int)$log['month'] == $k){
+                    $delta = $count['delta'] - $log['delta'];
+                    $content .='<td>'.$delta.'</td>';
+                }
+            }
+            $old = $count['name'];
+            $k++;
         }
         while($k<13){
             $content .='<td>0</td>';
