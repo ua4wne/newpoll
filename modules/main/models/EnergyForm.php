@@ -7,6 +7,7 @@ use Yii;
 use yii\base\Model;
 use app\modules\main\models\MainLog;
 use yii\db\Query;
+use app\controllers\HelpController;
 
 /**
  * ContactForm is the model behind the contact form.
@@ -336,6 +337,24 @@ class EnergyForm extends Model
         }
         $content .='</tr>';
         $content.='</table>';
+        return $content;
+    }
+
+    public static function ViewCalculate($year,$renters){
+        $content='';
+        foreach($renters as $renter){
+            $logs = EnergyLog::find()->select(['month','encount','delta','price'])->where(['=','renter_id',$renter])->andWhere(['=','year',$year])->orderBy('month', SORT_ASC)->all();
+            $title = Renter::findOne($renter);
+            $content.='<div class="agileinfo-grap">';
+            $content.='<p class="text-info">Данные расчета для '.$title->title.'</p>';
+            $content.='<table class="table table-hover table-striped">
+            <tr><th>Месяц</th><th>Показания счетчика, кВт</th><th>Потребление, кВт</th><th>Сумма, руб</th></tr>';
+            foreach ($logs as $log){
+                $month = HelpController::SetMonth($log->month);
+                $content.='<tr><td>'.$month.'</td><td>'.$log->encount.'</td><td>'.$log->delta.'</td><td>'.$log->price.'</td></tr>';
+            }
+            $content.='</table></div>';
+        }
         return $content;
     }
 

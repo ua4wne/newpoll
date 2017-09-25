@@ -3,12 +3,15 @@
 namespace app\modules\main\controllers\energy;
 use app\models\Report;
 use app\modules\admin\models\Describer;
+use app\modules\main\models\EnergyForm;
 use Yii;
 use yii\data\ActiveDataProvider;
 use app\modules\main\models\EnergyLog;
 use \yii\web\Controller;
 use app\controllers\HelpController;
 use app\models\BaseModel;
+use app\modules\main\models\Renter;
+use app\modules\main\models\RentLog;
 
 
 class BillingController extends Controller
@@ -85,16 +88,42 @@ class BillingController extends Controller
     }
 
     public function actionCalculate(){
-        return 'Calculate';
-    }
+        $model = new RentLog();
+        $year = date('Y');
+        $renters =  Renter::find()->select(['id','title','area'])->where(['status'=>1])->orderBy('title', SORT_ASC)->asArray()->all();
+        $select = array();
+        foreach($renters as $renter) {
+            $select[$renter['id']] = $renter['title'].' ('.$renter['area'].')'; //массив для заполнения данных в select формы
+        }
 
-    public function actionRenterCalculate(){
-        return 'Renter Calculate';
+        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+            if (Yii::$app->request->post('report')) {
+                //return 'Calculate';
+                $content =  EnergyForm::ViewCalculate($model->data,$model->renter_id);
+                return $this->render('calculate',[
+                    'content' => $content,
+                    'year' => $model->data,
+                ]);
+            }
+            if (Yii::$app->request->post('export')) {
+                if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+                    Report::CalculateToExcel($model->data,$model->renter_id);
+                }
+            }
+
+        }
+        else{
+            return $this->render('filter',[
+                'model' => $model,
+                'data' => $year,
+                'renter_id' => $select,
+            ]);
+        }
+
     }
 
     public function actionReport()
     {
         Report::EnergyReport(false); //выгрузка excel-файла отчета по потреблению арендаторами без сохранения на сервере
     }
-
 }
