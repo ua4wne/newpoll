@@ -4,99 +4,241 @@
 
 //$this->title = 'My Yii Application';
 ?>
-<!--four-grids here-->
-<div class="four-grids">
-    <div class="col-md-3 four-grid">
-        <div class="four-agileits">
-            <div class="icon">
-                <i class="glyphicon glyphicon-user" aria-hidden="true"></i>
-            </div>
-            <div class="four-text">
-                <h3>User</h3>
-                <h4> 24,420  </h4>
-
-            </div>
-
-        </div>
-    </div>
-    <div class="col-md-3 four-grid">
-        <div class="four-agileinfo">
-            <div class="icon">
-                <i class="glyphicon glyphicon-list-alt" aria-hidden="true"></i>
-            </div>
-            <div class="four-text">
-                <h3>Clients</h3>
-                <h4>15,520</h4>
-
-            </div>
-
-        </div>
-    </div>
-    <div class="col-md-3 four-grid">
-        <div class="four-w3ls">
-            <div class="icon">
-                <i class="glyphicon glyphicon-folder-open" aria-hidden="true"></i>
-            </div>
-            <div class="four-text">
-                <h3>Projects</h3>
-                <h4>12,430</h4>
-
-            </div>
-
-        </div>
-    </div>
-    <div class="col-md-3 four-grid">
-        <div class="four-wthree">
-            <div class="icon">
-                <i class="glyphicon glyphicon-briefcase" aria-hidden="true"></i>
-            </div>
-            <div class="four-text">
-                <h3>Old Projects</h3>
-                <h4>14,430</h4>
-
-            </div>
-
-        </div>
-    </div>
-    <div class="clearfix"></div>
-</div>
-<!--//four-grids here-->
-<!--agileinfo-grap-->
-<div class="agileinfo-grap">
-    <div class="agileits-box">
-        <header class="agileits-box-header clearfix">
-            <h3>Statistics</h3>
-            <div class="toolbar">
-                <div class="pull-left">
-                    <div class="btn-group">
-                        <a href="#" class="btn btn-default btn-xs">Daily</a>
-                        <a href="#" class="btn btn-default btn-xs active">Monthly</a>
-                        <a href="#" class="btn btn-default btn-xs">Yearly</a>
+<div class="row">
+    <div class="col-lg-3 col-md-6">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <div class="row">
+                    <div class="col-xs-3">
+                        <i class="fa fa-users fa-5x"></i>
+                    </div>
+                    <div class="col-xs-9 text-right">
+                        <div class="huge"><?= $people ?> чел.</div>
+                        <div>Посещение выставки</div>
                     </div>
                 </div>
-                <div class="pull-right">
-                    <div class="btn-group">
-                        <a aria-expanded="false" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
-                            Export <i class="fa fa-angle-down"></i>
-                        </a>
-                        <ul class="dropdown-menu pull-right" role="menu">
-                            <li><a href="#">Export as PDF</a></li>
-                            <li><a href="#">Export as CSV</a></li>
-                            <li><a href="#">Export as PNG</a></li>
-                            <li class="divider"></li>
-                            <li><a href="#">Separated link</a></li>
-                        </ul>
-                    </div>
-                    <a href="#" class="btn btn-primary btn-xs"><i class="fa fa-cog"></i></a>
+            </div>
+            <div class="panel-body dashbrd">
+                <div class="list-group">
+                    <?= $visitors; ?>
                 </div>
             </div>
-        </header>
-        <div class="agileits-box-body clearfix">
-            <div id="hero-area"></div>
+            <a href="#" class="a-footer">
+                <div class="panel-footer">
+                    <span class="pull-left">Подробнее</span>
+                    <span class="pull-right"><i class="fa fa-arrow-circle-down"></i></span>
+                    <div class="clearfix"></div>
+                </div>
+            </a>
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-6">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <div class="row">
+                    <div class="col-xs-3">
+                        <i class="fa fa-clock-o fa-5x"></i>
+                    </div>
+                    <div class="col-xs-9 text-right">
+                        <div class="huge"><?= $time_avg; ?> час.</div>
+                        <div>Работа домов</div>
+                    </div>
+                </div>
+            </div>
+            <div class="panel-body dashbrd">
+                <div class="list-group">
+                    <?= $worktime; ?>
+                </div>
+            </div>
+            <a href="#" class="a-footer">
+                <div class="panel-footer">
+                    <span class="pull-left">Подробнее</span>
+                    <span class="pull-right"><i class="fa fa-arrow-circle-down"></i></span>
+                    <div class="clearfix"></div>
+                </div>
+            </a>
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-6">
+        <div class="panel panel-green">
+            <div class="panel-heading">
+                <div class="row">
+                    <div class="col-xs-3">
+                        <i class="fa fa-lightbulb-o fa-5x"></i>
+                    </div>
+                    <div class="col-xs-9 text-right">
+                        <div class="huge"><?= $main_count; ?> кВт</div>
+                        <div>Энергопотребление</div>
+                    </div>
+                </div>
+            </div>
+            <div class="panel-body dashbrd">
+                <div class="list-group">
+                    <?= $energy; ?>
+                </div>
+            </div>
+            <a href="#" class="a-footer">
+                <div class="panel-footer">
+                    <span class="pull-left">Подробнее</span>
+                    <span class="pull-right"><i class="fa fa-arrow-circle-down"></i></span>
+                    <div class="clearfix"></div>
+                </div>
+            </a>
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-6">
+        <div class="panel panel-green">
+            <div class="panel-heading">
+                <div class="row">
+                    <div class="col-xs-3">
+                        <i class="fa fa-support fa-5x"></i>
+                    </div>
+                    <div class="col-xs-9 text-right">
+                        <div class="huge">13</div>
+                        <div>Support Tickets!</div>
+                    </div>
+                </div>
+            </div>
+            <a href="#">
+                <div class="panel-footer">
+                    <span class="pull-left">View Details</span>
+                    <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                    <div class="clearfix"></div>
+                </div>
+            </a>
         </div>
     </div>
 </div>
-<!--//agileinfo-grap-->
-<!--photoday-section-->
-
-<!--//photoday-section-->
+<!-- /.row -->
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <i class="fa fa-bar-chart-o fa-fw"></i> Area Chart Example
+        <div class="pull-right">
+            <div class="btn-group">
+                <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
+                    Actions
+                    <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu pull-right" role="menu">
+                    <li><a href="#">Action</a>
+                    </li>
+                    <li><a href="#">Another action</a>
+                    </li>
+                    <li><a href="#">Something else here</a>
+                    </li>
+                    <li class="divider"></li>
+                    <li><a href="#">Separated link</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!-- /.panel-heading -->
+    <div class="panel-body">
+        <div id="morris-area-chart"></div>
+    </div>
+    <!-- /.panel-body -->
+    <!-- /.panel -->
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <i class="fa fa-bar-chart-o fa-fw"></i> Bar Chart Example
+            <div class="pull-right">
+                <div class="btn-group">
+                    <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
+                        Actions
+                        <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu pull-right" role="menu">
+                        <li><a href="#">Action</a>
+                        </li>
+                        <li><a href="#">Another action</a>
+                        </li>
+                        <li><a href="#">Something else here</a>
+                        </li>
+                        <li class="divider"></li>
+                        <li><a href="#">Separated link</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <!-- /.panel-heading -->
+        <div class="panel-body">
+            <div class="row">
+                <div class="col-lg-4">
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-hover table-striped">
+                            <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Date</th>
+                                <th>Time</th>
+                                <th>Amount</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td>3326</td>
+                                <td>10/21/2013</td>
+                                <td>3:29 PM</td>
+                                <td>$321.33</td>
+                            </tr>
+                            <tr>
+                                <td>3325</td>
+                                <td>10/21/2013</td>
+                                <td>3:20 PM</td>
+                                <td>$234.34</td>
+                            </tr>
+                            <tr>
+                                <td>3324</td>
+                                <td>10/21/2013</td>
+                                <td>3:03 PM</td>
+                                <td>$724.17</td>
+                            </tr>
+                            <tr>
+                                <td>3323</td>
+                                <td>10/21/2013</td>
+                                <td>3:00 PM</td>
+                                <td>$23.71</td>
+                            </tr>
+                            <tr>
+                                <td>3322</td>
+                                <td>10/21/2013</td>
+                                <td>2:49 PM</td>
+                                <td>$8345.23</td>
+                            </tr>
+                            <tr>
+                                <td>3321</td>
+                                <td>10/21/2013</td>
+                                <td>2:23 PM</td>
+                                <td>$245.12</td>
+                            </tr>
+                            <tr>
+                                <td>3320</td>
+                                <td>10/21/2013</td>
+                                <td>2:15 PM</td>
+                                <td>$5663.54</td>
+                            </tr>
+                            <tr>
+                                <td>3319</td>
+                                <td>10/21/2013</td>
+                                <td>2:13 PM</td>
+                                <td>$943.45</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- /.table-responsive -->
+                </div>
+                <!-- /.col-lg-4 (nested) -->
+                <div class="col-lg-8">
+                    <div id="morris-bar-chart"></div>
+                </div>
+                <!-- /.col-lg-8 (nested) -->
+            </div>
+            <!-- /.row -->
+        </div>
+        <!-- /.panel-body -->
+    </div>
+    <!-- /.panel -->
+</div>

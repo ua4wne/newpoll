@@ -6,7 +6,7 @@ use yii\helpers\Html;
 /* @var $model \app\modules\main\models\Renter */
 
 $this->title = 'Обновление записи: ' . $model->title;
-$this->params['breadcrumbs'][] = ['label' => 'Renters', 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => 'Арендаторы', 'url' => ['index']];
 $this->params['breadcrumbs'][] = ['label' => $model->title, 'url' => ['view', 'id' => $model->id]];
 $this->params['breadcrumbs'][] = 'Обновление записи';
 ?>

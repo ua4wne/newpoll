@@ -22,18 +22,21 @@ class AppAsset extends AssetBundle
         'css/style.css',
         'css/morris.css',
         'css/font-awesome.css',
-        '//fonts.googleapis.com/css?family=Roboto:700,500,300,100italic,100,400',
-        '//fonts.googleapis.com/css?family=Montserrat:400,700',
-        'css/icon-font.min.css',
+        'css/metisMenu.min.css',
+        //'//fonts.googleapis.com/css?family=Roboto:700,500,300,100italic,100,400',
+        //'//fonts.googleapis.com/css?family=Montserrat:400,700',
+        //'css/icon-font.min.css',
     ];
     public $js = [
     //    'js/jquery-2.1.4.min.js',
         'js/jquery.nicescroll.js',
         'js/scripts.js',
     //    'js/bootstrap.min.js',
+        'js/metisMenu.min.js',
         'js/raphael-min.js',
         'js/morris.js',
         'js/control.js',
+        'js/sb-admin-2.js',
     ];
     public $jsOptions = [
         //'position' => \yii\web\View::POS_HEAD, //влияет на работу фильтрации в таблицах представлений - виджет GridView!!!
