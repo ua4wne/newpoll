@@ -37,7 +37,7 @@ AppAsset::register($this);
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="index.html">SB Admin v2.0</a>
+            <p class="navbar-text">Малоэтажная страна</p>
         </div>
         <!-- /.navbar-header -->
 
@@ -209,6 +209,15 @@ AppAsset::register($this);
             <div class="sidebar-nav navbar-collapse">
                 <ul class="nav" id="side-menu">
                     <li>
+                        <div class="user-panel">
+                            <div class="pull-left image"><img class="img-circle" src="/images/in4.jpg" alt=""></div>
+
+                            <div class="pull-left info">
+                                <p><?= Yii::$app->user->identity->fname .' '.Yii::$app->user->identity->lname?></p>
+                            </div>
+                        </div>
+                    </li>
+                    <li>
                         <a href="/main/default/index"><i class="fa fa-tachometer"></i> Главная</a>
                     </li>
                     <li>
@@ -221,58 +230,42 @@ AppAsset::register($this);
                         <!-- /.nav-second-level -->
                     </li>
                     <li>
-                        <a href="tables.html"><i class="fa fa-table fa-fw"></i> Tables</a>
-                    </li>
-                    <li>
-                        <a href="forms.html"><i class="fa fa-edit fa-fw"></i> Forms</a>
-                    </li>
-                    <li>
-                        <a href="#"><i class="fa fa-wrench fa-fw"></i> UI Elements<span class="fa arrow"></span></a>
+                        <a href="#"><i class="fa fa-book fa-fw"></i> Контакты<span class="fa arrow"></span></a>
                         <ul class="nav nav-second-level">
-                            <li>
-                                <a href="panels-wells.html">Panels and Wells</a>
-                            </li>
-                            <li>
-                                <a href="buttons.html">Buttons</a>
-                            </li>
-                            <li>
-                                <a href="notifications.html">Notifications</a>
-                            </li>
-                            <li>
-                                <a href="typography.html">Typography</a>
-                            </li>
-                            <li>
-                                <a href="icons.html"> Icons</a>
-                            </li>
-                            <li>
-                                <a href="grid.html">Grid</a>
-                            </li>
+                            <li><a href="/main/renter">Арендаторы</a></li>
+                            <li ><a href="/main/division">Наши юрлица</a></li>
                         </ul>
-                        <!-- /.nav-second-level -->
                     </li>
                     <li>
-                        <a href="#"><i class="fa fa-sitemap fa-fw"></i> Multi-Level Dropdown<span class="fa arrow"></span></a>
+                        <a href="#"><i class="fa fa-users fa-fw"></i></i> Маркетинг<span class="fa arrow"></span></a>
+                        <ul class="nav nav-second-level">
+                            <li><a href="/ankets">Анкеты</a></li>
+                            <li ><a href="/refbooks">Справочники</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="#"><i class="fa fa-bar-chart fa-fw"></i> Отчеты<span class="fa arrow"></span></a>
                         <ul class="nav nav-second-level">
                             <li>
-                                <a href="#">Second Level Item</a>
+                                <a href="/reports/ankets">Анкетирование</a>
                             </li>
                             <li>
-                                <a href="#">Second Level Item</a>
+                                <a href="/main/control/visit-report">Посещаемость выставки</a>
                             </li>
                             <li>
-                                <a href="#">Third Level <span class="fa arrow"></span></a>
+                                <a href="/main/control/work-report">Присутствие на выставке</a>
+                            </li>
+                            <li>
+                                <a href="#">Потребление эл. энергии <span class="fa arrow"></span></a>
                                 <ul class="nav nav-third-level">
                                     <li>
-                                        <a href="#">Third Level Item</a>
+                                        <a href="/main/energy/main-report">Счетчики общие</a>
                                     </li>
                                     <li>
-                                        <a href="#">Third Level Item</a>
+                                        <a href="/main/energy/rent-counter">Счетчики арендаторов</a></li>
                                     </li>
                                     <li>
-                                        <a href="#">Third Level Item</a>
-                                    </li>
-                                    <li>
-                                        <a href="#">Third Level Item</a>
+                                        <a href="/main/energy/own-counter">Собственное потребление</a></li>
                                     </li>
                                 </ul>
                                 <!-- /.nav-third-level -->
@@ -281,13 +274,58 @@ AppAsset::register($this);
                         <!-- /.nav-second-level -->
                     </li>
                     <li>
-                        <a href="#"><i class="fa fa-files-o fa-fw"></i> Sample Pages<span class="fa arrow"></span></a>
+                        <a href="#"><i class="fa fa-table fa-fw"></i> Посещение<span class="fa arrow"></span></a>
                         <ul class="nav nav-second-level">
                             <li>
-                                <a href="blank.html">Blank Page</a>
+                                <a href="/main/control/works">Присутствие на выставке</a>
                             </li>
                             <li>
-                                <a href="login.html">Login Page</a>
+                                <a href="/main/control/visits">Посещение выставки</a>
+                            </li>
+                        </ul>
+                        <!-- /.nav-second-level -->
+                    </li>
+                    <li>
+                        <a href="#"><i class="fa fa-lightbulb-o fa-fw"></i> Энергоучет<span class="fa arrow"></span></a>
+                        <ul class="nav nav-second-level">
+                            <li>
+                                <a href="/main/energy/main-counter">Счетчики общие</a>
+                            </li>
+                            <li>
+                                <a href="/main/energy/renters-counter">Счетчики арендаторов</a>
+                            </li>
+                            <li>
+                                <a href="#">Начальные показания <span class="fa arrow"></span></a>
+                                <ul class="nav nav-third-level">
+                                    <li>
+                                        <a href="/main/energy/init-main">Счетчики общие</a>
+                                    </li>
+                                    <li>
+                                        <a href="/main/energy/init-counter">Счетчики арендаторов</a>
+                                    </li>
+                                </ul>
+                                <!-- /.nav-third-level -->
+                            </li>
+                            <li>
+                                <a href="/main/energy/billing">Расчет потребления</a>
+                            </li>
+                        </ul>
+                        <!-- /.nav-second-level -->
+                    </li>
+                    <li>
+                        <a href="#"><i class="fa fa-gear fa-fw"></i> Настройки<span class="fa arrow"></span></a>
+                        <ul class="nav nav-second-level">
+                            <li>
+                                <a href="/admin/ecounter">Счетчики общие</a>
+                            </li>
+                            <li>
+                                <a href="/admin/place">Территории</a>
+                            </li>
+                            <li>
+                                <a href="/admin/user">Пользователи</a>
+                            </li>
+                            <li>
+                                <a href="/admin/describer">Подписчики</a>
                             </li>
                         </ul>
                         <!-- /.nav-second-level -->
@@ -300,6 +338,12 @@ AppAsset::register($this);
     </nav>
 
     <div id="page-wrapper">
+        <div class="row">
+            <div class="col-lg-12">
+                <h3 class="page-header">Информационная панель</h3>
+            </div>
+            <!-- /.col-lg-12 -->
+        </div>
         <div class="row">
             <div class="col-lg-12">
                 <?php echo Breadcrumbs::widget(['links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [], ]); ?>
@@ -316,139 +360,6 @@ AppAsset::register($this);
                     </div>
                 <?php endif;?>
                 <?= $content; ?>
-
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <i class="fa fa-bar-chart-o fa-fw"></i> Area Chart Example
-                        <div class="pull-right">
-                            <div class="btn-group">
-                                <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
-                                    Actions
-                                    <span class="caret"></span>
-                                </button>
-                                <ul class="dropdown-menu pull-right" role="menu">
-                                    <li><a href="#">Action</a>
-                                    </li>
-                                    <li><a href="#">Another action</a>
-                                    </li>
-                                    <li><a href="#">Something else here</a>
-                                    </li>
-                                    <li class="divider"></li>
-                                    <li><a href="#">Separated link</a>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- /.panel-heading -->
-                    <div class="panel-body">
-                        <div id="morris-area-chart"></div>
-                    </div>
-                    <!-- /.panel-body -->
-                </div>
-                <!-- /.panel -->
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <i class="fa fa-bar-chart-o fa-fw"></i> Bar Chart Example
-                        <div class="pull-right">
-                            <div class="btn-group">
-                                <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
-                                    Actions
-                                    <span class="caret"></span>
-                                </button>
-                                <ul class="dropdown-menu pull-right" role="menu">
-                                    <li><a href="#">Action</a>
-                                    </li>
-                                    <li><a href="#">Another action</a>
-                                    </li>
-                                    <li><a href="#">Something else here</a>
-                                    </li>
-                                    <li class="divider"></li>
-                                    <li><a href="#">Separated link</a>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- /.panel-heading -->
-                    <div class="panel-body">
-                        <div class="row">
-                            <div class="col-lg-4">
-                                <div class="table-responsive">
-                                    <table class="table table-bordered table-hover table-striped">
-                                        <thead>
-                                        <tr>
-                                            <th>#</th>
-                                            <th>Date</th>
-                                            <th>Time</th>
-                                            <th>Amount</th>
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-                                        <tr>
-                                            <td>3326</td>
-                                            <td>10/21/2013</td>
-                                            <td>3:29 PM</td>
-                                            <td>$321.33</td>
-                                        </tr>
-                                        <tr>
-                                            <td>3325</td>
-                                            <td>10/21/2013</td>
-                                            <td>3:20 PM</td>
-                                            <td>$234.34</td>
-                                        </tr>
-                                        <tr>
-                                            <td>3324</td>
-                                            <td>10/21/2013</td>
-                                            <td>3:03 PM</td>
-                                            <td>$724.17</td>
-                                        </tr>
-                                        <tr>
-                                            <td>3323</td>
-                                            <td>10/21/2013</td>
-                                            <td>3:00 PM</td>
-                                            <td>$23.71</td>
-                                        </tr>
-                                        <tr>
-                                            <td>3322</td>
-                                            <td>10/21/2013</td>
-                                            <td>2:49 PM</td>
-                                            <td>$8345.23</td>
-                                        </tr>
-                                        <tr>
-                                            <td>3321</td>
-                                            <td>10/21/2013</td>
-                                            <td>2:23 PM</td>
-                                            <td>$245.12</td>
-                                        </tr>
-                                        <tr>
-                                            <td>3320</td>
-                                            <td>10/21/2013</td>
-                                            <td>2:15 PM</td>
-                                            <td>$5663.54</td>
-                                        </tr>
-                                        <tr>
-                                            <td>3319</td>
-                                            <td>10/21/2013</td>
-                                            <td>2:13 PM</td>
-                                            <td>$943.45</td>
-                                        </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                                <!-- /.table-responsive -->
-                            </div>
-                            <!-- /.col-lg-4 (nested) -->
-                            <div class="col-lg-8">
-                                <div id="morris-bar-chart"></div>
-                            </div>
-                            <!-- /.col-lg-8 (nested) -->
-                        </div>
-                        <!-- /.row -->
-                    </div>
-                    <!-- /.panel-body -->
-                </div>
-                <!-- /.panel -->
             </div>
             <!-- /.col-lg-12 -->
         </div>

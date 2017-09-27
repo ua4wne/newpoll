@@ -16,10 +16,8 @@ $this->params['breadcrumbs'][] = $this->title;
         <small>За период с <?= $start ?> по <?= $finish ?> </small>
     </div>
 
-    <p>
-        <?= $firm ?>
-    </p>
-    <div class="agileinfo-grap table-bordered">
-        <?= $content ?>
-    </div>
+    <?= $firm ?>
+
+    <?= $content ?>
+
 </div>
