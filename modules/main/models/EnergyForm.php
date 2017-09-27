@@ -346,7 +346,7 @@ class EnergyForm extends Model
             $logs = EnergyLog::find()->select(['month','encount','delta','price'])->where(['=','renter_id',$renter])->andWhere(['=','year',$year])->orderBy('month', SORT_ASC)->all();
             $title = Renter::findOne($renter);
             $content.='<div class="agileinfo-grap">';
-            $content.='<p class="text-info">Данные расчета для '.$title->title.'</p>';
+            $content.='<p class="text-info">Данные расчета для '.$title->title.' ('.$title->area.')</p>';
             $content.='<table class="table table-hover table-striped">
             <tr><th>Месяц</th><th>Показания счетчика, кВт</th><th>Потребление, кВт</th><th>Сумма, руб</th></tr>';
             foreach ($logs as $log){

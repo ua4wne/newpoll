@@ -20,6 +20,7 @@ class DefaultController extends Controller
 
     public function actionIndex()
     {
+
         $this->view->title = 'Информационная панель';
         return $this->render('index');
     }

@@ -8,391 +8,459 @@ AppAsset::register($this);
 <?php $this->beginPage() ?>
 <!DOCTYPE html>
 <html lang="<?= Yii::$app->language ?>">
+
 <head>
     <meta charset="<?= Yii::$app->charset ?>">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <?= Html::csrfMetaTags() ?>
     <title><?= Html::encode($this->title) ?></title>
 
-    <script type="application/x-javascript"> addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false); function hideURLbar(){ window.scrollTo(0,1); } </script>
-
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
     <?php $this->head() ?>
 </head>
+
 <body>
 <?php $this->beginBody() ?>
-   <div class="page-container">
-   <!--/content-inner-->
-<div class="left-content">
-	   <div class="mother-grid-inner">
-             <!--header start here-->
-				<div class="header-main">
-                    <div class="w3layouts-right">
-                        <div class="profile_details_left"><!--notifications of menu start -->
-                            <ul class="nofitications-dropdown">
-                                <li class="dropdown head-dpdn">
-                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-envelope"></i><span class="badge">3</span></a>
-                                    <ul class="dropdown-menu">
-                                        <li>
-                                            <div class="notification_header">
-                                                <h3>You have 3 new messages</h3>
-                                            </div>
-                                        </li>
-                                        <li><a href="#">
-                                                <div class="user_img"><img src="images/in11.jpg" alt=""></div>
-                                                <div class="notification_desc">
-                                                    <p>Lorem ipsum dolor</p>
-                                                    <p><span>1 hour ago</span></p>
-                                                </div>
-                                                <div class="clearfix"></div>
-                                            </a></li>
-                                        <li class="odd"><a href="#">
-                                                <div class="user_img"><img src="images/in10.jpg" alt=""></div>
-                                                <div class="notification_desc">
-                                                    <p>Lorem ipsum dolor </p>
-                                                    <p><span>1 hour ago</span></p>
-                                                </div>
-                                                <div class="clearfix"></div>
-                                            </a></li>
-                                        <li><a href="#">
-                                                <div class="user_img"><img src="images/in9.jpg" alt=""></div>
-                                                <div class="notification_desc">
-                                                    <p>Lorem ipsum dolor</p>
-                                                    <p><span>1 hour ago</span></p>
-                                                </div>
-                                                <div class="clearfix"></div>
-                                            </a></li>
-                                        <li>
-                                            <div class="notification_bottom">
-                                                <a href="#">See all messages</a>
-                                            </div>
-                                        </li>
-                                    </ul>
-                                </li>
-                                <li class="dropdown head-dpdn">
-                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-bell"></i><span class="badge blue">3</span></a>
-                                    <ul class="dropdown-menu">
-                                        <li>
-                                            <div class="notification_header">
-                                                <h3>You have 3 new notification</h3>
-                                            </div>
-                                        </li>
-                                        <li><a href="#">
-                                                <div class="user_img"><img src="images/in8.jpg" alt=""></div>
-                                                <div class="notification_desc">
-                                                    <p>Lorem ipsum dolor</p>
-                                                    <p><span>1 hour ago</span></p>
-                                                </div>
-                                                <div class="clearfix"></div>
-                                            </a></li>
-                                        <li class="odd"><a href="#">
-                                                <div class="user_img"><img src="images/in6.jpg" alt=""></div>
-                                                <div class="notification_desc">
-                                                    <p>Lorem ipsum dolor</p>
-                                                    <p><span>1 hour ago</span></p>
-                                                </div>
-                                                <div class="clearfix"></div>
-                                            </a></li>
-                                        <li><a href="#">
-                                                <div class="user_img"><img src="images/in7.jpg" alt=""></div>
-                                                <div class="notification_desc">
-                                                    <p>Lorem ipsum dolor</p>
-                                                    <p><span>1 hour ago</span></p>
-                                                </div>
-                                                <div class="clearfix"></div>
-                                            </a></li>
-                                        <li>
-                                            <div class="notification_bottom">
-                                                <a href="#">See all notifications</a>
-                                            </div>
-                                        </li>
-                                    </ul>
-                                </li>
-                                <li class="dropdown head-dpdn">
-                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-tasks"></i><span class="badge blue1">9</span></a>
-                                    <ul class="dropdown-menu">
-                                        <li>
-                                            <div class="notification_header">
-                                                <h3>You have 8 pending task</h3>
-                                            </div>
-                                        </li>
-                                        <li><a href="#">
-                                                <div class="task-info">
-                                                    <span class="task-desc">Database update</span><span class="percentage">40%</span>
-                                                    <div class="clearfix"></div>
-                                                </div>
-                                                <div class="progress progress-striped active">
-                                                    <div class="bar yellow" style="width:40%;"></div>
-                                                </div>
-                                            </a></li>
-                                        <li><a href="#">
-                                                <div class="task-info">
-                                                    <span class="task-desc">Dashboard done</span><span class="percentage">90%</span>
-                                                    <div class="clearfix"></div>
-                                                </div>
-                                                <div class="progress progress-striped active">
-                                                    <div class="bar green" style="width:90%;"></div>
-                                                </div>
-                                            </a></li>
-                                        <li><a href="#">
-                                                <div class="task-info">
-                                                    <span class="task-desc">Mobile App</span><span class="percentage">33%</span>
-                                                    <div class="clearfix"></div>
-                                                </div>
-                                                <div class="progress progress-striped active">
-                                                    <div class="bar red" style="width: 33%;"></div>
-                                                </div>
-                                            </a></li>
-                                        <li><a href="#">
-                                                <div class="task-info">
-                                                    <span class="task-desc">Issues fixed</span><span class="percentage">80%</span>
-                                                    <div class="clearfix"></div>
-                                                </div>
-                                                <div class="progress progress-striped active">
-                                                    <div class="bar  blue" style="width: 80%;"></div>
-                                                </div>
-                                            </a></li>
-                                        <li>
-                                            <div class="notification_bottom">
-                                                <a href="#">See all pending tasks</a>
-                                            </div>
-                                        </li>
-                                    </ul>
-                                </li>
-                                <div class="clearfix"> </div>
-                            </ul>
-                            <div class="clearfix"> </div>
-                        </div>
-                        <!--notification menu end -->
+<div id="wrapper">
 
-                        <div class="clearfix"> </div>
+    <!-- Navigation -->
+    <nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="index.html">SB Admin v2.0</a>
+        </div>
+        <!-- /.navbar-header -->
+
+        <ul class="nav navbar-top-links navbar-right">
+
+            <li class="dropdown">
+                <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                    <i class="fa fa-tasks fa-fw"></i> <i class="fa fa-caret-down"></i>
+                </a>
+                <ul class="dropdown-menu dropdown-tasks">
+                    <li>
+                        <a href="#">
+                            <div>
+                                <p>
+                                    <strong>Task 1</strong>
+                                    <span class="pull-right text-muted">40% Complete</span>
+                                </p>
+                                <div class="progress progress-striped active">
+                                    <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: 40%">
+                                        <span class="sr-only">40% Complete (success)</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </li>
+                    <li class="divider"></li>
+                    <li>
+                        <a href="#">
+                            <div>
+                                <p>
+                                    <strong>Task 2</strong>
+                                    <span class="pull-right text-muted">20% Complete</span>
+                                </p>
+                                <div class="progress progress-striped active">
+                                    <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100" style="width: 20%">
+                                        <span class="sr-only">20% Complete</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </li>
+                    <li class="divider"></li>
+                    <li>
+                        <a href="#">
+                            <div>
+                                <p>
+                                    <strong>Task 3</strong>
+                                    <span class="pull-right text-muted">60% Complete</span>
+                                </p>
+                                <div class="progress progress-striped active">
+                                    <div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 60%">
+                                        <span class="sr-only">60% Complete (warning)</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </li>
+                    <li class="divider"></li>
+                    <li>
+                        <a href="#">
+                            <div>
+                                <p>
+                                    <strong>Task 4</strong>
+                                    <span class="pull-right text-muted">80% Complete</span>
+                                </p>
+                                <div class="progress progress-striped active">
+                                    <div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100" style="width: 80%">
+                                        <span class="sr-only">80% Complete (danger)</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </li>
+                    <li class="divider"></li>
+                    <li>
+                        <a class="text-center" href="#">
+                            <strong>See All Tasks</strong>
+                            <i class="fa fa-angle-right"></i>
+                        </a>
+                    </li>
+                </ul>
+                <!-- /.dropdown-tasks -->
+            </li>
+            <!-- /.dropdown -->
+            <li class="dropdown">
+                <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                    <i class="fa fa-bell fa-fw"></i> <i class="fa fa-caret-down"></i>
+                </a>
+                <ul class="dropdown-menu dropdown-alerts">
+                    <li>
+                        <a href="#">
+                            <div>
+                                <i class="fa fa-comment fa-fw"></i> New Comment
+                                <span class="pull-right text-muted small">4 minutes ago</span>
+                            </div>
+                        </a>
+                    </li>
+                    <li class="divider"></li>
+                    <li>
+                        <a href="#">
+                            <div>
+                                <i class="fa fa-twitter fa-fw"></i> 3 New Followers
+                                <span class="pull-right text-muted small">12 minutes ago</span>
+                            </div>
+                        </a>
+                    </li>
+                    <li class="divider"></li>
+                    <li>
+                        <a href="#">
+                            <div>
+                                <i class="fa fa-envelope fa-fw"></i> Message Sent
+                                <span class="pull-right text-muted small">4 minutes ago</span>
+                            </div>
+                        </a>
+                    </li>
+                    <li class="divider"></li>
+                    <li>
+                        <a href="#">
+                            <div>
+                                <i class="fa fa-tasks fa-fw"></i> New Task
+                                <span class="pull-right text-muted small">4 minutes ago</span>
+                            </div>
+                        </a>
+                    </li>
+                    <li class="divider"></li>
+                    <li>
+                        <a href="#">
+                            <div>
+                                <i class="fa fa-upload fa-fw"></i> Server Rebooted
+                                <span class="pull-right text-muted small">4 minutes ago</span>
+                            </div>
+                        </a>
+                    </li>
+                    <li class="divider"></li>
+                    <li>
+                        <a class="text-center" href="#">
+                            <strong>See All Alerts</strong>
+                            <i class="fa fa-angle-right"></i>
+                        </a>
+                    </li>
+                </ul>
+                <!-- /.dropdown-alerts -->
+            </li>
+            <!-- /.dropdown -->
+            <li class="dropdown">
+                <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                    <i class="fa fa-user fa-fw"></i> <i class="fa fa-caret-down"></i>
+                </a>
+                <ul class="dropdown-menu dropdown-user">
+                    <li><a href="#"><i class="fa fa-user fa-fw"></i> User Profile</a>
+                    </li>
+                    <li><a href="#"><i class="fa fa-gear fa-fw"></i> Settings</a>
+                    </li>
+                    <li class="divider"></li>
+                    <li><?= Html::a("<i class=\"fa fa-sign-out\"></i>Выход", '/user/default/logout', [
+                                'data' => [
+                                    'method' => 'post'
+                                ],
+                            ]
+                        );?>
+                    </li>
+                </ul>
+                <!-- /.dropdown-user -->
+            </li>
+            <!-- /.dropdown -->
+        </ul>
+        <!-- /.navbar-top-links -->
+        <div class="navbar-default sidebar" role="navigation">
+            <div class="sidebar-nav navbar-collapse">
+                <ul class="nav" id="side-menu">
+                    <li>
+                        <a href="/main/default/index"><i class="fa fa-tachometer"></i> Главная</a>
+                    </li>
+                    <li>
+                        <a href="#"><i class="fa fa-file-text-o"></i> Документы<span class="fa arrow"></span></a>
+                        <ul class="nav nav-second-level">
+                            <li>
+                                <a href="/main/energy/billing/calculate">Расчет по арендатору</a>
+                            </li>
+                        </ul>
+                        <!-- /.nav-second-level -->
+                    </li>
+                    <li>
+                        <a href="tables.html"><i class="fa fa-table fa-fw"></i> Tables</a>
+                    </li>
+                    <li>
+                        <a href="forms.html"><i class="fa fa-edit fa-fw"></i> Forms</a>
+                    </li>
+                    <li>
+                        <a href="#"><i class="fa fa-wrench fa-fw"></i> UI Elements<span class="fa arrow"></span></a>
+                        <ul class="nav nav-second-level">
+                            <li>
+                                <a href="panels-wells.html">Panels and Wells</a>
+                            </li>
+                            <li>
+                                <a href="buttons.html">Buttons</a>
+                            </li>
+                            <li>
+                                <a href="notifications.html">Notifications</a>
+                            </li>
+                            <li>
+                                <a href="typography.html">Typography</a>
+                            </li>
+                            <li>
+                                <a href="icons.html"> Icons</a>
+                            </li>
+                            <li>
+                                <a href="grid.html">Grid</a>
+                            </li>
+                        </ul>
+                        <!-- /.nav-second-level -->
+                    </li>
+                    <li>
+                        <a href="#"><i class="fa fa-sitemap fa-fw"></i> Multi-Level Dropdown<span class="fa arrow"></span></a>
+                        <ul class="nav nav-second-level">
+                            <li>
+                                <a href="#">Second Level Item</a>
+                            </li>
+                            <li>
+                                <a href="#">Second Level Item</a>
+                            </li>
+                            <li>
+                                <a href="#">Third Level <span class="fa arrow"></span></a>
+                                <ul class="nav nav-third-level">
+                                    <li>
+                                        <a href="#">Third Level Item</a>
+                                    </li>
+                                    <li>
+                                        <a href="#">Third Level Item</a>
+                                    </li>
+                                    <li>
+                                        <a href="#">Third Level Item</a>
+                                    </li>
+                                    <li>
+                                        <a href="#">Third Level Item</a>
+                                    </li>
+                                </ul>
+                                <!-- /.nav-third-level -->
+                            </li>
+                        </ul>
+                        <!-- /.nav-second-level -->
+                    </li>
+                    <li>
+                        <a href="#"><i class="fa fa-files-o fa-fw"></i> Sample Pages<span class="fa arrow"></span></a>
+                        <ul class="nav nav-second-level">
+                            <li>
+                                <a href="blank.html">Blank Page</a>
+                            </li>
+                            <li>
+                                <a href="login.html">Login Page</a>
+                            </li>
+                        </ul>
+                        <!-- /.nav-second-level -->
+                    </li>
+                </ul>
+            </div>
+            <!-- /.sidebar-collapse -->
+        </div>
+        <!-- /.navbar-static-side -->
+    </nav>
+
+    <div id="page-wrapper">
+        <div class="row">
+            <div class="col-lg-12">
+                <?php echo Breadcrumbs::widget(['links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [], ]); ?>
+                <?php if( Yii::$app->session->hasFlash('success') ): ?>
+                    <div class="alert alert-success alert-dismissible" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <?php echo Yii::$app->session->getFlash('success'); ?>
                     </div>
+                <?php endif;?>
+                <?php if( Yii::$app->session->hasFlash('error') ): ?>
+                    <div class="alert alert-danger alert-dismissible" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <?php echo Yii::$app->session->getFlash('error'); ?>
+                    </div>
+                <?php endif;?>
+                <?= $content; ?>
 
-						<div class="profile_details w3l">
-								<ul>
-									<li class="dropdown profile_details_drop">
-										<a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-											<div class="profile_img">
-												<span class="prfil-img"><img src="/images/in4.jpg" alt=""> </span>
-												<div class="user-name">
-													<p><?= Yii::$app->user->identity->fname .' '.Yii::$app->user->identity->lname?></p>
-													<span>Administrator</span>
-												</div>
-												<i class="fa fa-angle-down"></i>
-												<i class="fa fa-angle-up"></i>
-												<div class="clearfix"></div>
-											</div>
-										</a>
-										<ul class="dropdown-menu drp-mnu">
-											<li> <a href="#"><i class="fa fa-cog"></i> Settings</a> </li>
-											<li> <a href="#"><i class="fa fa-user"></i> Profile</a> </li>
-											<li> <?= Html::a("<i class=\"fa fa-sign-out\"></i>Выход", '/user/default/logout', [
-                                                        'data' => [
-                                                            'method' => 'post'
-                                                        ],
-                                                    ]
-                                                );?></li>
-										</ul>
-									</li>
-								</ul>
-							</div>
-
-				     <div class="clearfix"> </div>
-				</div>
-<!--heder end here-->
-		    <?php echo Breadcrumbs::widget(['links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [], ]); ?>
-           <?php if( Yii::$app->session->hasFlash('success') ): ?>
-               <div class="alert alert-success alert-dismissible" role="alert">
-                   <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                   <?php echo Yii::$app->session->getFlash('success'); ?>
-               </div>
-           <?php endif;?>
-           <?php if( Yii::$app->session->hasFlash('error') ): ?>
-               <div class="alert alert-danger alert-dismissible" role="alert">
-                   <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                   <?php echo Yii::$app->session->getFlash('error'); ?>
-               </div>
-           <?php endif;?>
-       <?= $content; ?>
-
-        <!-- script-for sticky-nav -->
-           <script>
-           var navoffeset=$(".header-main").offset().top;
-           $(window).scroll(function(){
-           var scrollpos=$(window).scrollTop();
-           if(scrollpos >=navoffeset){
-           $(".header-main").addClass("fixed");
-           }else{
-           $(".header-main").removeClass("fixed");
-           }
-           });
-           </script>
-
-		<!-- /script-for sticky-nav -->
-<!--inner block start here-->
-<div class="inner-block">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <i class="fa fa-bar-chart-o fa-fw"></i> Area Chart Example
+                        <div class="pull-right">
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
+                                    Actions
+                                    <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu pull-right" role="menu">
+                                    <li><a href="#">Action</a>
+                                    </li>
+                                    <li><a href="#">Another action</a>
+                                    </li>
+                                    <li><a href="#">Something else here</a>
+                                    </li>
+                                    <li class="divider"></li>
+                                    <li><a href="#">Separated link</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /.panel-heading -->
+                    <div class="panel-body">
+                        <div id="morris-area-chart"></div>
+                    </div>
+                    <!-- /.panel-body -->
+                </div>
+                <!-- /.panel -->
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <i class="fa fa-bar-chart-o fa-fw"></i> Bar Chart Example
+                        <div class="pull-right">
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
+                                    Actions
+                                    <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu pull-right" role="menu">
+                                    <li><a href="#">Action</a>
+                                    </li>
+                                    <li><a href="#">Another action</a>
+                                    </li>
+                                    <li><a href="#">Something else here</a>
+                                    </li>
+                                    <li class="divider"></li>
+                                    <li><a href="#">Separated link</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /.panel-heading -->
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-lg-4">
+                                <div class="table-responsive">
+                                    <table class="table table-bordered table-hover table-striped">
+                                        <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Date</th>
+                                            <th>Time</th>
+                                            <th>Amount</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr>
+                                            <td>3326</td>
+                                            <td>10/21/2013</td>
+                                            <td>3:29 PM</td>
+                                            <td>$321.33</td>
+                                        </tr>
+                                        <tr>
+                                            <td>3325</td>
+                                            <td>10/21/2013</td>
+                                            <td>3:20 PM</td>
+                                            <td>$234.34</td>
+                                        </tr>
+                                        <tr>
+                                            <td>3324</td>
+                                            <td>10/21/2013</td>
+                                            <td>3:03 PM</td>
+                                            <td>$724.17</td>
+                                        </tr>
+                                        <tr>
+                                            <td>3323</td>
+                                            <td>10/21/2013</td>
+                                            <td>3:00 PM</td>
+                                            <td>$23.71</td>
+                                        </tr>
+                                        <tr>
+                                            <td>3322</td>
+                                            <td>10/21/2013</td>
+                                            <td>2:49 PM</td>
+                                            <td>$8345.23</td>
+                                        </tr>
+                                        <tr>
+                                            <td>3321</td>
+                                            <td>10/21/2013</td>
+                                            <td>2:23 PM</td>
+                                            <td>$245.12</td>
+                                        </tr>
+                                        <tr>
+                                            <td>3320</td>
+                                            <td>10/21/2013</td>
+                                            <td>2:15 PM</td>
+                                            <td>$5663.54</td>
+                                        </tr>
+                                        <tr>
+                                            <td>3319</td>
+                                            <td>10/21/2013</td>
+                                            <td>2:13 PM</td>
+                                            <td>$943.45</td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <!-- /.table-responsive -->
+                            </div>
+                            <!-- /.col-lg-4 (nested) -->
+                            <div class="col-lg-8">
+                                <div id="morris-bar-chart"></div>
+                            </div>
+                            <!-- /.col-lg-8 (nested) -->
+                        </div>
+                        <!-- /.row -->
+                    </div>
+                    <!-- /.panel-body -->
+                </div>
+                <!-- /.panel -->
+            </div>
+            <!-- /.col-lg-12 -->
+        </div>
+        <!-- /.row -->
+    </div>
+    <!-- /#page-wrapper -->
 
 </div>
-<!--inner block end here-->
-<!--copy rights start here-->
-<!-- <div class="copyrights navbar-fixed-bottom">
-	 <p>© 2016 Pooled. All Rights Reserved | Design by  <a href="http://w3layouts.com/" target="_blank">W3layouts</a> </p>
-<!-- </div> -->
-<!--COPY rights end here-->
-</div>
-</div>
-  <!--//content-inner-->
-			<!--/sidebar-menu-->
-				<div class="sidebar-menu">
-					<header class="logo1">
-						<a href="#" class="sidebar-icon"> <span class="fa fa-bars"></span> </a>
-					</header>
-						<div style="border-top:1px ridge rgba(255, 255, 255, 0.15)"></div>
-                           <div class="menu">
-                               <ul id="menu" >
-                                   <li><a href="/main/default/index"><i class="fa fa-tachometer"></i> <span>Главная</span><div class="clearfix"></div></a></li>
-                                   <li id="menu-academico" ><a href="#"><i class="fa fa-file-text-o"></i>  <span>Документы</span> <span class="fa fa-angle-right pull-right"></span><div class="clearfix"></div></a>
-                                       <ul id="menu-academico-sub" >
-                                           <li id="menu-academico-boletim" ><a href="/main/energy/billing/calculate">Расчет по арендатору</a></li>
-                                       </ul>
-                                   </li>
-                                   <li id="menu-academico" ><a href="#"><i class="fa fa-book" aria-hidden="true"></i><span> Контакты</span> <span class="fa fa-angle-right" style="float: right"></span><div class="clearfix"></div></a>
-                                       <ul id="menu-academico-sub" >
-                                           <li id="menu-academico-boletim" ><a href="/main/renter">Арендаторы</a></li>
-                                           <li id="menu-academico-avaliacoes" ><a href="/main/division">Наши юрлица</a></li>
-                                       </ul>
-                                   </li>
-                                   <li id="menu-academico" ><a href="#"><i class="fa fa-gear"></i>  <span>Маркетинг</span> <span class="fa fa-angle-right" style="float: right"></span><div class="clearfix"></div></a>
-                                       <ul id="menu-academico-sub" >
-                                           <li id="menu-academico-boletim" ><a href="/ankets">Анкеты</a></li>
-                                           <li id="menu-academico-avaliacoes" ><a href="/refbooks">Справочники</a></li>
-                                       </ul>
-                                   </li>
-                                   <li id="menu-academico" ><a href="#"><i class="fa fa-bar-chart"></i>  <span>Отчеты</span> <span class="fa fa-angle-right" style="float: right"></span><div class="clearfix"></div></a>
-                                       <ul id="menu-academico-sub" >
-                                           <li id="menu-academico-boletim" ><a href="/reports/ankets">Анкетирование</a></li>
-                                           <li id="menu-academico-avaliacoes" ><a href="/main/control/visit-report">Посещаемость выставки</a></li>
-                                           <li id="menu-academico-avaliacoes" ><a href="/main/control/work-report">Присутствие на выставке</a></li>
-                                           <li id="menu-academico-avaliacoes" ><a href="#"><span>Потребление эл. энергии</span><span class="fa fa-angle-right" style="float: right"></span><div class="clearfix"></div></a>
-                                               <ul id="menu-academico-sub" >
-                                                   <li id="menu-academico-avaliacoes" style="float:left; width: 200px;"><a href="/main/energy/main-report">Счетчики общие</a></li>
-                                                   <li id="menu-academico-avaliacoes" style="float:left; width: 200px;"><a href="/main/energy/rent-counter">Счетчики арендаторов</a></li>
-                                                   <li id="menu-academico-avaliacoes" style="float:left; width: 200px;"><a href="/main/energy/own-counter">Собственное потребление</a></li>
-                                               </ul>
-                                           </li>
-                                       </ul>
-                                   </li>
-                                   <li id="menu-academico" ><a href="#"><i class="fa fa-table"></i>  <span>Посещение</span> <span class="fa fa-angle-right" style="float: right"></span><div class="clearfix"></div></a>
-                                       <ul id="menu-academico-sub" >
-                                           <li id="menu-academico-boletim" ><a href="/main/control/works">Присутствие на выставке</a></li>
-                                           <li id="menu-academico-avaliacoes" ><a href="/main/control/visits">Посещение выставки</a></li>
-                                       </ul>
-                                   </li>
-                                   <li id="menu-academico" ><a href="#"><i class="fa fa-lightbulb-o" aria-hidden="true"></i><span> Энергоучет</span> <span class="fa fa-angle-right" style="float: right"></span><div class="clearfix"></div></a>
-                                       <ul id="menu-academico-sub" >
-                                           <li id="menu-academico-boletim" ><a href="/main/energy/main-counter">Счетчики общие</a></li>
-                                           <li id="menu-academico-avaliacoes" ><a href="/main/energy/renters-counter">Счетчики арендаторов</a></li>
-                                           <li id="menu-academico-avaliacoes" ><a href="#"><span>Начальные показания</span><span class="fa fa-angle-right" style="float: right"></span><div class="clearfix"></div></a>
-                                               <ul id="menu-academico-sub" >
-                                                   <li id="menu-academico-avaliacoes" style="float:left; width: 200px;"><a href="/main/energy/init-main">Счетчики общие</a></li>
-                                                   <li id="menu-academico-avaliacoes" style="float:left; width: 200px;"><a href="/main/energy/init-counter">Счетчики арендаторов</a></li>
-                                               </ul>
-                                           </li>
-                                           <li id="menu-academico-avaliacoes" ><a href="/main/energy/billing">Расчет потребления</a></li>
-                                       </ul>
-                                   </li>
-                                   <li id="menu-academico" ><a href="#"><i class="fa fa-gear" aria-hidden="true"></i><span> Настройки</span> <span class="fa fa-angle-right" style="float: right"></span><div class="clearfix"></div></a>
-                                       <ul id="menu-academico-sub" >
-                                           <li id="menu-academico-boletim" ><a href="/admin/ecounter">Счетчики общие</a></li>
-                                           <li id="menu-academico-avaliacoes" ><a href="/admin/place">Территории</a></li>
-                                           <li id="menu-academico-avaliacoes" ><a href="/admin/user">Пользователи</a></li>
-                                           <li id="menu-academico-avaliacoes" ><a href="/admin/describer">Подписчики</a></li>
-                                       </ul>
-                                   </li>
-                               </ul>
-								</div>
-							  </div>
-							  <div class="clearfix"></div>
-							</div>
-							<script>
-							var toggle = true;
-
-							$(".sidebar-icon").click(function() {
-                                if (toggle)
-                                {
-                                    $(".page-container").addClass("sidebar-collapsed").removeClass("sidebar-collapsed-back");
-                                    $("#menu span").css({"position":"absolute"});
-							  }
-                                else
-                                {
-                                    $(".page-container").removeClass("sidebar-collapsed").addClass("sidebar-collapsed-back");
-                                    setTimeout(function() {
-                                        $("#menu span").css({"position":"relative"});
-								}, 400);
-                                }
-
-                                toggle = !toggle;
-                            });
-							</script>
-<!--js -->
-
-<!-- morris JavaScript -->
-
-<script>
-$(document).ready(function() {
-    //BOX BUTTON SHOW AND CLOSE
-    jQuery('.small-graph-box').hover(function() {
-        jQuery(this).find('.box-button').fadeIn('fast');
-    }, function() {
-        jQuery(this).find('.box-button').fadeOut('fast');
-    });
-    jQuery('.small-graph-box .box-close').click(function() {
-        jQuery(this).closest('.small-graph-box').fadeOut(200);
-        return false;
-    });
-
-    //CHARTS
-    function gd(year, day, month) {
-        return new Date(year, month - 1, day).getTime();
-    }
-
-    graphArea2 = Morris.Area({
-			element: 'hero-area',
-			padding: 10,
-        behaveLikeLine: true,
-        gridEnabled: false,
-        gridLineColor: '#dddddd',
-        axes: true,
-        resize: true,
-        smooth:true,
-        pointSize: 0,
-        lineWidth: 0,
-        fillOpacity:0.85,
-			data: [
-				{period: '2014 Q1', iphone: 2668, ipad: null, itouch: 2649},
-				{period: '2014 Q2', iphone: 15780, ipad: 13799, itouch: 12051},
-				{period: '2014 Q3', iphone: 12920, ipad: 10975, itouch: 9910},
-				{period: '2014 Q4', iphone: 8770, ipad: 6600, itouch: 6695},
-				{period: '2015 Q1', iphone: 10820, ipad: 10924, itouch: 12300},
-				{period: '2015 Q2', iphone: 9680, ipad: 9010, itouch: 7891},
-				{period: '2015 Q3', iphone: 4830, ipad: 3805, itouch: 1598},
-				{period: '2015 Q4', iphone: 15083, ipad: 8977, itouch: 5185},
-				{period: '2016 Q1', iphone: 10697, ipad: 4470, itouch: 2038},
-				{period: '2016 Q2', iphone: 8442, ipad: 5723, itouch: 1801}
-			],
-			lineColors:['#ff4a43','#a2d200','#22beef'],
-			xkey: 'period',
-            redraw: true,
-            ykeys: ['iphone', 'ipad', 'itouch'],
-            labels: ['All Visitors', 'Returning Visitors', 'Unique Visitors'],
-			pointSize: 2,
-			hideHover: 'auto',
-			resize: true
-		});
-
-
-	});
-	</script>
+<!-- /#wrapper -->
 <?php $this->endBody() ?>
 </body>
+
 </html>
 <?php $this->endPage() ?>
+

@@ -497,7 +497,7 @@ class Report extends Model {
             $logs = EnergyLog::find()->select(['month','encount','delta','price'])->where(['=','renter_id',$renter])->andWhere(['=','year',$year])->orderBy('month', SORT_ASC)->all();
             $title = Renter::findOne($renter);
             $objPHPExcel->setActiveSheetIndex($p);
-            $objPHPExcel->getActiveSheet()->setTitle($title->title);
+            $objPHPExcel->getActiveSheet()->setTitle($title->title.' ('.$title->area.')');
             $k=1;
             $objPHPExcel->setActiveSheetIndex($p)
                 ->setCellValue('A'.$k, 'Расчет энергопотребления за '.$year.' год');
