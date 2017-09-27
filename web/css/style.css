@@ -104,6 +104,12 @@ body {
 .img-circle {
   border-radius: 50%;
 }
+.headpan {
+  height: 150px;
+  z-index: 999;
+  position: relative;
+}
+
 .sidebar .sidebar-nav.navbar-collapse {
   padding-left: 0;
   padding-right: 0;
@@ -467,5 +473,10 @@ table.dataTable thead .sorting:after {
     left: -14px;
     border-right-width: 14px;
     border-left-width: 0;
+  }
+}
+@media(max-width:767px) {
+  .headpan {
+    height: auto;
   }
 }
