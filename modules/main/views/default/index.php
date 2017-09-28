@@ -91,18 +91,23 @@
             <div class="panel-heading">
                 <div class="row">
                     <div class="col-xs-3">
-                        <i class="fa fa-support fa-5x"></i>
+                        <i class="fa fa-flash fa-5x"></i>
                     </div>
                     <div class="col-xs-9 text-right">
-                        <div class="huge">13</div>
-                        <div>Support Tickets!</div>
+                        <div class="huge"><?= $rent_count; ?></div>
+                        <div>Потребители</div>
                     </div>
                 </div>
             </div>
-            <a href="#">
+            <div class="panel-body dashbrd">
+                <div class="list-group">
+                    <?= $place_count; ?>
+                </div>
+            </div>
+            <a href="#" class="a-footer">
                 <div class="panel-footer">
-                    <span class="pull-left">View Details</span>
-                    <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                    <span class="pull-left">Подробнее</span>
+                    <span class="pull-right"><i class="fa fa-arrow-circle-down"></i></span>
                     <div class="clearfix"></div>
                 </div>
             </a>
@@ -112,133 +117,85 @@
 <!-- /.row -->
 <div class="panel panel-default">
     <div class="panel-heading">
-        <i class="fa fa-bar-chart-o fa-fw"></i> Area Chart Example
+        <i class="fa fa-bar-chart-o fa-fw"></i> График посещений выставки
         <div class="pull-right">
             <div class="btn-group">
                 <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
-                    Actions
+                    Действия
                     <span class="caret"></span>
                 </button>
                 <ul class="dropdown-menu pull-right" role="menu">
-                    <li><a href="#">Action</a>
-                    </li>
-                    <li><a href="#">Another action</a>
-                    </li>
-                    <li><a href="#">Something else here</a>
-                    </li>
-                    <li class="divider"></li>
-                    <li><a href="#">Separated link</a>
+                    <li>
+                        <a href="/main/default/index">Обновить</a>
                     </li>
                 </ul>
             </div>
         </div>
     </div>
     <!-- /.panel-heading -->
-    <div class="panel-body">
-        <div id="morris-area-chart"></div>
+    <div class="panel-body col-md-8">
+        <div id="visitor-chart"></div>
     </div>
-    <!-- /.panel-body -->
-    <!-- /.panel -->
-    <div class="panel panel-default">
-        <div class="panel-heading">
-            <i class="fa fa-bar-chart-o fa-fw"></i> Bar Chart Example
-            <div class="pull-right">
-                <div class="btn-group">
-                    <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
-                        Actions
-                        <span class="caret"></span>
-                    </button>
-                    <ul class="dropdown-menu pull-right" role="menu">
-                        <li><a href="#">Action</a>
-                        </li>
-                        <li><a href="#">Another action</a>
-                        </li>
-                        <li><a href="#">Something else here</a>
-                        </li>
-                        <li class="divider"></li>
-                        <li><a href="#">Separated link</a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-        <!-- /.panel-heading -->
-        <div class="panel-body">
-            <div class="row">
-                <div class="col-lg-4">
-                    <div class="table-responsive">
-                        <table class="table table-bordered table-hover table-striped">
-                            <thead>
-                            <tr>
-                                <th>#</th>
-                                <th>Date</th>
-                                <th>Time</th>
-                                <th>Amount</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr>
-                                <td>3326</td>
-                                <td>10/21/2013</td>
-                                <td>3:29 PM</td>
-                                <td>$321.33</td>
-                            </tr>
-                            <tr>
-                                <td>3325</td>
-                                <td>10/21/2013</td>
-                                <td>3:20 PM</td>
-                                <td>$234.34</td>
-                            </tr>
-                            <tr>
-                                <td>3324</td>
-                                <td>10/21/2013</td>
-                                <td>3:03 PM</td>
-                                <td>$724.17</td>
-                            </tr>
-                            <tr>
-                                <td>3323</td>
-                                <td>10/21/2013</td>
-                                <td>3:00 PM</td>
-                                <td>$23.71</td>
-                            </tr>
-                            <tr>
-                                <td>3322</td>
-                                <td>10/21/2013</td>
-                                <td>2:49 PM</td>
-                                <td>$8345.23</td>
-                            </tr>
-                            <tr>
-                                <td>3321</td>
-                                <td>10/21/2013</td>
-                                <td>2:23 PM</td>
-                                <td>$245.12</td>
-                            </tr>
-                            <tr>
-                                <td>3320</td>
-                                <td>10/21/2013</td>
-                                <td>2:15 PM</td>
-                                <td>$5663.54</td>
-                            </tr>
-                            <tr>
-                                <td>3319</td>
-                                <td>10/21/2013</td>
-                                <td>2:13 PM</td>
-                                <td>$943.45</td>
-                            </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <!-- /.table-responsive -->
-                </div>
-                <!-- /.col-lg-4 (nested) -->
-                <div class="col-lg-8">
-                    <div id="morris-bar-chart"></div>
-                </div>
-                <!-- /.col-lg-8 (nested) -->
-            </div>
-            <!-- /.row -->
-        </div>
-        <!-- /.panel-body -->
+    <div class="panel-body col-md-4">
+        <div id="visitor-bar">График тут</div>
     </div>
-    <!-- /.panel -->
+
 </div>
+
+<?php
+$js = <<<JS
+$(document).ready(function(){
+var now = new Date();
+var month = now.getMonth().toString();
+var year = now.getFullYear().toString();
+if(month.length < 2)
+    month = '0'+month;
+var date = now.getDate().toString()
+if(date.length < 2)
+    date = '0'+date;
+
+     var start = year+'-'+month+'-01';
+     var finish = year+'-'+month+'-'+date;
+     $.ajax({
+     url: '/main/control/visit-report',
+     type: 'POST',
+     data: {'start':start,'finish':finish},
+     success: function(res){
+     //alert("Сервер вернул вот что: " + res);
+      $("#visitor-chart").empty();
+     Morris.Line({
+          element: 'visitor-chart',
+          data: JSON.parse(res),
+          xkey: 'y',
+          ykeys: ['a'],
+          labels: ['Кол-во']
+      });
+     },
+     error: function(){
+     alert('Error!');
+     }
+     });
+ $.ajax({
+     url: '/main/default',
+     type: 'POST',
+     data: {'start':start,'finish':finish},
+     success: function(res){
+     //alert("Сервер вернул вот что: " + res);
+      $("#visitor-bar").empty();
+     Morris.Bar({
+          element: 'visitor-bar',
+          data: JSON.parse(res),
+          xkey: 'y',
+          ykeys: ['a'],
+          labels: ['Кол-во']
+      });
+     },
+     error: function(){
+     alert('Error!');
+     }
+     });
+ });
+JS;
+
+$this->registerJs($js);
+?>

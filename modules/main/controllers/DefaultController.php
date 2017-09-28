@@ -2,9 +2,11 @@
 
 namespace app\modules\main\controllers;
 
+use app\models\Events;
 use Yii;
 use yii\web\Controller;
 use app\modules\main\models\MainLog;
+use yii\data\ActiveDataProvider;
 
 /**
  * Default controller for the `main` module
@@ -27,6 +29,62 @@ class DefaultController extends Controller
         $start = date('Y-m').'-01';
         $finish = date('Y-m-d');
         $this->view->title = 'Информационная панель';
+
+        //строим график для анализа посещений
+        if(\Yii::$app->request->isAjax){
+            $data = array();
+            $date = $year.'-'.$month.'-';
+            $query=Yii::$app->db->createCommand("select sum(ucount) as ucount from visit where `data` like '$date%'"); //текущий месяц
+            $logs = $query->queryAll();
+            foreach($logs as $log){
+                $tmp = array();
+                $tmp['y'] = $year.'-'.$month;
+                $tmp['a'] = $log['ucount'];
+                array_push($data,$tmp);
+            }
+            $period = explode('-', date('Y-m-d', strtotime("$finish -1 month"))); // предыдущий месяц
+            $y = $period[0];
+            $m = $period[1];
+            //$d = $period[2];
+            $date = $y.'-'.$m.'-';
+            $query=Yii::$app->db->createCommand("select sum(ucount) as ucount from visit where `data` like '$date%'");
+            $logs = $query->queryAll();
+            foreach($logs as $log){
+                $tmp = array();
+                $tmp['y'] = $y.'-'.$m;
+                $tmp['a'] = $log['ucount'];
+                array_push($data,$tmp);
+            }
+            $period = explode('-', date('Y-m-d', strtotime("$finish -2 month"))); // препредыдущий месяц
+            $y = $period[0];
+            $m = $period[1];
+            //$d = $period[2];
+            $date = $y.'-'.$m.'-';
+            $query=Yii::$app->db->createCommand("select sum(ucount) as ucount from visit where `data` like '$date%'");
+            $logs = $query->queryAll();
+            foreach($logs as $log){
+                $tmp = array();
+                $tmp['y'] = $y.'-'.$m;
+                $tmp['a'] = $log['ucount'];
+                array_push($data,$tmp);
+            }
+            $period = explode('-', date('Y-m-d', strtotime("$finish -1 year"))); //текущий месяц предыдущего года
+            $y = $period[0];
+            $m = $period[1];
+            //$d = $period[2];
+            $date = $y.'-'.$m.'-'.$d;
+            $query=Yii::$app->db->createCommand("select sum(ucount) as ucount from visit where `data` like '$date%'");
+            $logs = $query->queryAll();
+            //return print_r($logs);
+            foreach($logs as $log){
+                $tmp = array();
+                $tmp['y'] = $y.'-'.$m;
+                $tmp['a'] = $log['ucount'];
+                array_push($data,$tmp);
+            }
+            return json_encode($data);
+        }
+
         //инфа для виджета энергопотребления
         $period = explode('-', date('Y-m', strtotime("$year-$month-01 -1 month"))); //определяем предыдущий период
         $y = $period[0];
@@ -93,8 +151,19 @@ class DefaultController extends Controller
             $worktime.='<tr><td>В среднем</td><td class="success">'.$time_avg.'</td></tr>';
         else
             $worktime.='<tr><td>В среднем</td><td class="danger">'.$time_avg.'</td></tr>';
-
         $worktime.='</table>';
+        //определяем данные по кол-ву потребителей по территориям
+        $rent_count = 0;
+        $place_count = '<table class="table table-hover table-striped"><tr  class="tblh"><th>Территория</th><th>Число счетчиков</th></tr>';
+        $query = "select p.name, count(r.title) as rents from renter r join place p on p.id=r.place_id where status=1 group by p.name";
+        $rows = $connection->createCommand($query)->queryAll();
+        foreach ($rows as $row){
+            $place_count.='<tr><td>'.$row['name'].'</td><td>'.$row['rents'].'</td></tr>';
+            $rent_count += $row['rents'];
+        }
+        $place_count .= '</table>';
+        $events = Events::find()->where(['=','is_read',0])->count(); //общее число не прочитанных событий
+        Yii::$app->session->setFlash('events', $events);
         return $this->render('index',[
             'energy' => $energy,
             'people' => $people,
@@ -102,7 +171,46 @@ class DefaultController extends Controller
             'worktime' => $worktime,
             'time_avg' => $time_avg,
             'main_count' => $main_count,
+            'rent_count' => $rent_count,
+            'place_count' => $place_count,
         ]);
+    }
+
+    public function actionEvents(){
+        $query = Events::find()->where(['=', 'is_read', 0]);
+        $dataProvider = new ActiveDataProvider([
+            'query' => $query,
+            'sort'=> ['defaultOrder' => ['id'=>SORT_ASC]],
+            'pagination' => [
+                'pageSize' => Yii::$app->params['page_size'],
+            ],
+        ]);
+        $events = Events::find()->where(['=','is_read',0])->count(); //общее число не прочитанных событий
+        Yii::$app->session->setFlash('events', $events);
+        return $this->render('events', [
+            'dataProvider' => $dataProvider,
+        ]);
+    }
+
+    public function actionView($id)
+    {
+        return $this->render('view', [
+            'model' => $this->findModel($id),
+        ]);
+    }
+
+    public function actionUpdate($id)
+    {
+        $model = $this->findModel($id);
+        $model->is_read = 1;
+        $model->save();
+        return $this->redirect('/main/default/events');
+    }
+
+    public function actionDelete($id)
+    {
+        $this->findModel($id)->delete();
+        return $this->redirect(['/main/default/events']);
     }
 
     public function actionAddAdmin() {
@@ -118,6 +226,15 @@ class DefaultController extends Controller
             if ($user->save()) {
                 echo 'Администратор системы создан';
             }
+        }
+    }
+
+    protected function findModel($id)
+    {
+        if (($model = Events::findOne($id)) !== null) {
+            return $model;
+        } else {
+            throw new NotFoundHttpException('The requested page does not exist.');
         }
     }
 }
