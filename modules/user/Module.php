@@ -1,7 +1,7 @@
 <?php
 
 namespace app\modules\user;
-
+use Yii;
 /**
  * user module definition class
  */
@@ -21,4 +21,17 @@ class Module extends \yii\base\Module
 
         // custom initialization code goes here
     }
+
+    /**
+     * @var string
+     */
+    public $defaultRole = 'user';
+    /**
+     * @var int
+     */
+    public $emailConfirmTokenExpire = 259200; // 3 days
+    /**
+     * @var int
+     */
+    public $passwordResetTokenExpire = 3600;
 }

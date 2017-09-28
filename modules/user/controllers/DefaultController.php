@@ -6,6 +6,10 @@ use app\modules\user\models\LoginForm;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
 use yii\web\Controller;
+use app\modules\user\models\PasswordResetForm;
+use app\modules\user\models\PasswordResetRequestForm;
+use app\models\BaseModel;
+use app\modules\user\models\User;
 use Yii;
 
 /**
@@ -18,12 +22,17 @@ class DefaultController extends Controller
         return [
             'access' => [
                 'class' => AccessControl::className(),
-                'only' => ['logout'],
+                'only' => ['logout','password-reset-request'],
                 'rules' => [
                     [
                         'actions' => ['logout'],
                         'allow' => true,
                         'roles' => ['@'],
+                    ],
+                    [
+                        'actions' => ['password-reset-request'],
+                        'allow' => true,
+                        'roles' => ['?'],
                     ],
                 ],
             ],
@@ -81,5 +90,47 @@ class DefaultController extends Controller
         } */
         $this->view->title = 'Информационная панель';
         return $this->render('index');
+    }
+
+    public function actionPasswordResetRequest()
+    {
+        $this->layout = 'basic';
+        $model = new PasswordResetRequestForm($this->module->passwordResetTokenExpire);
+        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+            if ($model->sendEmail()) {
+                Yii::$app->getSession()->setFlash('success', 'Запрос на смену пароля отправлен!');
+                $log = 'На email <strong>'. $model->email .'</strong> отправлен запрос на смену пароля пользователя <strong>'. $model->getUser()->username .'</strong>.';
+                BaseModel::AddEventLog('info',$log);
+                return $this->goHome();
+            } else {
+                Yii::$app->getSession()->setFlash('error', 'Возникла ошибка при попытке отправки запроса на смену пароля.');
+                Yii::$app->getSession()->setFlash('success', 'Запрос на смену пароля отправлен!');
+                $log = 'Возникла ошибка при попытке отправки запроса на смену пароля пользователя <strong>'. $model->getUser()->username .'</strong> на email <strong>'. $model->email .'</strong>.';
+                BaseModel::AddEventLog('info',$log);
+            }
+        }
+        return $this->render('passwordResetRequest', [
+            'model' => $model,
+        ]);
+    }
+
+    public function actionPasswordReset($token)
+    {
+        $user = User::findByPasswordResetToken($token);
+        $this->layout = 'basic';
+        try {
+            $model = new PasswordResetForm($token, $this->module->passwordResetTokenExpire);
+        } catch (InvalidParamException $e) {
+            throw new BadRequestHttpException($e->getMessage());
+        }
+        if ($model->load(Yii::$app->request->post()) && $model->validate() && $model->resetPassword()) {
+            Yii::$app->getSession()->setFlash('success', 'Новый пароль установлен!');
+            $log = 'Новый пароль для пользователя <strong>'. $user['username'].'</strong> установлен.';
+            BaseModel::AddEventLog('info',$log);
+            return $this->goHome();
+        }
+        return $this->render('passwordReset', [
+            'model' => $model,
+        ]);
     }
 }

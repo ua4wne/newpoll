@@ -28,6 +28,10 @@ html {
     font-weight: bold;
 }
 
+.login_form p{
+    margin:5px;
+}
+
 .login_form button {
     margin: 0 auto;
     width: 90%;
