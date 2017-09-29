@@ -97,10 +97,22 @@ AppAsset::register($this);
                         </ul>
                     </li>
                     <li>
-                        <a href="#"><i class="fa fa-users fa-fw"></i></i> Маркетинг<span class="fa arrow"></span></a>
+                        <a href="#"><i class="fa fa-users fa-fw"></i> Маркетинг<span class="fa arrow"></span></a>
                         <ul class="nav nav-second-level">
-                            <li><a href="/ankets">Анкеты</a></li>
-                            <li ><a href="/refbooks">Справочники</a></li>
+                            <li><a href="/main/market/form">Анкеты</a></li>
+                            <li ><a href="#"><i class="fa fa-book fa-fw"></i>Справочники<span class="fa arrow"></span></a>
+                                <ul class="nav nav-third-level">
+                                    <li>
+                                        <a href="/main/market/city">Справочник городов</a>
+                                    </li>
+                                    <li>
+                                        <a href="/main/market/material">Справочник материалов</a>
+                                    </li>
+                                    <li>
+                                        <a href="/main/market/tvsource">Справочник медиа</a>
+                                    </li>
+                                </ul>
+                            </li>
                         </ul>
                     </li>
                     <li>
@@ -186,6 +198,9 @@ AppAsset::register($this);
                             </li>
                             <li>
                                 <a href="/admin/describer">Подписчики</a>
+                            </li>
+                            <li>
+                                <a href="/admin/catalog">Справочники</a>
                             </li>
                         </ul>
                         <!-- /.nav-second-level -->
