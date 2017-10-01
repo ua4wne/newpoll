@@ -12,17 +12,13 @@ use yii\widgets\ActiveForm;
 
     <?php $form = ActiveForm::begin(); ?>
 
-    <?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>
+    <?= $form->field($model, 'form_id')->hiddenInput()->label(false) ?>
 
-    <?//= $form->field($model, 'is_active')->textInput() ?>
-    <?= $form->field($model, 'is_active')->dropDownList($statsel) ?>
-
-    <?//= $form->field($model, 'is_work')->textInput() ?>
-    <?= $form->field($model, 'is_work')->dropDownList($worksel) ?>
+    <?= $form->field($model, 'name')->textInput() ?>
 
     <div class="form-group">
         <?= Html::submitButton($model->isNewRecord ? 'Создать' : 'Обновить', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
-        <?= Html::a('Вопросы анкеты', ['/main/market/questions','id' => $model->id], ['class' => 'btn btn-primary']) ?>
+        <?= Html::a('Ответы на вопрос', ['/main/market/answers','id' => $model->id], ['class' => 'btn btn-primary']) ?>
     </div>
 
     <?php ActiveForm::end(); ?>

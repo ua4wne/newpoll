@@ -3,6 +3,7 @@
 namespace app\modules\main\models;
 
 use Yii;
+use app\models\BaseModel;
 
 /**
  * This is the model class for table "form".
@@ -16,7 +17,7 @@ use Yii;
  *
  * @property Questions[] $questions
  */
-class Form extends \yii\db\ActiveRecord
+class Form extends BaseModel
 {
     /**
      * @inheritdoc

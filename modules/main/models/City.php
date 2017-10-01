@@ -3,6 +3,7 @@
 namespace app\modules\main\models;
 
 use Yii;
+use app\models\BaseModel;
 
 /**
  * This is the model class for table "city".
@@ -12,7 +13,7 @@ use Yii;
  * @property string $created_at
  * @property string $updated_at
  */
-class City extends \yii\db\ActiveRecord
+class City extends BaseModel
 {
     /**
      * @inheritdoc

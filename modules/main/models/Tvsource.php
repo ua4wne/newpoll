@@ -3,6 +3,7 @@
 namespace app\modules\main\models;
 
 use Yii;
+use app\models\BaseModel;
 
 /**
  * This is the model class for table "tvsource".
@@ -12,7 +13,7 @@ use Yii;
  * @property string $created_at
  * @property string $updated_at
  */
-class Tvsource extends \yii\db\ActiveRecord
+class Tvsource extends BaseModel
 {
     /**
      * @inheritdoc

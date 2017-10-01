@@ -2,12 +2,14 @@
 
 namespace app\modules\main\controllers\market;
 
+use app\modules\main\models\Questions;
 use Yii;
 use app\modules\main\models\Form;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use app\models\BaseModel;
 
 /**
  * FormController implements the CRUD actions for Form model.
@@ -69,11 +71,24 @@ class FormController extends Controller
     {
         $model = new Form();
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+            if($model->is_work){//если хотим установить рабочую анкеты
+                $connection = \Yii::$app->db;
+                $query="update form set is_work=0";
+                $connection->createCommand($query)->execute();
+            }
+            $msg = 'Добавлена новая анкета  <strong>'. $model->name .'</strong> пользователем <strong>'.Yii::$app->user->identity->fname .' '.Yii::$app->user->identity->lname.'</strong>.';
+            $model->save();
+            BaseModel::AddEventLog('info',$msg);
+            //return $this->redirect(['view', 'id' => $model->id]);
+            return $this->redirect('index');
         } else {
+            $statsel = array ('1' => 'Активная','0' => 'Не активная');
+            $worksel = array ('1' => 'Рабочая','0' => 'Не рабочая');
             return $this->render('create', [
                 'model' => $model,
+                'statsel' => $statsel,
+                'worksel' => $worksel,
             ]);
         }
     }
@@ -88,11 +103,24 @@ class FormController extends Controller
     {
         $model = $this->findModel($id);
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+            if($model->is_work){//если хотим установить рабочую анкеты
+                $connection = \Yii::$app->db;
+                $query="update form set is_work=0";
+                $connection->createCommand($query)->execute();
+            }
+            $msg = 'Данные анкеты  <strong>'. $model->name .'</strong> были обновлены пользователем <strong>'.Yii::$app->user->identity->fname .' '.Yii::$app->user->identity->lname.'</strong>.';
+            $model->save();
+            BaseModel::AddEventLog('info',$msg);
+            //return $this->redirect(['view', 'id' => $model->id]);
+            return $this->redirect('index');
         } else {
+            $statsel = array ('1' => 'Активная','0' => 'Не активная');
+            $worksel = array ('1' => 'Рабочая','0' => 'Не рабочая');
             return $this->render('update', [
                 'model' => $model,
+                'statsel' => $statsel,
+                'worksel' => $worksel,
             ]);
         }
     }
@@ -105,7 +133,15 @@ class FormController extends Controller
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
+        //есть ли вопросы
+        $qst = Questions::find()->where(['=','form_id',$id])->count();
+        if($qst)
+            Yii::$app->session->setFlash('error', 'У анкеты есть не удаленные вопросы. Удаление не возможно!');
+        else {
+            $msg = 'Анкета  <strong>'. $this->findModel($id)->name .'</strong> была удалена пользователем <strong>'.Yii::$app->user->identity->fname .' '.Yii::$app->user->identity->lname.'</strong>.';
+            $this->findModel($id)->delete();
+            BaseModel::AddEventLog('info',$msg);
+        }
 
         return $this->redirect(['index']);
     }

@@ -6,8 +6,8 @@ use yii\helpers\Html;
 /* @var $this yii\web\View */
 /* @var $model app\modules\main\models\Form */
 
-$this->title = 'Новая анкета';
-$this->params['breadcrumbs'][] = ['label' => 'Анкеты', 'url' => ['index']];
+$this->title = 'Новый вопрос';
+$this->params['breadcrumbs'][] = ['label' => 'Вопросы', 'url' => ['index','id'=>$model->form_id]];
 ?>
 <div class="form-create">
 
@@ -15,8 +15,6 @@ $this->params['breadcrumbs'][] = ['label' => 'Анкеты', 'url' => ['index']]
 
     <?= $this->render('_form', [
         'model' => $model,
-        'statsel' => $statsel,
-        'worksel' => $worksel,
     ]) ?>
 
 </div>
