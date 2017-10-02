@@ -24,11 +24,7 @@ $this->params['breadcrumbs'][] = $this->title;
             //'user_id',
             'user_ip',
             'type',
-            [
-                'attribute' => 'msg',
-                'value' => Html::decode('msg'),
-            ],
-            //'msg',
+            'msg:html',
             'created_at',
             //'updated_at',
 

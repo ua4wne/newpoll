@@ -5,7 +5,7 @@
 //$this->title = 'My Yii Application';
 ?>
 <div class="row">
-    <div class="col-lg-3 col-md-6">
+    <div class="col-lg-3 col-md-6 headpan">
         <div class="panel panel-primary">
             <div class="panel-heading">
                 <div class="row">
@@ -32,7 +32,7 @@
             </a>
         </div>
     </div>
-    <div class="col-lg-3 col-md-6">
+    <div class="col-lg-3 col-md-6 headpan">
         <div class="panel panel-primary">
             <div class="panel-heading">
                 <div class="row">
@@ -59,7 +59,7 @@
             </a>
         </div>
     </div>
-    <div class="col-lg-3 col-md-6">
+    <div class="col-lg-3 col-md-6 headpan">
         <div class="panel panel-green">
             <div class="panel-heading">
                 <div class="row">
@@ -86,7 +86,7 @@
             </a>
         </div>
     </div>
-    <div class="col-lg-3 col-md-6">
+    <div class="col-lg-3 col-md-6 headpan">
         <div class="panel panel-green">
             <div class="panel-heading">
                 <div class="row">
@@ -137,9 +137,18 @@
         <div id="visitor-chart"></div>
     </div>
     <div class="panel-body col-md-4">
-        <div id="visitor-bar">График тут</div>
+        <div id="visitor-bar"></div>
     </div>
-
+</div>
+<div class="row">
+    <div class="panel-heading">
+        <ul class="nav nav-pills" role="tablist">
+            <li role="presentation" class="active">
+                <a href="/main/default/events">События <span class="badge"><?= $events; ?></span></a>
+            </li>
+        </ul>
+    </div>
+    <div class="panel-body col-md-6"><?= $sysstate; ?></div>
 </div>
 
 <?php

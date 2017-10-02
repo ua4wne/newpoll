@@ -9,11 +9,13 @@ $(document).ready(function(){
             $(this).find('span:first').text('Свернуть');
             $(this).find('span:last').find('i').removeClass('fa-arrow-circle-down');
             $(this).find('span:last').find('i').addClass('fa-arrow-circle-up');
+            $('.headpan').css('z-index','9999');
         }
         else {
             $(this).find('span:first').text('Подробнее');
             $(this).find('span:last').find('i').removeClass('fa-arrow-circle-up');
             $(this).find('span:last').find('i').addClass('fa-arrow-circle-down');
+            $('.headpan').css('z-index','999');
         }
     });
 
