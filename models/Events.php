@@ -52,7 +52,7 @@ class Events extends BaseModel
         return [
             'id' => 'ID',
             'user_id' => 'Пользователь',
-            'user_id' => 'IP адрес',
+            'user_ip' => 'IP адрес',
             'type' => 'Тип события',
             'msg' => 'Сообщение',
             'is_read' => 'Прочтено',

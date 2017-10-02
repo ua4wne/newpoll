@@ -73,8 +73,10 @@ class QuestionsController extends Controller
             return $this->redirect(['index','id'=>$model->form_id]);
         } else {
             $model->form_id = $id;
+            $qstans = 0;
             return $this->render('create', [
                 'model' => $model,
+                'qstans' => $qstans,
             ]);
         }
     }
@@ -96,8 +98,10 @@ class QuestionsController extends Controller
             //return $this->redirect(['view', 'id' => $model->id]);
             return $this->redirect(['index','id'=>$model->form_id]);
         } else {
+            $qstans = Answers::find()->where(['=','question_id',$id])->count();
             return $this->render('update', [
                 'model' => $model,
+                'qstans' => $qstans,
             ]);
         }
     }

@@ -15,6 +15,7 @@ $this->params['breadcrumbs'][] = ['label' => 'Вопросы', 'url' => ['index'
 
     <?= $this->render('_form', [
         'model' => $model,
+        'qstans' => $qstans,
     ]) ?>
 
 </div>

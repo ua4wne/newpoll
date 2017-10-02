@@ -22,7 +22,7 @@ use yii\widgets\ActiveForm;
 
     <div class="form-group">
         <?= Html::submitButton($model->isNewRecord ? 'Создать' : 'Обновить', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
-        <?= Html::a('Вопросы анкеты', ['/main/market/questions','id' => $model->id], ['class' => 'btn btn-primary']) ?>
+        <?= Html::a('Вопросы анкеты <span class="badge">'.$qstcount.'</span>', ['/main/market/questions','id' => $model->id], ['class' => 'btn btn-primary']) ?>
     </div>
 
     <?php ActiveForm::end(); ?>

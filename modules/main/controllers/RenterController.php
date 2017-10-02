@@ -69,7 +69,7 @@ class RenterController extends Controller
         $model = new Renter();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            $msg = 'Добавлен новый арендатор <strong>'. $model->title .'</strong>.';
+            $msg = 'Пользователем <strong>'.Yii::$app->user->identity->fname .' '.Yii::$app->user->identity->lname.'</strong> добавлен новый арендатор <strong>'. $model->title .'</strong>.';
             BaseModel::AddEventLog('info',$msg);
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
@@ -104,7 +104,7 @@ class RenterController extends Controller
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            $msg = 'Данные арендатора <strong>'. $model->title .'</strong> были обновлены.';
+            $msg = 'Данные арендатора <strong>'. $model->title .'</strong> были обновлены пользователем <strong>'.Yii::$app->user->identity->fname .' '.Yii::$app->user->identity->lname.'</strong>.';
             BaseModel::AddEventLog('info',$msg);
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
@@ -139,7 +139,7 @@ class RenterController extends Controller
         //$this->findModel($id)->delete();
         $row = Renter::findOne($id);
         $row->delete();
-        $msg = 'Данные арендатора <strong>'. $row->title .'</strong> были удалены.';
+        $msg = 'Данные арендатора <strong>'. $row->title .'</strong> были удалены пользователем <strong>'.Yii::$app->user->identity->fname .' '.Yii::$app->user->identity->lname.'</strong>.';
         BaseModel::AddEventLog('info',$msg);
 
         return $this->redirect(['index']);
