@@ -17,6 +17,7 @@ $this->params['breadcrumbs'][] = ['label' => 'Анкеты', 'url' => ['index']]
         'model' => $model,
         'statsel' => $statsel,
         'worksel' => $worksel,
+        'qstcount' => $qstcount,
     ]) ?>
 
 </div>

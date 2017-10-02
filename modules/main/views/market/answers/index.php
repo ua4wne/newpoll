@@ -7,14 +7,15 @@ use yii\widgets\Pjax;
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
 $this->title = 'Ответы на вопрос';
+$this->params['breadcrumbs'][] = ['label' => $qname, 'url' => ['/main/market/questions/update','id'=>$qid]];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="form-index">
 
-    <h1>Вопросы анкеты "<?= Html::encode($anket) ?>"</h1>
+    <h1>Ответы на вопрос "<?= Html::encode($qname) ?>"</h1>
 
     <p>
-        <?= Html::a('Новый ответ', ['create','id' => $qst_id], ['class' => 'btn btn-success']) ?>
+        <?= Html::a('Новый ответ', ['create','id' => $qid], ['class' => 'btn btn-success']) ?>
     </p>
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
@@ -23,7 +24,9 @@ $this->params['breadcrumbs'][] = $this->title;
 
             //'id',
             'name',
-            'htmlcode',
+            ['attribute' => 'htmlcode',
+                'format' => 'raw',],
+            //'htmlcode',
             'source',
             'created_at',
             'updated_at',

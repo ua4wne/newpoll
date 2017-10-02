@@ -85,10 +85,12 @@ class FormController extends Controller
         } else {
             $statsel = array ('1' => 'Активная','0' => 'Не активная');
             $worksel = array ('1' => 'Рабочая','0' => 'Не рабочая');
+            $qstcount = 0;
             return $this->render('create', [
                 'model' => $model,
                 'statsel' => $statsel,
                 'worksel' => $worksel,
+                'qstcount' => $qstcount,
             ]);
         }
     }
@@ -117,10 +119,12 @@ class FormController extends Controller
         } else {
             $statsel = array ('1' => 'Активная','0' => 'Не активная');
             $worksel = array ('1' => 'Рабочая','0' => 'Не рабочая');
+            $qstcount = Questions::find()->where(['=','form_id',$id])->count();
             return $this->render('update', [
                 'model' => $model,
                 'statsel' => $statsel,
                 'worksel' => $worksel,
+                'qstcount' => $qstcount,
             ]);
         }
     }

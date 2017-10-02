@@ -7,6 +7,7 @@ use yii\widgets\Pjax;
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
 $this->title = 'Вопросы анкеты';
+$this->params['breadcrumbs'][] = ['label' => $anket, 'url' => ['/main/market/form/update','id'=>$form_id]];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="form-index">

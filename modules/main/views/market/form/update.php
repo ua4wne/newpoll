@@ -18,6 +18,7 @@ $this->params['breadcrumbs'][] = ['label' => $model->name, 'url' => ['view', 'id
         'model' => $model,
         'statsel' => $statsel,
         'worksel' => $worksel,
+        'qstcount' => $qstcount,
     ]) ?>
 
 </div>
