@@ -119,7 +119,7 @@ AppAsset::register($this);
                         <a href="#"><i class="fa fa-bar-chart fa-fw"></i> Отчеты<span class="fa arrow"></span></a>
                         <ul class="nav nav-second-level">
                             <li>
-                                <a href="/reports/ankets">Анкетирование</a>
+                                <a href="/main/market/form-report">Анкетирование</a>
                             </li>
                             <li>
                                 <a href="/main/control/visit-report">Посещаемость выставки</a>

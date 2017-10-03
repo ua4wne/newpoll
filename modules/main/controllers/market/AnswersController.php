@@ -90,15 +90,15 @@ class AnswersController extends Controller
                         $html='<input type="checkbox" name="q'.$id.'[]" id="a'.$last_id.'" value="'.$last_id.'" >'.$model->name.'<input type="text" name="other'.$last_id.'" value="">';
                         break;
                     case 'tonesel':
-                        if($model->refbook=='city')
-                            $html='<input type="radio" name="q'.$id.'" id="a'.$last_id.'" value="'.$last_id.'" >'.$model->name.'<input type="text" name="other'.$last_id.'" value="" placeholder="начинайте вводить текст" class="'.$model->refbook.'">';
-                        else
+                        //if($model->refbook=='city')
+                        //    $html='<input type="radio" name="q'.$id.'" id="a'.$last_id.'" value="'.$last_id.'" >'.$model->name.'<input type="text" name="other'.$last_id.'" value="" placeholder="начинайте вводить текст" class="'.$model->refbook.'">';
+                        //else
                             $html='<input type="radio" name="q'.$id.'" id="a'.$last_id.'" value="'.$last_id.'" >'.$model->name.'<select size="1" name="other'.$last_id.'" id="s'.$last_id.'">';
                         break;
                     case 'tmulsel':
-                        if($model->refbook=='city')
-                            $html='<input type="checkbox" name="q'.$id.'[]" id="a'.$last_id.'" value="'.$last_id.'" >'.$model->name.'<input type="text" name="other'.$last_id.'" value="" placeholder="начинайте вводить текст" class="'.$model->refbook.'">';
-                        else
+                        //if($model->refbook=='city')
+                        //    $html='<input type="checkbox" name="q'.$id.'[]" id="a'.$last_id.'" value="'.$last_id.'" >'.$model->name.'<input type="text" name="other'.$last_id.'" value="" placeholder="начинайте вводить текст" class="'.$model->refbook.'">';
+                        //else
                             $html='<input type="checkbox" name="q'.$id.'[]" id="a'.$last_id.'" value="'.$last_id.'" >'.$model->name.'<select size="1" name="other'.$last_id.'" id="s'.$last_id.'">';
                         break;
                 }

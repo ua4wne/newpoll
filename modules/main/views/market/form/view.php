@@ -30,6 +30,8 @@ $this->params['breadcrumbs'][] = ['label' => Html::encode($this->title)];
 $js = <<<JS
 $(document).ready(function(){
     $('form').submit(function(){
+        var err = 0;
+        //e.preventDefault();
         $(".table").find(":input[name*='other']").each(function() {// проверяем каждое поле ввода в форме
 			if($(this).prev().is(':checked')){ //если выбран чекбокс
 				if(!$(this).val()){// если поле пустое
@@ -37,29 +39,32 @@ $(document).ready(function(){
 					$(this).css('border', '1px solid red');// устанавливаем рамку красного цвета
 					$(this).focus(); //установка фокуса на поле с ошибкой
 					err=1;
-                    return false;
-				//	error=1;// определяем индекс ошибки
+					return false;
 				}
 				else{
-					$(this).css('border', '1px solid green');// устанавливаем рамку зеленого цвета
+					$(this).css('border', '');// устанавливаем рамку зеленого цвета
 				}
 			}
 		})
-        $('.panel-heading').each(function() { //проверяем наличие вопросов без ответов
+        $('.panel-info').each(function() { //проверяем наличие вопросов без ответов
             var obj = $(this);
-            var qname = obj.find('legend').text();
+            var qname = obj.find('.panel-heading').text();
             var qst = obj.find('input:checked').length;
             //var rqst = obj.find('input[type=radio]:checked').length;
             //alert('val='+qst+' qname='+qname);
             if(qst==0) {
-                if(qname!='Ваши контакты?'&&err==0) {
+                if(qname!='Ваши контакты?') {
+                    err++;
                     alert('Не выбран вариант ответа на вопрос "'+qname+'"');
                     $(':first-child',this).focus();
-                    err=1;
                     return false;
                 }
             }
         })
+        if(err) return false;
+        else{
+            return true;
+        };
     });
 });
 JS;
