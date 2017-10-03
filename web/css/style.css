@@ -475,6 +475,14 @@ table.dataTable thead .sorting:after {
     border-left-width: 0;
   }
 }
+td select {
+  width: 50%;
+  margin-left: 5px;
+}
+td input[type=text] {
+  width: 50%;
+  margin-left: 5px;
+}
 @media(max-width:767px) {
   .headpan {
     height: auto;

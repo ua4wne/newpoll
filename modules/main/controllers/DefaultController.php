@@ -36,12 +36,18 @@ class DefaultController extends Controller
             $date = $year.'-'.$month.'-';
             $query=Yii::$app->db->createCommand("select sum(ucount) as ucount from visit where `data` like '$date%'"); //текущий месяц
             $logs = $query->queryAll();
-            foreach($logs as $log){
-                $tmp = array();
-                $tmp['y'] = $year.'-'.$month;
-                $tmp['a'] = $log['ucount'];
-                array_push($data,$tmp);
+            if($logs){
+                foreach($logs as $log){
+                    $tmp = array();
+                    $tmp['y'] = $year.'-'.$month;
+                    if($log['ucount'])
+                        $tmp['a'] = $log['ucount'];
+                    else
+                        $tmp['a'] = 0;
+                    array_push($data,$tmp);
+                }
             }
+
             $period = explode('-', date('Y-m-d', strtotime("$finish -1 month"))); // предыдущий месяц
             $y = $period[0];
             $m = $period[1];
@@ -72,7 +78,7 @@ class DefaultController extends Controller
             $y = $period[0];
             $m = $period[1];
             //$d = $period[2];
-            $date = $y.'-'.$m.'-'.$d;
+            $date = $y.'-'.$m.'-';
             $query=Yii::$app->db->createCommand("select sum(ucount) as ucount from visit where `data` like '$date%'");
             $logs = $query->queryAll();
             //return print_r($logs);

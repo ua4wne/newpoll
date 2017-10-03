@@ -24,15 +24,29 @@ class VisitReportController extends Controller
             $model->start = Yii::$app->request->post('start');
             $model->finish = Yii::$app->request->post('finish');
             $data = array();
+            if($model->start=='start')
+                $model->start = date('Y-m').'-01';
+            if($model->finish=='finish')
+                $model->finish = date('Y-m-d');
             $query=Yii::$app->db->createCommand("select `data`, sum(ucount) as ucount from visit where `data` between '$model->start' and '$model->finish' group by `data`");
             $logs = $query->queryAll();
-            //return print_r($logs);
-            foreach($logs as $log){
+            if($logs) {
+                foreach($logs as $log){
+                    $tmp = array();
+                    $tmp['y'] = $log['data'];
+                    $tmp['a'] = $log['ucount'];
+                    array_push($data,$tmp);
+                }
+            }
+            else{
                 $tmp = array();
-                $tmp['y'] = $log['data'];
-                $tmp['a'] = $log['ucount'];
+                $tmp['y'] = $model->start;
+                $tmp['a'] = 0;
+                $tmp['y'] = $model->finish;
+                $tmp['a'] = 0;
                 array_push($data,$tmp);
             }
+
             return json_encode($data);
         }
         if (Yii::$app->request->post('export')) {
@@ -41,8 +55,8 @@ class VisitReportController extends Controller
             }
         }
         else{
-            $model->start = date('Y-m').'-01';
-            $model->finish  = date('Y-m-d');
+            //$model->start = date('Y-m').'-01';
+            //$model->finish  = date('Y-m-d');
 
             return $this->render('index',[
                 'model' => $model,

@@ -19,6 +19,7 @@ $this->params['breadcrumbs'][] = ['label' => 'Новый ответ'];
     <?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>
 
     <?= $form->field($model, 'htmlcode')->dropDownList($htmlsel) ?>
+    <?= $form->field($model, 'refbook')->dropDownList($refsel) ?>
 
 
     <div class="form-group">
@@ -27,5 +28,25 @@ $this->params['breadcrumbs'][] = ['label' => 'Новый ответ'];
 
     <?php ActiveForm::end(); ?>
 
-
 </div>
+
+<?php
+$js = <<<JS
+$(document).ready(function(){
+    $("#answerform-refbook").hide();
+    $("#answerform-refbook").prev().hide();
+    $("#answerform-htmlcode").change(function() {
+		if($("#answerform-htmlcode").val()=='tonesel'||$("#answerform-htmlcode").val()=='tmulsel') {
+			$("#answerform-refbook").show();
+			$("#answerform-refbook").prev().show();
+		}
+		else {
+			$("#answerform-refbook").hide();
+			$("#answerform-refbook").prev().hide();
+		}	
+	});
+});
+JS;
+
+$this->registerJs($js);
+?>

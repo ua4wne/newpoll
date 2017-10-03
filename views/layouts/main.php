@@ -134,10 +134,10 @@ AppAsset::register($this);
                                         <a href="/main/energy/main-report">Счетчики общие</a>
                                     </li>
                                     <li>
-                                        <a href="/main/energy/rent-counter">Счетчики арендаторов</a></li>
+                                        <a href="/main/energy/rent-counter">Счетчики арендаторов</a>
                                     </li>
                                     <li>
-                                        <a href="/main/energy/own-counter">Собственное потребление</a></li>
+                                        <a href="/main/energy/own-counter">Собственное потребление</a>
                                     </li>
                                 </ul>
                                 <!-- /.nav-third-level -->

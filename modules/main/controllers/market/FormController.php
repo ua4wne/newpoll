@@ -5,6 +5,7 @@ namespace app\modules\main\controllers\market;
 use app\modules\main\models\Questions;
 use Yii;
 use app\modules\main\models\Form;
+use app\modules\main\models\Answers;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -57,8 +58,43 @@ class FormController extends Controller
      */
     public function actionView($id)
     {
+        $content='<div class="content">';
+        //выбираем все вопросы анкеты
+        $questions = Questions::find()->where(['=','form_id',$id])->all();
+        foreach($questions as $question){
+            $content.='<div class="row"><div class="col-md-12">
+                    <div class="panel panel-info">
+                        <div class="panel-heading">'.
+                            $question->name . '?'.
+                        '</div>
+                        <div class="panel-body">';
+            //выбираем все ответы на вопрос
+            $answers = Answers::find()->where(['=','question_id',$question->id])->all();
+            $k=0;
+            $content.='<table class="table">';
+            foreach ($answers as $answer){
+                if($k==0)
+                    $content.='<tr>';
+                $content .= '<td>'.$answer->htmlcode.'</td>';
+                $k++;
+                if($k==2){
+                    $content.='</tr>';
+                    $k=0;
+                }
+            }
+            if($k==1){
+                $content.='<td></td></tr>';
+            }
+                            //<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum tincidunt est vitae ultrices accumsan. Aliquam ornare lacus adipiscing, posuere lectus et, fringilla augue.</p>
+            $content.='</table></div>
+                    </div></div>
+                </div>';
+        }
+
+        $content.='</div>';
         return $this->render('view', [
             'model' => $this->findModel($id),
+            'content' => $content,
         ]);
     }
 

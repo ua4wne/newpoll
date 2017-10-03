@@ -154,17 +154,16 @@
 <?php
 $js = <<<JS
 $(document).ready(function(){
-var now = new Date();
-var month = now.getMonth().toString();
-var year = now.getFullYear().toString();
-if(month.length < 2)
-    month = '0'+month;
-var date = now.getDate().toString()
-if(date.length < 2)
-    date = '0'+date;
-
-     var start = year+'-'+month+'-01';
-     var finish = year+'-'+month+'-'+date;
+//var now = new Date();
+//var month = now.getMonth().toString();
+//var year = now.getFullYear().toString();
+//if(month.length < 2)
+//    month = '0'+month;
+//var date = now.getDate().toString()
+//if(date.length < 2)
+//    date = '0'+date;
+     var start = 'start'; //year+'-'+month+'-01';
+     var finish = 'finish'; //year+'-'+month+'-'+date;
      $.ajax({
      url: '/main/control/visit-report',
      type: 'POST',

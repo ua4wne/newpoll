@@ -13,6 +13,7 @@ class AnswerForm extends Model
     public $name;
     public $question_id;
     public $htmlcode;
+    public $refbook;
 
 
     /**
@@ -25,6 +26,7 @@ class AnswerForm extends Model
             [['name', 'question_id', 'htmlcode'], 'required'],
             [['question_id'], 'integer'],
             [['name'], 'string', 'max' => 100],
+            [['refbook'], 'safe'],
         ];
     }
 
@@ -37,6 +39,7 @@ class AnswerForm extends Model
             'question_id' => 'Вопрос',
             'name' => 'Ответ на вопрос',
             'htmlcode' => 'Тип ответа',
+            'refbook' => 'Справочник',
         ];
     }
 

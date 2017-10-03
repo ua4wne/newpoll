@@ -89,7 +89,7 @@ class QuestionsController extends Controller
             //проверяем, уникальность вопроса для анкеты
             $qst = Questions::find()->where(['=','name',$model->name])->andWhere(['=','form_id',$model->form_id])->count();
             if(!$qst){
-                $msg = 'Вопрос  <strong>'. $model->name .'</strong> был обновлен пользователем <strong>'.Yii::$app->user->identity->fname .' '.Yii::$app->user->identity->lname.'</strong>.';
+                $msg = 'Вопрос  <strong>'. $model->name .'</strong> анкеты <strong>'.$model->form->name.'</strong> был обновлен пользователем <strong>'.Yii::$app->user->identity->fname .' '.Yii::$app->user->identity->lname.'</strong>.';
                 $model->save();
                 BaseModel::AddEventLog('info',$msg);
             }
@@ -109,12 +109,13 @@ class QuestionsController extends Controller
     public function actionDelete($id)
     {
         $form_id = $this->findModel($id)->form_id;
+        $anket = Form::find($form_id)->all();
         //есть ли ответы вопрос
         $ans = Answers::find()->where(['=','question_id',$id])->count();
         if($ans)
             Yii::$app->session->setFlash('error', 'У вопроса есть не удаленные ответы. Удаление не возможно!');
         else {
-            $msg = 'Вопрос  <strong>'. $this->findModel($id)->name .'</strong> был удален пользователем <strong>'.Yii::$app->user->identity->fname .' '.Yii::$app->user->identity->lname.'</strong>.';
+            $msg = 'Вопрос  <strong>'. $this->findModel($id)->name .'</strong> был удален из анкеты <strong>'.$anket.'</strong> пользователем <strong>'.Yii::$app->user->identity->fname .' '.Yii::$app->user->identity->lname.'</strong>.';
             $this->findModel($id)->delete();
             BaseModel::AddEventLog('info',$msg);
         }
