@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "e29ba5b25bf64d73f77cbde3361e5bd7",
+    "content-hash": "52d485c32929cf2ad127846c4f3078d1",
     "packages": [
         {
             "name": "bower-asset/bootstrap",
@@ -619,6 +619,51 @@
                 "xlsx"
             ],
             "time": "2015-05-01T07:00:55+00:00"
+        },
+        {
+            "name": "sjaakp/yii2-gcharts",
+            "version": "1.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/sjaakp/yii2-gcharts.git",
+                "reference": "caf7ca1ca052f0ec8192bd8c78aab5bb5ee1ec6d"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/sjaakp/yii2-gcharts/zipball/caf7ca1ca052f0ec8192bd8c78aab5bb5ee1ec6d",
+                "reference": "caf7ca1ca052f0ec8192bd8c78aab5bb5ee1ec6d",
+                "shasum": ""
+            },
+            "require": {
+                "yiisoft/yii2": "*"
+            },
+            "type": "yii2-extension",
+            "autoload": {
+                "psr-4": {
+                    "sjaakp\\gcharts\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Sjaak Priester",
+                    "email": "sjaak@sjaakpriester.nl",
+                    "homepage": "http://sjaakpriester.nl"
+                }
+            ],
+            "description": "Google Charts the Yii 2.0 way",
+            "keywords": [
+                "charts",
+                "extension",
+                "visualization",
+                "widget",
+                "yii",
+                "yii2"
+            ],
+            "time": "2017-09-17T11:41:34+00:00"
         },
         {
             "name": "swiftmailer/swiftmailer",

@@ -20,7 +20,7 @@ $this->params['breadcrumbs'][] = ['label' => Html::encode($this->title)];
         'name' => 'start',
         'type' => DateTimePicker::TYPE_COMPONENT_PREPEND,
         'options' => ['placeholder' => 'Ввод даты/времени...'],
-        'value'=> date("yyyy-MM-dd"),
+        'value'=> date("yyyy-MM-dd",$model->start),
         'convertFormat' => true,
         'pluginOptions' => [
             'format' => 'yyyy-MM-dd',
@@ -35,7 +35,7 @@ $this->params['breadcrumbs'][] = ['label' => Html::encode($this->title)];
         'name' => 'finish',
         'type' => DateTimePicker::TYPE_COMPONENT_PREPEND,
         'options' => ['placeholder' => 'Ввод даты/времени...'],
-        'value'=> date("yyyy-MM-dd"),
+        'value'=> date("yyyy-MM-dd",$model->finish),
         'convertFormat' => true,
         'pluginOptions' => [
             'format' => 'yyyy-MM-dd',
@@ -53,7 +53,7 @@ $this->params['breadcrumbs'][] = ['label' => Html::encode($this->title)];
 
     <div class="form-group">
         <?= Html::submitButton('Сформировать', ['class' => 'btn btn-success']) ?>
-        <?= Html::submitButton('<span class="fa  fa-file-excel-o"></span> Скачать', ['name' => 'export','value' => 'export','class' => 'btn btn-primary']) ?>
+        <?//= Html::submitButton('<span class="fa  fa-file-excel-o"></span> Скачать', ['name' => 'export','value' => 'export','class' => 'btn btn-primary']) ?>
     </div>
 
     <?php ActiveForm::end(); ?>

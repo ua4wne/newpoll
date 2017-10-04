@@ -13,15 +13,16 @@ class FormReportController extends \yii\web\Controller
         $model = new FormReport();
 
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
-            $content='https://developers.google.com/chart/interactive/docs/gallery/piechart';
             $form = Form::findOne($model->form_id);
             return $this->render('view',[
                 'model' => $model,
                 'form' => $form['name'],
-                'content' => $content,
+                'form_id' => $form['id']
             ]);
         }
         else{
+            $model->start = date('Y-m').'-01';
+            $model->finish = date('Y-m-d');
             $forms = Form::find()->where(['=','is_active',1])->all();
             $verselect = ['new'=>'Новый вариант (версия 2)','old'=>'Старый вариант (версия 1)'];
             foreach($forms as $form) {
@@ -34,5 +35,4 @@ class FormReportController extends \yii\web\Controller
             ]);
         }
     }
-
 }
