@@ -61,12 +61,47 @@ class FormController extends Controller
     {
         if(Yii::$app->request->post()){
             //$request = Yii::$app->request->post();
-            self::SavePoll($id);
+            $date = date('Y-m-d'); //текущая дата
+            self::SavePoll($id,$date);
         }
         return $this->render('view', [
                 'model' => $this->findModel($id),
                 'content' => $this->ViewForm($id),
             ]);
+
+    }
+
+    public function actionMedia()
+    {
+        $id = 7; //Опрос посетителей выставки домов Малоэтажная Страна
+
+        if(\Yii::$app->request->isAjax){
+            $date = $_POST['date'];
+            $kol = $_POST['kolvo'];
+            if($kol > 0){
+                while($kol){
+                    self::SavePoll($id,$date);
+                    $kol--;
+                }
+            }
+            return 'OK';
+        }
+
+        /*if(Yii::$app->request->post()){
+            //$request = Yii::$app->request->post();
+            $date = $_POST['date'];
+            $kol = $_POST['kolvo'];
+            if($kol > 0){
+                while($kol){
+                    self::SavePoll($id,$date);
+                    $kol--;
+                }
+            }
+        }*/
+        return $this->render('view', [
+            'model' => $this->findModel($id),
+            'content' => $this->ViewMedia($id),
+        ]);
 
     }
 
@@ -232,8 +267,73 @@ class FormController extends Controller
         return $content;
     }
 
-    public static function SavePoll($idform){
-        $date = date('Y-m-d'); //текущая дата
+    protected function ViewMedia($id){
+        $content='<div class="content">';
+        $content.='<input type="hidden" name="form_id" id="form_id" value="'.$id.'">';
+        //выбираем только вопрос Откуда Вы узнали о выставке домов "Малоэтажная страна" анкеты
+        $questions = Questions::find()->where(['form_id'=>$id, 'name'=>'Откуда Вы узнали о выставке домов "Малоэтажная страна"'])->all();
+        foreach($questions as $question){
+            $content.='<div class="row"><div class="col-md-12">
+                    <div class="panel panel-info">
+                        <div class="panel-heading">'.
+                $question->name . '?'.
+                '</div>
+                        <div class="panel-body">';
+            //выбираем все ответы на вопрос
+            $answers = Answers::find()->where(['=','question_id',$question->id])->all();
+            $k=0;
+            $content.='<table class="table">';
+            foreach ($answers as $answer){
+                if($k==0)
+                    $content.='<tr>';
+                if(strpos($answer->htmlcode,"select size=",0)!=false)
+                {
+                    $html='<option value="" selected disabled>Выберите из списка</option>';
+                    $query="SELECT name FROM ".$answer->source;
+                    // подключение к базе данных
+                    $connection = \Yii::$app->db;
+                    // Составляем SQL запрос
+                    $model = $connection->createCommand($query);
+                    //Осуществляем запрос к базе данных, переменная $model содержит ассоциативный массив с данными
+                    $rows = $model->queryAll();
+                    foreach($rows as $row){
+                        if($row[name]!='Другое (свой вариант)')
+                            $html.='<option value="'.$row[name].'">'.$row[name].'</option>';
+                    }
+                    $html.='</select>';
+                    $content.= '<td>'.$answer->htmlcode.$html.'</td>';
+                }
+                else
+                    $content.= '<td>'.$answer->htmlcode.'</td>';
+
+                $k++;
+                if($k==2){
+                    $content.='</tr>';
+                    $k=0;
+                }
+            }
+            if($k==1){
+                $content.='<td></td></tr>';
+            }
+            //<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum tincidunt est vitae ultrices accumsan. Aliquam ornare lacus adipiscing, posuere lectus et, fringilla augue.</p>
+            $content.='</table></div>
+                    </div></div>
+                </div>';
+            $content.='<table class="table">
+                        <tr><td>
+                            <label for="date">Укажите дату в формате ГГГГ-ММ-ДД: </label><input type="text" name="date" id="date" value="'.date('Y-m-d').'" placeholder="yyyy-mm-dd" required>
+                        </td>
+                        <td>
+                            <label for="kolvo">Кол-во опрошенных </label><input type="text" name="kolvo" id="kolvo" class="digits" value="" required>
+                        </td></tr>
+                    </table>';
+        }
+
+        $content.='</div>';
+        return $content;
+    }
+
+    public static function SavePoll($idform,$date){
         $iduser = Yii::$app->user->identity->getId(); //id пользователя
         $questions = Questions::find()->select(['id'])->where(['=','form_id',$idform])->all(); //выбрали все вопросы анкеты
         foreach ($questions as $question){

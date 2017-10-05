@@ -2,6 +2,7 @@
 
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
+use kartik\datetime\DateTimePicker;
 
 /* @var $this yii\web\View */
 /* @var $model app\modules\main\models\Form */
@@ -13,7 +14,7 @@ $this->params['breadcrumbs'][] = ['label' => Html::encode($this->title)];
 <div class="container">
     <div class="form-form">
 
-        <?php $form = ActiveForm::begin(); ?>
+        <?php $form = ActiveForm::begin(['id' => 'fMedia']); ?>
 
         <?= $content; ?>
 
@@ -29,9 +30,9 @@ $this->params['breadcrumbs'][] = ['label' => Html::encode($this->title)];
 <?php
 $js = <<<JS
 $(document).ready(function(){
-    $('form').submit(function(){
+    $('form').submit(function(e){
         var err = 0;
-        //e.preventDefault();
+        e.preventDefault();
         $(".table").find(":input[name*='other']").each(function() {// проверяем каждое поле ввода в форме
 			if($(this).prev().is(':checked')){ //если выбран чекбокс
 				if(!$(this).val()){// если поле пустое
@@ -61,11 +62,35 @@ $(document).ready(function(){
                 }
             }
         })
+        
         if(err) return false;
-        else{
-            return true;
-        };
+        var fData = $("form[id='fMedia']").serialize();
+        $.ajax({
+            url: '/main/market/form/media',
+            type: 'POST',
+            data: fData,
+            success: function(res){
+                //alert("Сервер вернул вот что: " + res);
+                if(res=='OK'){
+                    alert("Данные успешно добавлены!");
+                    $('#kolvo').val('');
+                }
+            },
+            error: function(){
+                alert('Error!');
+            }
+        });
     });
+    
+    $('.digits').blur( function(){
+    	var val=$(this).val();
+		if(/[^0-9.]/.test(val)) {
+			alert('Значение должно содержать только цифры!');
+			$(this).val('');
+			err++;
+			return false;
+		}
+	});
 });
 JS;
 

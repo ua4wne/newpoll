@@ -100,6 +100,7 @@ AppAsset::register($this);
                         <a href="#"><i class="fa fa-users fa-fw"></i> Маркетинг<span class="fa arrow"></span></a>
                         <ul class="nav nav-second-level">
                             <li><a href="/main/market/form">Анкеты</a></li>
+                            <li><a href="/main/market/form/media">Источники медиарекламы</a></li>
                             <li ><a href="#"><i class="fa fa-book fa-fw"></i>Справочники<span class="fa arrow"></span></a>
                                 <ul class="nav nav-third-level">
                                     <li>
