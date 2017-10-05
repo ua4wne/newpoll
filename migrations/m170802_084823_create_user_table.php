@@ -28,8 +28,9 @@ class m170802_084823_create_user_table extends Migration
             'email' => $this->string(40)->notNull()->unique(),
             'status' => $this->smallInteger()->notNull()->defaultValue(10),
             'role' => $this->string(30)->notNull(),
-            'created_at' => $this->integer()->notNull(),
-            'updated_at' => $this->integer()->notNull(),
+            'image' => $this->string(30)->defaultValue(null),
+            'created_at' => $this->dateTime()->notNull(),
+            'updated_at' => $this->dateTime()->notNull(),
         ], $tableOptions);
     }
 

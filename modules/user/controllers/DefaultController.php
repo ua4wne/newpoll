@@ -25,14 +25,14 @@ class DefaultController extends Controller
                 'only' => ['logout','password-reset-request'],
                 'rules' => [
                     [
-                        'actions' => ['logout'],
-                        'allow' => true,
-                        'roles' => ['@'],
-                    ],
-                    [
                         'actions' => ['password-reset-request'],
                         'allow' => true,
                         'roles' => ['?'],
+                    ],
+                    [
+                        'actions' => ['logout'],
+                        'allow' => true,
+                        'roles' => ['@'],
                     ],
                 ],
             ],

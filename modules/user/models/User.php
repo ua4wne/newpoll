@@ -7,6 +7,8 @@ use yii\base\NotSupportedException;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
 use yii\web\IdentityInterface;
+use app\models\BaseModel;
+use app\modules\admin\models\Role;
 
 /**
  * User model
@@ -24,7 +26,7 @@ use yii\web\IdentityInterface;
  * @property integer $updated_at
  * @property string $password write-only password
  */
-class User extends ActiveRecord implements IdentityInterface
+class User extends BaseModel implements IdentityInterface
 {
     const STATUS_ACTIVE = 1; //активный пользователь
     const STATUS_BLOCKED = 0; //заблокированный пользователь
@@ -53,12 +55,12 @@ class User extends ActiveRecord implements IdentityInterface
     /**
      * @inheritdoc
      */
-    public function behaviors()
+    /*public function behaviors()
     {
         return [
             TimestampBehavior::className(), //чтобы записывать дату в поля created_at и updated_at
         ];
-    }
+    }*/
 
     /**
      * @inheritdoc
@@ -70,6 +72,7 @@ class User extends ActiveRecord implements IdentityInterface
             ['username', 'match', 'pattern' => '#^[\w_-]+$#is'],
             ['username', 'unique', 'targetClass' => self::className(), 'message' => 'Пользователь с таким логином уже существует.'],
             ['username', 'string', 'min' => 3, 'max' => 30],
+            ['image', 'string', 'max' => 30],
 
             ['fname', 'required'],
             ['fname', 'string', 'max' => 50],
@@ -77,7 +80,7 @@ class User extends ActiveRecord implements IdentityInterface
             ['lname', 'required'],
             ['lname', 'string', 'max' => 50],
 
-            ['role', 'required'],
+            ['role_id', 'required'],
 
             ['email', 'required'],
             ['email', 'email'],
@@ -101,7 +104,8 @@ class User extends ActiveRecord implements IdentityInterface
             'status' => 'Статус',
             'fname' => 'Имя',
             'lname' => 'Фамилия',
-            'role' => 'Роль',
+            'role_id' => 'Роль',
+            'image' => 'Аватар'
         ];
     }
 
@@ -244,5 +248,10 @@ class User extends ActiveRecord implements IdentityInterface
     public function removePasswordResetToken()
     {
         $this->password_reset_token = null;
+    }
+
+    public function getRole()
+    {
+        return $this->hasOne(Role::className(), ['id' => 'role_id']);
     }
 }
