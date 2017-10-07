@@ -6,12 +6,12 @@
 
 use yii\helpers\Html;
 use yii\bootstrap\ActiveForm;
-//use yii\captcha\Captcha;
 
 $this->title = 'Login';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="login_form row">
+
+<div class="login_form">
     <?php $form = ActiveForm::begin([
         'id' => 'login-form',
         'options' => [
@@ -23,9 +23,14 @@ $this->params['breadcrumbs'][] = $this->title;
     <?= $form->field($model, 'username')->textInput(['autofocus' => true]) ?>
     <?= $form->field($model, 'password')->passwordInput() ?>
     <?= $form->field($model, 'rememberMe')->checkbox() ?>
-    <?php // $form->field($model, 'verifyCode')->widget(Captcha::className()) ?>
-    <div class="form-group">
-        <?= Html::submitButton('Вход', ['class' => 'btn btn-primary btn-lg btn-block', 'name' => 'login-button']) ?>
+
+    <div class="row">
+        <div class="col-md-8 form-group">
+            <?= Html::submitButton('Вход', ['class' => 'btn btn-primary', 'name' => 'login-button']) ?>
+        </div>
+        <div class="col-md-4 form-group">
+        <?= Html::a('Сбросить пароль', ['/user/default/password-reset-request'], ['class' => 'btn btn-danger']) ?>
+        </div>
     </div>
 
     <?php ActiveForm::end(); ?>

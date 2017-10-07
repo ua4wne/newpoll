@@ -98,6 +98,10 @@ body {
   margin-top:3px;
   font-size:11px
 }
+.user-panel>.info>p {
+  font-size:12px;
+  font-weight: bold;
+}
 .user-panel>.info>a>.fa,.user-panel>.info>a>.ion,.user-panel>.info>a>.glyphicon {
   margin-right:3px
 }

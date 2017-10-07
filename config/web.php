@@ -91,7 +91,7 @@ $config = [
         'rules' => [
             [
                 'allow' => true,
-                'actions' => ['login'],
+                'actions' => ['login','password-reset-request','password-reset'],
             ],
             [
                 'allow' => true,

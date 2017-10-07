@@ -47,12 +47,15 @@ AppAsset::register($this);
                     <i class="fa fa-user fa-fw"></i> <i class="fa fa-caret-down"></i>
                 </a>
                 <ul class="dropdown-menu dropdown-user">
-                    <li><a href="#"><i class="fa fa-user fa-fw"></i> User Profile</a>
-                    </li>
-                    <li><a href="#"><i class="fa fa-gear fa-fw"></i> Settings</a>
+                    <li><?= Html::a("<i class=\"fa fa-user fa-fw\"></i> Профиль", '/user/profile/index', [
+                                'data' => [
+                                    'method' => 'post'
+                                ],
+                            ]
+                        );?>
                     </li>
                     <li class="divider"></li>
-                    <li><?= Html::a("<i class=\"fa fa-sign-out\"></i>Выход", '/user/default/logout', [
+                    <li><?= Html::a("<i class=\"fa fa-sign-out\"></i> Выход", '/user/default/logout', [
                                 'data' => [
                                     'method' => 'post'
                                 ],
@@ -70,10 +73,11 @@ AppAsset::register($this);
                 <ul class="nav" id="side-menu">
                     <li>
                         <div class="user-panel">
-                            <div class="pull-left image"><img class="img-circle" src="/images/in4.jpg" alt=""></div>
+                            <div class="pull-left image"><img class="img-circle" src="<?= Yii::$app->user->identity->image ?>" alt="image"></div>
 
                             <div class="pull-left info">
-                                <p><?= Yii::$app->user->identity->fname .' '.Yii::$app->user->identity->lname?></p>
+                                <p><?= Yii::$app->user->identity->fname .' '.Yii::$app->user->identity->lname ?></p>
+                                <span class="label label-success">online</span>
                             </div>
                         </div>
                     </li>

@@ -17,7 +17,7 @@ html {
 
 .login_form input[type=text], input[type=password] {
     margin: 0 auto;
-    width: 90%;
+    width: 80%;
 }
 
 .login_form label {
@@ -32,9 +32,8 @@ html {
     margin:5px;
 }
 
-.login_form button {
-    margin: 0 auto;
-    width: 90%;
+.btn-primary {
+    width: 70%;
 }
 
 div.required label.control-label:before {

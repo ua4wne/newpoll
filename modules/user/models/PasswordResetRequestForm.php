@@ -70,9 +70,10 @@ class PasswordResetRequestForm extends Model
             $user->generatePasswordResetToken();
             if ($user->save()) {
                 $resetLink = Yii::$app->urlManager->createAbsoluteUrl(['user/default/password-reset', 'token' => $user->password_reset_token]);
+                $site = Yii::$app->urlManager->createAbsoluteUrl(['/']);
                 $msg = '<html><head><title>Запрос на сброс пароля</title></head>
                     <body><h3>Сброс пароля для '.$user->username.'</h3>
-                    <p>Здравствуйте!<br>Для сброса пароля перейдите по ссылке '.$resetLink.'</p>
+                    <p>Здравствуйте!<br>С вашего e-mail поступил запрос на сброс пароля на сайте '.$site.'<br>Для сброса пароля перейдите по ссылке '.$resetLink.'</p>
                     <em style="color:red;">Письмо отправлено автоматически. Отвечать на него не нужно.</em><br>
                     <p style="color:darkblue;">С уважением,<br> Ваш почтовый робот.</p>
                     </body></html>';
