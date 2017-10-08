@@ -11,6 +11,7 @@ use yii\filters\VerbFilter;
 use app\modules\main\models\Division;
 use app\modules\admin\models\Place;
 use app\models\BaseModel;
+use \yii\web\HttpException;
 
 /**
  * RenterController implements the CRUD actions for Renter model.
@@ -38,13 +39,18 @@ class RenterController extends Controller
      */
     public function actionIndex()
     {
-        $searchModel = new RenterSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        if(Yii::$app->user->can('manager')) {
+            $searchModel = new RenterSearch();
+            $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
-        return $this->render('index', [
-            'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
-        ]);
+            return $this->render('index', [
+                'searchModel' => $searchModel,
+                'dataProvider' => $dataProvider,
+            ]);
+        }
+        else{
+            throw new HttpException(404 ,'Доступ запрещен');
+        }
     }
 
     /**
@@ -54,9 +60,14 @@ class RenterController extends Controller
      */
     public function actionView($id)
     {
-        return $this->render('view', [
-            'model' => $this->findModel($id),
-        ]);
+        if(Yii::$app->user->can('manager')) {
+            return $this->render('view', [
+                'model' => $this->findModel($id),
+            ]);
+        }
+        else{
+            throw new HttpException(404 ,'Доступ запрещен');
+        }
     }
 
     /**
@@ -66,30 +77,35 @@ class RenterController extends Controller
      */
     public function actionCreate()
     {
-        $model = new Renter();
+        if(Yii::$app->user->can('energy')) {
+            $model = new Renter();
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            $msg = 'Пользователем <strong>'.Yii::$app->user->identity->fname .' '.Yii::$app->user->identity->lname.'</strong> добавлен новый арендатор <strong>'. $model->title .'</strong>.';
-            BaseModel::AddEventLog('info',$msg);
-            return $this->redirect(['view', 'id' => $model->id]);
-        } else {
-            $divisions = Division::find()->select(['id','name'])->asArray()->all();
-            $places = Place::find()->select(['id','name'])->asArray()->all();
-            $data = array();
-            $data1 = array();
-            $statsel = array ('1' => 'Действующий','0' => 'Не действующий');
-            foreach($places as $place) {
-                $data[$place['id']] = $place['name']; //массив для заполнения данных в select формы
+            if ($model->load(Yii::$app->request->post()) && $model->save()) {
+                $msg = 'Пользователем <strong>' . Yii::$app->user->identity->fname . ' ' . Yii::$app->user->identity->lname . '</strong> добавлен новый арендатор <strong>' . $model->title . '</strong>.';
+                BaseModel::AddEventLog('info', $msg);
+                return $this->redirect(['view', 'id' => $model->id]);
+            } else {
+                $divisions = Division::find()->select(['id', 'name'])->asArray()->all();
+                $places = Place::find()->select(['id', 'name'])->asArray()->all();
+                $data = array();
+                $data1 = array();
+                $statsel = array('1' => 'Действующий', '0' => 'Не действующий');
+                foreach ($places as $place) {
+                    $data[$place['id']] = $place['name']; //массив для заполнения данных в select формы
+                }
+                foreach ($divisions as $division) {
+                    $data1[$division['id']] = $division['name']; //массив для заполнения данных в select формы
+                }
+                return $this->render('create', [
+                    'model' => $model,
+                    'place' => $data,
+                    'division' => $data1,
+                    'statsel' => $statsel,
+                ]);
             }
-            foreach($divisions as $division) {
-                $data1[$division['id']] = $division['name']; //массив для заполнения данных в select формы
-            }
-            return $this->render('create', [
-                'model' => $model,
-                'place' => $data,
-                'division' => $data1,
-                'statsel' => $statsel,
-            ]);
+        }
+        else{
+            throw new HttpException(404 ,'Доступ запрещен');
         }
     }
 
@@ -101,30 +117,35 @@ class RenterController extends Controller
      */
     public function actionUpdate($id)
     {
-        $model = $this->findModel($id);
+        if(Yii::$app->user->can('energy')) {
+            $model = $this->findModel($id);
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            $msg = 'Данные арендатора <strong>'. $model->title .'</strong> были обновлены пользователем <strong>'.Yii::$app->user->identity->fname .' '.Yii::$app->user->identity->lname.'</strong>.';
-            BaseModel::AddEventLog('info',$msg);
-            return $this->redirect(['view', 'id' => $model->id]);
-        } else {
-            $divisions = Division::find()->select(['id','name'])->asArray()->all();
-            $places = Place::find()->select(['id','name'])->asArray()->all();
-            $data = array();
-            $data1 = array();
-            $statsel = array ('1' => 'Действующий','0' => 'Не действующий');
-            foreach($places as $place) {
-                $data[$place['id']] = $place['name']; //массив для заполнения данных в select формы
+            if ($model->load(Yii::$app->request->post()) && $model->save()) {
+                $msg = 'Данные арендатора <strong>' . $model->title . '</strong> были обновлены пользователем <strong>' . Yii::$app->user->identity->fname . ' ' . Yii::$app->user->identity->lname . '</strong>.';
+                BaseModel::AddEventLog('info', $msg);
+                return $this->redirect(['view', 'id' => $model->id]);
+            } else {
+                $divisions = Division::find()->select(['id', 'name'])->asArray()->all();
+                $places = Place::find()->select(['id', 'name'])->asArray()->all();
+                $data = array();
+                $data1 = array();
+                $statsel = array('1' => 'Действующий', '0' => 'Не действующий');
+                foreach ($places as $place) {
+                    $data[$place['id']] = $place['name']; //массив для заполнения данных в select формы
+                }
+                foreach ($divisions as $division) {
+                    $data1[$division['id']] = $division['name']; //массив для заполнения данных в select формы
+                }
+                return $this->render('update', [
+                    'model' => $model,
+                    'place' => $data,
+                    'division' => $data1,
+                    'statsel' => $statsel,
+                ]);
             }
-            foreach($divisions as $division) {
-                $data1[$division['id']] = $division['name']; //массив для заполнения данных в select формы
-            }
-            return $this->render('update', [
-                'model' => $model,
-                'place' => $data,
-                'division' => $data1,
-                'statsel' => $statsel,
-            ]);
+        }
+        else{
+            throw new HttpException(404 ,'Доступ запрещен');
         }
     }
 
@@ -136,13 +157,18 @@ class RenterController extends Controller
      */
     public function actionDelete($id)
     {
-        //$this->findModel($id)->delete();
-        $row = Renter::findOne($id);
-        $row->delete();
-        $msg = 'Данные арендатора <strong>'. $row->title .'</strong> были удалены пользователем <strong>'.Yii::$app->user->identity->fname .' '.Yii::$app->user->identity->lname.'</strong>.';
-        BaseModel::AddEventLog('info',$msg);
+        if(Yii::$app->user->can('admin')) {
+            //$this->findModel($id)->delete();
+            $row = Renter::findOne($id);
+            $row->delete();
+            $msg = 'Данные арендатора <strong>' . $row->title . '</strong> были удалены пользователем <strong>' . Yii::$app->user->identity->fname . ' ' . Yii::$app->user->identity->lname . '</strong>.';
+            BaseModel::AddEventLog('info', $msg);
 
-        return $this->redirect(['index']);
+            return $this->redirect(['index']);
+        }
+        else{
+            throw new HttpException(404 ,'Доступ запрещен');
+        }
     }
 
     /**

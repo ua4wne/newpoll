@@ -9,6 +9,21 @@ use yii\db\Query;
 
 class MainReportController extends Controller
 {
+    public function behaviors()
+    {
+        return [
+            'access' => [
+                'class' => \yii\filters\AccessControl::className(),
+                'rules' => [
+                    [
+                        'allow' => true,
+                        'roles' => ['manager']
+                    ],
+                ],
+            ],
+        ];
+    }
+
     public function actionIndex()
     {
         $model = new EnergyForm();

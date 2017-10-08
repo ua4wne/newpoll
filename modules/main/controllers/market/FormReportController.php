@@ -8,6 +8,21 @@ use app\modules\main\models\FormReport;
 
 class FormReportController extends \yii\web\Controller
 {
+    public function behaviors()
+    {
+        return [
+            'access' => [
+                'class' => \yii\filters\AccessControl::className(),
+                'rules' => [
+                    [
+                        'allow' => true,
+                        'roles' => ['manager']
+                    ],
+                ],
+            ],
+        ];
+    }
+
     public function actionIndex()
     {
         $model = new FormReport();

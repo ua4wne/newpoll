@@ -140,7 +140,8 @@
         <div id="visitor-bar"></div>
     </div>
 </div>
-<div class="row">
+<?php if(Yii::$app->user->can('admin')) : ?>
+    <div class="row">
     <div class="panel-heading">
         <ul class="nav nav-pills" role="tablist">
             <li role="presentation" class="active">
@@ -150,7 +151,7 @@
     </div>
     <div class="panel-body col-md-6"><?= $sysstate; ?></div>
 </div>
-
+<?php endif; ?>
 <?php
 $js = <<<JS
 $(document).ready(function(){

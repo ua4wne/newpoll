@@ -59,7 +59,7 @@ class DefaultController extends Controller
         $attempt = $session->get('num');
         if(!isset($attempt))
             $session->set('num', 0);
-        if($attempt>5)
+        if($attempt==5)
             return $this->render('ban');
 
         if (!Yii::$app->user->isGuest) {
@@ -87,7 +87,6 @@ class DefaultController extends Controller
             if($attempt<5)
                 $attempt++;
             $session->set('num', $attempt);
-            echo 'Число попыток='.$session->get('num');
             if($attempt==Yii::$app->params['max_attempts']){
                 //число попыток входа исчерпано, блокируем пользователя
                 $user = User::findByUsername($model->username);

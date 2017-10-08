@@ -7,6 +7,7 @@ use Yii;
 use yii\web\Controller;
 use app\modules\main\models\MainLog;
 use yii\data\ActiveDataProvider;
+use \yii\web\HttpException;
 
 /**
  * Default controller for the `main` module
@@ -18,227 +19,256 @@ class DefaultController extends Controller
         return [
             'error' => [
                 'class' => 'yii\web\ErrorAction',
+                'view' => '@app/views/error/view.php',
             ],
         ];
     }
 
     public function actionIndex()
     {
-        $year = date('Y');
-        $month = date('m');
-        $start = date('Y-m').'-01';
-        $finish = date('Y-m-d');
-        $this->view->title = 'Информационная панель';
+        if(Yii::$app->user->can('manager')){
+            $year = date('Y');
+            $month = date('m');
+            $start = date('Y-m').'-01';
+            $finish = date('Y-m-d');
+            $this->view->title = 'Информационная панель';
+            //строим график для анализа посещений
+            if(\Yii::$app->request->isAjax){
+                $data = array();
+                $date = $year.'-'.$month.'-';
+                $query=Yii::$app->db->createCommand("select sum(ucount) as ucount from visit where `data` like '$date%'"); //текущий месяц
+                $logs = $query->queryAll();
+                if($logs){
+                    foreach($logs as $log){
+                        $tmp = array();
+                        $tmp['y'] = $year.'-'.$month;
+                        if($log['ucount'])
+                            $tmp['a'] = $log['ucount'];
+                        else
+                            $tmp['a'] = 0;
+                        array_push($data,$tmp);
+                    }
+                }
 
-        //строим график для анализа посещений
-        if(\Yii::$app->request->isAjax){
-            $data = array();
-            $date = $year.'-'.$month.'-';
-            $query=Yii::$app->db->createCommand("select sum(ucount) as ucount from visit where `data` like '$date%'"); //текущий месяц
-            $logs = $query->queryAll();
-            if($logs){
+                $period = explode('-', date('Y-m-d', strtotime("$finish -1 month"))); // предыдущий месяц
+                $y = $period[0];
+                $m = $period[1];
+                //$d = $period[2];
+                $date = $y.'-'.$m.'-';
+                $query=Yii::$app->db->createCommand("select sum(ucount) as ucount from visit where `data` like '$date%'");
+                $logs = $query->queryAll();
                 foreach($logs as $log){
                     $tmp = array();
-                    $tmp['y'] = $year.'-'.$month;
-                    if($log['ucount'])
-                        $tmp['a'] = $log['ucount'];
-                    else
-                        $tmp['a'] = 0;
+                    $tmp['y'] = $y.'-'.$m;
+                    $tmp['a'] = $log['ucount'];
                     array_push($data,$tmp);
                 }
+                $period = explode('-', date('Y-m-d', strtotime("$finish -2 month"))); // препредыдущий месяц
+                $y = $period[0];
+                $m = $period[1];
+                //$d = $period[2];
+                $date = $y.'-'.$m.'-';
+                $query=Yii::$app->db->createCommand("select sum(ucount) as ucount from visit where `data` like '$date%'");
+                $logs = $query->queryAll();
+                foreach($logs as $log){
+                    $tmp = array();
+                    $tmp['y'] = $y.'-'.$m;
+                    $tmp['a'] = $log['ucount'];
+                    array_push($data,$tmp);
+                }
+                $period = explode('-', date('Y-m-d', strtotime("$finish -1 year"))); //текущий месяц предыдущего года
+                $y = $period[0];
+                $m = $period[1];
+                //$d = $period[2];
+                $date = $y.'-'.$m.'-';
+                $query=Yii::$app->db->createCommand("select sum(ucount) as ucount from visit where `data` like '$date%'");
+                $logs = $query->queryAll();
+                //return print_r($logs);
+                foreach($logs as $log){
+                    $tmp = array();
+                    $tmp['y'] = $y.'-'.$m;
+                    $tmp['a'] = $log['ucount'];
+                    array_push($data,$tmp);
+                }
+                return json_encode($data);
             }
-
-            $period = explode('-', date('Y-m-d', strtotime("$finish -1 month"))); // предыдущий месяц
+            //инфа для виджета энергопотребления
+            $period = explode('-', date('Y-m', strtotime("$year-$month-01 -1 month"))); //определяем предыдущий период
             $y = $period[0];
             $m = $period[1];
-            //$d = $period[2];
-            $date = $y.'-'.$m.'-';
-            $query=Yii::$app->db->createCommand("select sum(ucount) as ucount from visit where `data` like '$date%'");
-            $logs = $query->queryAll();
-            foreach($logs as $log){
-                $tmp = array();
-                $tmp['y'] = $y.'-'.$m;
-                $tmp['a'] = $log['ucount'];
-                array_push($data,$tmp);
+            $main_count = 0;
+            $rows = MainLog::find()->where(['=','year',$y])->andWhere(['=','month',$m])->orderBy('ecounter_id', SORT_ASC)->all();
+            $energy = '<table class="table table-hover table-striped"><tr  class="tblh"><th>Счетчик</th><th>Потребление, кВт</th></tr>';
+            foreach($rows as $row){
+                $energy.='<tr><td>'.$row->ecounter->name.'</td><td>'.$row->delta.'</td></tr>';
+                if($row->ecounter->name=='Главный')
+                    $main_count = $row->delta;
             }
-            $period = explode('-', date('Y-m-d', strtotime("$finish -2 month"))); // препредыдущий месяц
-            $y = $period[0];
-            $m = $period[1];
-            //$d = $period[2];
-            $date = $y.'-'.$m.'-';
-            $query=Yii::$app->db->createCommand("select sum(ucount) as ucount from visit where `data` like '$date%'");
-            $logs = $query->queryAll();
-            foreach($logs as $log){
-                $tmp = array();
-                $tmp['y'] = $y.'-'.$m;
-                $tmp['a'] = $log['ucount'];
-                array_push($data,$tmp);
-            }
-            $period = explode('-', date('Y-m-d', strtotime("$finish -1 year"))); //текущий месяц предыдущего года
-            $y = $period[0];
-            $m = $period[1];
-            //$d = $period[2];
-            $date = $y.'-'.$m.'-';
-            $query=Yii::$app->db->createCommand("select sum(ucount) as ucount from visit where `data` like '$date%'");
-            $logs = $query->queryAll();
-            //return print_r($logs);
-            foreach($logs as $log){
-                $tmp = array();
-                $tmp['y'] = $y.'-'.$m;
-                $tmp['a'] = $log['ucount'];
-                array_push($data,$tmp);
-            }
-            return json_encode($data);
-        }
-
-        //инфа для виджета энергопотребления
-        $period = explode('-', date('Y-m', strtotime("$year-$month-01 -1 month"))); //определяем предыдущий период
-        $y = $period[0];
-        $m = $period[1];
-        $main_count = 0;
-        $rows = MainLog::find()->where(['=','year',$y])->andWhere(['=','month',$m])->orderBy('ecounter_id', SORT_ASC)->all();
-        $energy = '<table class="table table-hover table-striped"><tr  class="tblh"><th>Счетчик</th><th>Потребление, кВт</th></tr>';
-        foreach($rows as $row){
-            $energy.='<tr><td>'.$row->ecounter->name.'</td><td>'.$row->delta.'</td></tr>';
-            if($row->ecounter->name=='Главный')
-                $main_count = $row->delta;
-        }
-        $energy.='</table>';
-        $people = 0; //количество посетителей
-        $visitors='<table class="table table-hover table-striped"><tr  class="tblh"><th>Показатель</th><th>Кол-во человек</th></tr>';
-        $connection = \Yii::$app->db;
-        $query="select sum(ucount) as people from visit where data between '$start' and '$finish'";
-        $result = $connection->createCommand($query)->queryAll();
-        $people = $result[0]['people'];
-        $visitors.='<tr><td>Посетителей всего</td><td>'.$people.'</td></tr>';
-        $query="select sum(ucount) as val from visit where data between '$start' and '$finish' group by data";
-        $result = $connection->createCommand($query)->queryAll();
-        if(count($result)>0)
-            $max = (max($result));
-        $visitors.='<tr><td>Максимально за день</td><td>'.$max['val'].'</td></tr>';
-        if(count($result)>0)
-            $min = (min($result));
-        $visitors.='<tr><td>Минимально за день</td><td>'.$min['val'].'</td></tr>';
-        $visitors.='</table>';
-        $worktime = '<table class="table table-hover table-striped"><tr  class="tblh"><th>Компания</th><th>Часов в день</th></tr>';
-        $time_avg = 0;
-        $query="SELECT renter.title, renter.area, Sum(period1)+Sum(period2)+Sum(period3)+Sum(period4)+Sum(period5)+Sum(period6)+Sum(period7)+Sum(period8)+Sum(period9)+Sum(period10)+Sum(period11) AS alltime,
+            $energy.='</table>';
+            $people = 0; //количество посетителей
+            $visitors='<table class="table table-hover table-striped"><tr  class="tblh"><th>Показатель</th><th>Кол-во человек</th></tr>';
+            $connection = \Yii::$app->db;
+            $query="select sum(ucount) as people from visit where data between '$start' and '$finish'";
+            $result = $connection->createCommand($query)->queryAll();
+            $people = $result[0]['people'];
+            $visitors.='<tr><td>Посетителей всего</td><td>'.$people.'</td></tr>';
+            $query="select sum(ucount) as val from visit where data between '$start' and '$finish' group by data";
+            $result = $connection->createCommand($query)->queryAll();
+            if(count($result)>0)
+                $max = (max($result));
+            $visitors.='<tr><td>Максимально за день</td><td>'.$max['val'].'</td></tr>';
+            if(count($result)>0)
+                $min = (min($result));
+            $visitors.='<tr><td>Минимально за день</td><td>'.$min['val'].'</td></tr>';
+            $visitors.='</table>';
+            $worktime = '<table class="table table-hover table-striped"><tr  class="tblh"><th>Компания</th><th>Часов в день</th></tr>';
+            $time_avg = 0;
+            $query="SELECT renter.title, renter.area, Sum(period1)+Sum(period2)+Sum(period3)+Sum(period4)+Sum(period5)+Sum(period6)+Sum(period7)+Sum(period8)+Sum(period9)+Sum(period10)+Sum(period11) AS alltime,
                 count(rent_log.data) AS alldata FROM rent_log INNER JOIN renter ON renter.id = rent_log.renter_id
                 WHERE rent_log.`data` between '$start' AND '$finish'
                 GROUP BY renter.title, renter.area ORDER BY alltime desc";
-        $result = $connection->createCommand($query)->queryAll();
-        $res = $result[0]; //это максимум
-        if($res['alldata']>0)
-            $hours = $res['alltime']/$res['alldata'];
-        $hours = round($hours,2);
-        if($hours>=9)
-            $worktime.='<tr><td>'.$res['title'].'</td><td class="success">'.$hours.'</td></tr>';
-        else
-            $worktime.='<tr><td>'.$res['title'].'</td><td class="danger">'.$hours.'</td></tr>';
-        $i = count($result)-1; //это минимум
-        $res = $result[$i];
-        if($res['alldata']>0)
-            $hours = $res['alltime']/$res['alldata'];
-        if($hours>=9)
-            $worktime.='<tr><td>'.$res['title'].'</td><td class="success">'.$hours.'</td></tr>';
-        else
-            $worktime.='<tr><td>'.$res['title'].'</td><td class="danger">'.$hours.'</td></tr>';
-        //считаем среднее время работы домов
-        $time = 0;
-        $data = 0;
-        foreach ($result as $res){
-            $time = $time + $res['alltime'];
-            $data = $data + $res['alldata'];
+            $result = $connection->createCommand($query)->queryAll();
+            $res = $result[0]; //это максимум
+            if($res['alldata']>0)
+                $hours = $res['alltime']/$res['alldata'];
+            $hours = round($hours,2);
+            if($hours>=9)
+                $worktime.='<tr><td>'.$res['title'].'</td><td class="success">'.$hours.'</td></tr>';
+            else
+                $worktime.='<tr><td>'.$res['title'].'</td><td class="danger">'.$hours.'</td></tr>';
+            $i = count($result)-1; //это минимум
+            $res = $result[$i];
+            if($res['alldata']>0)
+                $hours = $res['alltime']/$res['alldata'];
+            if($hours>=9)
+                $worktime.='<tr><td>'.$res['title'].'</td><td class="success">'.$hours.'</td></tr>';
+            else
+                $worktime.='<tr><td>'.$res['title'].'</td><td class="danger">'.$hours.'</td></tr>';
+            //считаем среднее время работы домов
+            $time = 0;
+            $data = 0;
+            foreach ($result as $res){
+                $time = $time + $res['alltime'];
+                $data = $data + $res['alldata'];
+            }
+            if($data>0)
+                $hours = $time/$data;
+            $time_avg = round($hours,2);
+            if($time_avg>=9)
+                $worktime.='<tr><td>В среднем</td><td class="success">'.$time_avg.'</td></tr>';
+            else
+                $worktime.='<tr><td>В среднем</td><td class="danger">'.$time_avg.'</td></tr>';
+            $worktime.='</table>';
+            //определяем данные по кол-ву потребителей по территориям
+            $rent_count = 0;
+            $place_count = '<table class="table table-hover table-striped"><tr  class="tblh"><th>Территория</th><th>Число счетчиков</th></tr>';
+            $query = "select p.name, count(r.title) as rents from renter r join place p on p.id=r.place_id where status=1 group by p.name";
+            $rows = $connection->createCommand($query)->queryAll();
+            foreach ($rows as $row){
+                $place_count.='<tr><td>'.$row['name'].'</td><td>'.$row['rents'].'</td></tr>';
+                $rent_count += $row['rents'];
+            }
+            $place_count .= '</table>';
+            $events = Events::find()->where(['=','is_read',0])->count(); //общее число не прочитанных событий
+            //Yii::$app->session->setFlash('events', $events);
+            return $this->render('index',[
+                'energy' => $energy,
+                'people' => $people,
+                'visitors' => $visitors,
+                'worktime' => $worktime,
+                'time_avg' => $time_avg,
+                'main_count' => $main_count,
+                'rent_count' => $rent_count,
+                'place_count' => $place_count,
+                'events' => $events,
+                'sysstate' => $this->SysState(),
+            ]);
         }
-        if($data>0)
-            $hours = $time/$data;
-        $time_avg = round($hours,2);
-        if($time_avg>=9)
-            $worktime.='<tr><td>В среднем</td><td class="success">'.$time_avg.'</td></tr>';
-        else
-            $worktime.='<tr><td>В среднем</td><td class="danger">'.$time_avg.'</td></tr>';
-        $worktime.='</table>';
-        //определяем данные по кол-ву потребителей по территориям
-        $rent_count = 0;
-        $place_count = '<table class="table table-hover table-striped"><tr  class="tblh"><th>Территория</th><th>Число счетчиков</th></tr>';
-        $query = "select p.name, count(r.title) as rents from renter r join place p on p.id=r.place_id where status=1 group by p.name";
-        $rows = $connection->createCommand($query)->queryAll();
-        foreach ($rows as $row){
-            $place_count.='<tr><td>'.$row['name'].'</td><td>'.$row['rents'].'</td></tr>';
-            $rent_count += $row['rents'];
+        else{
+            throw new HttpException(404 ,'Доступ запрещен');
         }
-        $place_count .= '</table>';
-        $events = Events::find()->where(['=','is_read',0])->count(); //общее число не прочитанных событий
-        //Yii::$app->session->setFlash('events', $events);
-        return $this->render('index',[
-            'energy' => $energy,
-            'people' => $people,
-            'visitors' => $visitors,
-            'worktime' => $worktime,
-            'time_avg' => $time_avg,
-            'main_count' => $main_count,
-            'rent_count' => $rent_count,
-            'place_count' => $place_count,
-            'events' => $events,
-            'sysstate' => $this->SysState(),
-        ]);
     }
 
     public function actionEvents(){
-        $query = Events::find()->where(['=', 'is_read', 0]);
-        $dataProvider = new ActiveDataProvider([
-            //'format' => 'raw',
-            'query' => $query,
-            'sort'=> ['defaultOrder' => ['id'=>SORT_ASC]],
-            'pagination' => [
-                'pageSize' => Yii::$app->params['page_size'],
-            ],
-        ]);
-        $events = Events::find()->where(['=','is_read',0])->count(); //общее число не прочитанных событий
-        Yii::$app->session->setFlash('events', $events);
-        return $this->render('events', [
-            'dataProvider' => $dataProvider,
-        ]);
+        if(Yii::$app->user->can('admin')) {
+            $query = Events::find()->where(['=', 'is_read', 0]);
+            $dataProvider = new ActiveDataProvider([
+                //'format' => 'raw',
+                'query' => $query,
+                'sort' => ['defaultOrder' => ['id' => SORT_ASC]],
+                'pagination' => [
+                    'pageSize' => Yii::$app->params['page_size'],
+                ],
+            ]);
+            $events = Events::find()->where(['=', 'is_read', 0])->count(); //общее число не прочитанных событий
+            Yii::$app->session->setFlash('events', $events);
+            return $this->render('events', [
+                'dataProvider' => $dataProvider,
+            ]);
+        }
+        else{
+            throw new HttpException(404 ,'Доступ запрещен');
+        }
     }
 
     public function actionView($id)
     {
-        return $this->render('view', [
-            'model' => $this->findModel($id),
-        ]);
+        if(Yii::$app->user->can('admin')){
+            return $this->render('view', [
+                'model' => $this->findModel($id),
+            ]);
+        }
+        else{
+            throw new HttpException(404 ,'Доступ запрещен');
+        }
     }
 
     public function actionUpdate($id)
     {
-        $model = $this->findModel($id);
-        $model->is_read = 1;
-        $model->save();
-        return $this->redirect('/main/default/events');
+        if(Yii::$app->user->can('admin')) {
+            $model = $this->findModel($id);
+            $model->is_read = 1;
+            $model->save();
+            return $this->redirect('/main/default/events');
+        }
+        else{
+            throw new HttpException(404 ,'Доступ запрещен');
+        }
     }
 
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
-        return $this->redirect(['/main/default/events']);
-    }
-
-    public function actionAddAdmin() {
-        $model = User::find()->where(['username' => 'ircut'])->one();
-        if (empty($model)) {
-            $user = new User();
-            $user->username = 'ircut';
-            $user->email = 'rogatnev@m-strana.ru';
-            $user->fname = 'Администратор';
-            $user->lname = 'системы';
-            $user->setPassword('$ystemm1');
-            $user->generateAuthKey();
-            if ($user->save()) {
-                echo 'Администратор системы создан';
-            }
+        if(Yii::$app->user->can('admin')) {
+            $this->findModel($id)->delete();
+            return $this->redirect(['/main/default/events']);
+        }
+        else{
+            throw new HttpException(404 ,'Доступ запрещен');
         }
     }
 
-    public function SysState(){
+    public function actionAddAdmin() {
+        if(Yii::$app->user->can('admin')) {
+            $model = User::find()->where(['username' => 'ircut'])->one();
+            if (empty($model)) {
+                $user = new User();
+                $user->username = 'ircut';
+                $user->email = 'rogatnev@m-strana.ru';
+                $user->fname = 'Администратор';
+                $user->lname = 'системы';
+                $user->setPassword('$ystemm1');
+                $user->generateAuthKey();
+                if ($user->save()) {
+                    echo 'Администратор системы создан';
+                }
+            }
+        }
+        else{
+            throw new HttpException(404 ,'Действие запрещено');
+        }
+    }
+
+    protected function SysState(){
         //memory stat
         $stat['mem_percent'] = round(shell_exec("free | grep Mem | awk '{print $3/$2 * 100.0}'"),0);
         $mem_result = shell_exec("cat /proc/meminfo | grep MemTotal");

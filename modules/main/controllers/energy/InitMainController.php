@@ -8,6 +8,21 @@ use app\models\BaseModel;
 
 class InitMainController extends BaseEcounterController
 {
+    public function behaviors()
+    {
+        return [
+            'access' => [
+                'class' => \yii\filters\AccessControl::className(),
+                'rules' => [
+                    [
+                        'allow' => true,
+                        'roles' => ['energy']
+                    ],
+                ],
+            ],
+        ];
+    }
+
     public function actionIndex()
     {
         $model = new MainLog();

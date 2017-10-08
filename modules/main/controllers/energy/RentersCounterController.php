@@ -17,6 +17,21 @@ class RentersCounterController extends BaseRcounterController
 
     private $previous; //предыдущее показание счетчика
 
+    public function behaviors()
+    {
+        return [
+            'access' => [
+                'class' => \yii\filters\AccessControl::className(),
+                'rules' => [
+                    [
+                        'allow' => true,
+                        'roles' => ['energy']
+                    ],
+                ],
+            ],
+        ];
+    }
+
     public function actionIndex()
     {
         $model = new EnergyLog();

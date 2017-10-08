@@ -11,6 +11,21 @@ use app\models\Report;
 
 class VisitReportController extends Controller
 {
+    public function behaviors()
+    {
+        return [
+            'access' => [
+                'class' => \yii\filters\AccessControl::className(),
+                'rules' => [
+                    [
+                        'allow' => true,
+                        'roles' => ['manager']
+                    ],
+                ],
+            ],
+        ];
+    }
+
     public function actionIndex()
     {
         //$month = date("m");

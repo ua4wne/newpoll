@@ -11,6 +11,22 @@ use app\modules\main\models\WorkReport;
 class WorkReportController extends Controller
 {
     private $firm='';
+
+    public function behaviors()
+    {
+        return [
+            'access' => [
+                'class' => \yii\filters\AccessControl::className(),
+                'rules' => [
+                    [
+                        'allow' => true,
+                        'roles' => ['manager']
+                    ],
+                ],
+            ],
+        ];
+    }
+
     public function actionIndex()
     {
         $model = new WorkReport();
