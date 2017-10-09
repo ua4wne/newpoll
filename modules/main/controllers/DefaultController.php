@@ -187,7 +187,7 @@ class DefaultController extends Controller
             ]);
         }
         elseif(Yii::$app->user->can('poll')){
-            //$this->layout = '@app/modules/user/views/layouts/basic.php';
+            $this->layout = '@app/views/layouts/poll.php';
             $model = new Poll();
             if ($model->load(Yii::$app->request->post()) && $model->validate()) {
                 return $this->redirect(['/main/poll','id'=>$model->form_id]);

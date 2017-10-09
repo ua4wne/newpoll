@@ -114,6 +114,15 @@ body {
   position: relative;
 }
 
+.stic {
+  border:2px orange solid;
+  margin: 30px 10px 0 10px;
+  cursor:pointer;
+  border-radius: 5px;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+}
+
 .sidebar .sidebar-nav.navbar-collapse {
   padding-left: 0;
   padding-right: 0;

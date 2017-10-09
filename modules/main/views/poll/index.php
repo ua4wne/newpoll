@@ -8,13 +8,12 @@ use kartik\datetime\DateTimePicker;
 /* @var $model app\modules\main\models\Form */
 
 $this->title = $model->name;
-$this->params['breadcrumbs'][] = ['label' => 'Анкеты', 'url' => ['index']];
 $this->params['breadcrumbs'][] = ['label' => Html::encode($this->title)];
 ?>
     <div class="container">
         <div class="form-form">
 
-            <?php $form = ActiveForm::begin(['id' => 'fMedia','action'=>'/main/market/form/view']); ?>
+            <?php $form = ActiveForm::begin(['id' => 'fPoll']); ?>
 
             <?= $content; ?>
 
@@ -30,9 +29,9 @@ $this->params['breadcrumbs'][] = ['label' => Html::encode($this->title)];
 <?php
 $js = <<<JS
 $(document).ready(function(){
-    $('form').submit(function(e){
+    $('form').submit(function(){
         var err = 0;
-        e.preventDefault();
+        //e.preventDefault();
         $(".table").find(":input[name*='other']").each(function() {// проверяем каждое поле ввода в форме
 			if($(this).prev().is(':checked')){ //если выбран чекбокс
 				if(!$(this).val()){// если поле пустое
@@ -64,13 +63,14 @@ $(document).ready(function(){
         })
         
         if(err) return false;
-        var fData = $("form[id='fMedia']").serialize();
+        else return true;
+        /*var fData = $("form[id='fPoll']").serialize();
         $.ajax({
-            url: '/main/market/form/view',
+            url: '/main/poll?id='+$('#form_id').val(),
             type: 'POST',
             data: fData,
             success: function(res){
-                //alert("Сервер вернул вот что: " + res);
+                alert("Сервер вернул вот что: " + res);
                 if(res=='OK'){
                     alert("Данные успешно добавлены!");
                     $('#kolvo').val('');
@@ -79,17 +79,24 @@ $(document).ready(function(){
             error: function(){
                 alert('Error!');
             }
-        });
+        });*/
     });
-    
-    $('.digits').blur( function(){
-    	var val=$(this).val();
-		if(/[^0-9.]/.test(val)) {
-			alert('Значение должно содержать только цифры!');
-			$(this).val('');
-			err++;
-			return false;
-		}
+        
+    $('#visitor').click(function() {
+		//e.preventDefault();
+		// отправляем AJAX запрос
+		$.ajax({
+			type: "POST",
+		    url: "/main/poll/add-visitor",
+		    //dataType: "json",
+	        data: {addvisitor:'set'},
+		    // success - это обработчик удачного выполнения событий
+		    success: function(res) {
+			    //alert("Сервер вернул вот что: " + res);
+			    $("#visitors").text(res);
+			}
+     		 
+     	});
 	});
 });
 JS;

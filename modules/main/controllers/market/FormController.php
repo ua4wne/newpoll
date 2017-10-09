@@ -69,20 +69,15 @@ class FormController extends Controller
      */
     public function actionView($id)
     {
-        if(Yii::$app->user->can('viewForm')) {
-            if (Yii::$app->request->post()) {
-                //$request = Yii::$app->request->post();
-                $date = date('Y-m-d'); //текущая дата
-                self::SavePoll($id, $date);
-            }
-            return $this->render('view', [
-                'model' => $this->findModel($id),
-                'content' => $this->ViewForm($id),
-            ]);
+        if (Yii::$app->request->post()) {
+            //$request = Yii::$app->request->post();
+            $date = date('Y-m-d'); //текущая дата
+            self::SavePoll($id, $date);
         }
-        else{
-            throw new HttpException(404 ,'Доступ запрещен');
-        }
+        return $this->render('view', [
+            'model' => $this->findModel($id),
+            'content' => self::ViewForm($id),
+        ]);
     }
 
     public function actionMedia()
@@ -113,7 +108,7 @@ class FormController extends Controller
                     }
                 }
             }*/
-            return $this->render('view', [
+            return $this->render('media', [
                 'model' => $this->findModel($id),
                 'content' => $this->ViewMedia($id),
             ]);
@@ -242,7 +237,7 @@ class FormController extends Controller
         }
     }
 
-    protected function ViewForm($id){
+    public static function ViewForm($id){
         $content='<div class="content">';
         $content.='<input type="hidden" name="form_id" id="form_id" value="'.$id.'">';
         //выбираем все вопросы анкеты

@@ -11,28 +11,28 @@ $this->title = $model->name;
 $this->params['breadcrumbs'][] = ['label' => 'Анкеты', 'url' => ['index']];
 $this->params['breadcrumbs'][] = ['label' => Html::encode($this->title)];
 ?>
-<div class="container">
-    <div class="form-form">
+    <div class="container">
+        <div class="form-form">
 
-        <?php $form = ActiveForm::begin(['id' => 'fMedia']); ?>
+            <?php $form = ActiveForm::begin(['id' => 'fMedia']); ?>
 
-        <?= $content; ?>
+            <?= $content; ?>
 
-        <div class="form-group">
-            <?= Html::submitButton('Сохранить', ['class' => 'btn btn-success']) ?>
+            <div class="form-group">
+                <?= Html::submitButton('Сохранить', ['class' => 'btn btn-success']) ?>
+            </div>
+
+            <?php ActiveForm::end(); ?>
+
         </div>
-
-        <?php ActiveForm::end(); ?>
-
     </div>
-</div>
 
 <?php
 $js = <<<JS
 $(document).ready(function(){
-    $('form').submit(function(){
+    $('form').submit(function(e){
         var err = 0;
-        //e.preventDefault();
+        e.preventDefault();
         $(".table").find(":input[name*='other']").each(function() {// проверяем каждое поле ввода в форме
 			if($(this).prev().is(':checked')){ //если выбран чекбокс
 				if(!$(this).val()){// если поле пустое
@@ -64,14 +64,13 @@ $(document).ready(function(){
         })
         
         if(err) return false;
-        else return true;
-        /*var fData = $("form[id='fMedia']").serialize();
+        var fData = $("form[id='fMedia']").serialize();
         $.ajax({
-            url: '/main/market/form/view',
+            url: '/main/market/form/media',
             type: 'POST',
             data: fData,
             success: function(res){
-                alert("Сервер вернул вот что: " + res);
+                //alert("Сервер вернул вот что: " + res);
                 if(res=='OK'){
                     alert("Данные успешно добавлены!");
                     //$('#kolvo').val('');
@@ -80,7 +79,7 @@ $(document).ready(function(){
             error: function(){
                 alert('Error!');
             }
-        });*/
+        });
     });
 });
 JS;
