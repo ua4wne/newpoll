@@ -99,6 +99,7 @@ class UserController extends Controller
             }
             $msg = 'Пользователем <strong>'.Yii::$app->user->identity->fname .' '.Yii::$app->user->identity->lname.'</strong> добавлена новая учетная запись <strong>'. $model->username .'</strong>.';
             BaseModel::AddEventLog('info',$msg);
+            $model->AddRole($model->role->name,$model->id); //добавляем права пользователю
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
             $statsel = ['0'=>'Не активный', '1'=>'Активный'];
@@ -130,6 +131,7 @@ class UserController extends Controller
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             $msg = 'Пользователь <strong>'.Yii::$app->user->identity->fname .' '.Yii::$app->user->identity->lname.'</strong> обновил учетную запись <strong>'. $model->username .'</strong>.';
             BaseModel::AddEventLog('info',$msg);
+            $model->UpdateRole($model->role->name,$model->id); //обновляем права пользователю
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
             $statsel = ['0'=>'Не активный', '1'=>'Активный'];

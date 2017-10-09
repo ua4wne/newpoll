@@ -46,40 +46,10 @@ class SiteController extends Controller
     public function actionIndex()
     {
         //Yii::$app->user->id; ID залогиненного пользователя
-        if (!\Yii::$app->user->can('viewAdminPage')) {
+        if (!\Yii::$app->user->can('adminTask')) {
             throw new ForbiddenHttpException('Access denied');
         }
         $this->view->title = 'Панель управления';
         return $this->render('index');
-    }
-    
-    public function actionSay($message = 'Привет')
-    {
-        return $this->render('say', ['message' => $message]);
-    }
-    
-    /*public function actionEntry()
-    {
-        $model = new BaseModel();
-        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
-            // данные в $model удачно проверены
-
-            // делаем что-то полезное с $model ...
- 
-            return $this->render('entry-confirm', ['model' => $model]);
-        } else {
-            // либо страница отображается первый раз, либо есть ошибка в данных
-            return $this->render('entry', ['model' => $model]);
-        }
-    }*/
-
-    /**
-     * Displays about page.
-     *
-     * @return string
-     */
-    public function actionAbout()
-    {
-        return $this->render('about');
     }
 }

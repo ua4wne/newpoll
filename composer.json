@@ -22,7 +22,8 @@
         "codemix/yii2-excelexport": "*",
         "moonlandsoft/yii2-phpexcel": "*",
         "kartik-v/yii2-widget-datetimepicker": "*",
-        "sjaakp/yii2-gcharts": "*"
+        "sjaakp/yii2-gcharts": "*",
+        "bower-asset/jquery": "1.*"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.0.0",

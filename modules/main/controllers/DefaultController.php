@@ -3,11 +3,13 @@
 namespace app\modules\main\controllers;
 
 use app\models\Events;
+use app\modules\main\models\Form;
 use Yii;
 use yii\web\Controller;
 use app\modules\main\models\MainLog;
 use yii\data\ActiveDataProvider;
 use \yii\web\HttpException;
+use app\modules\main\models\Poll;
 
 /**
  * Default controller for the `main` module
@@ -183,6 +185,25 @@ class DefaultController extends Controller
                 'events' => $events,
                 'sysstate' => $this->SysState(),
             ]);
+        }
+        elseif(Yii::$app->user->can('poll')){
+            //$this->layout = '@app/modules/user/views/layouts/basic.php';
+            $model = new Poll();
+            if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+                return $this->redirect(['/main/poll','id'=>$model->form_id]);
+            }
+            else{
+                $forms = Poll::GetActiveForms();
+                //return print_r($forms);
+                $selform = array();
+                foreach ($forms as $form){
+                    $selform[$form->id] = $form->name;
+                }
+                return $this->render('poll',[
+                    'model' => $model,
+                    'selform' => $selform
+                ]);
+            }
         }
         else{
             throw new HttpException(404 ,'Доступ запрещен');

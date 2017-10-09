@@ -42,6 +42,7 @@ class AppAsset extends AssetBundle
         //'position' => \yii\web\View::POS_HEAD, //влияет на работу фильтрации в таблицах представлений - виджет GridView!!!
     ];
     public $depends = [
+        'app\assets\IESupportAsset',
         'yii\web\YiiAsset',
         'yii\bootstrap\BootstrapPluginAsset',
     ];

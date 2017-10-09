@@ -74,6 +74,7 @@ class RbacController extends Controller {
         $auth->addChild($market,$viewReport);
         $auth->addChild($poll,$viewForm);
         $auth->addChild($market,$poll);
+        $auth->addChild($market,$manager);
 
         $auth->addChild($manager,$viewDocument);
         $auth->addChild($manager,$viewReport);

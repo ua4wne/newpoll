@@ -254,4 +254,38 @@ class User extends BaseModel implements IdentityInterface
     {
         return $this->hasOne(Role::className(), ['id' => 'role_id']);
     }
+
+    public function AddRole($role_name, $id){
+
+        $auth = Yii::$app->authManager;
+        $role = $auth->getRole($role_name); // Получаем роль
+        $auth->assign($role, $id); // Назначаем пользователю
+        Yii::$app->session->setFlash('success', 'Разрешения добавлены!');
+    }
+
+    public function UpdateRole($role_name,$id){
+        if($id!=1){ //права первого админа менять нельзя
+            $query="select * from auth_assignment where user_id=$id"; //ищем предыдущие разрешения
+            // подключение к базе данных
+            $connection = \Yii::$app->db;
+            // Составляем SQL запрос
+            $conn = $connection->createCommand($query);
+            //Осуществляем запрос к базе данных, переменная $model содержит ассоциативный массив с данными
+            $rows = $conn->queryAll();
+            //return print_r($rows);
+            if(!empty($rows)){
+                $query="delete from auth_assignment where user_id=$id"; //удаляем предыдущие разрешения
+                // подключение к базе данных
+                $connection = \Yii::$app->db;
+                // Составляем SQL запрос
+                $conn = $connection->createCommand($query);
+                $conn->execute();
+            }
+            $auth = Yii::$app->authManager;
+            $role = $auth->getRole($role_name); // Получаем роль
+            $auth->assign($role, $this->id); // Назначаем пользователю, которому принадлежит модель User
+            Yii::$app->session->setFlash('success', 'Разрешения обновлены!');
+
+        }
+    }
 }

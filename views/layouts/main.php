@@ -81,6 +81,7 @@ AppAsset::register($this);
                             </div>
                         </div>
                     </li>
+                    <?php if(Yii::$app->user->can('manager')) : ?>
                     <li>
                         <a href="/main/default/index"><i class="fa fa-tachometer"></i> Главная</a>
                     </li>
@@ -100,24 +101,31 @@ AppAsset::register($this);
                             <li ><a href="/main/division">Наши юрлица</a></li>
                         </ul>
                     </li>
+                    <?php endif; ?>
                     <li>
                         <a href="#"><i class="fa fa-users fa-fw"></i> Маркетинг<span class="fa arrow"></span></a>
                         <ul class="nav nav-second-level">
-                            <li><a href="/main/market/form">Анкеты</a></li>
-                            <li><a href="/main/market/form/media">Источники медиарекламы</a></li>
-                            <li ><a href="#"><i class="fa fa-book fa-fw"></i>Справочники<span class="fa arrow"></span></a>
-                                <ul class="nav nav-third-level">
-                                    <li>
-                                        <a href="/main/market/city">Справочник городов</a>
-                                    </li>
-                                    <li>
-                                        <a href="/main/market/material">Справочник материалов</a>
-                                    </li>
-                                    <li>
-                                        <a href="/main/market/tvsource">Справочник медиа</a>
-                                    </li>
-                                </ul>
-                            </li>
+                            <?php if(Yii::$app->user->can('market')) : ?>
+                                <li><a href="/main/market/form">Анкеты</a></li>
+                            <?php endif; ?>
+                            <?php if(Yii::$app->user->can('guard')) : ?>
+                                <li><a href="/main/market/form/media">Источники медиарекламы</a></li>
+                            <?php endif; ?>
+                            <?php if(Yii::$app->user->can('market')) : ?>
+                                <li ><a href="#"><i class="fa fa-book fa-fw"></i>Справочники<span class="fa arrow"></span></a>
+                                    <ul class="nav nav-third-level">
+                                        <li>
+                                            <a href="/main/market/city">Справочник городов</a>
+                                        </li>
+                                        <li>
+                                            <a href="/main/market/material">Справочник материалов</a>
+                                        </li>
+                                        <li>
+                                            <a href="/main/market/tvsource">Справочник медиа</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                            <?php endif; ?>
                         </ul>
                     </li>
                     <li>
@@ -150,18 +158,21 @@ AppAsset::register($this);
                         </ul>
                         <!-- /.nav-second-level -->
                     </li>
-                    <li>
-                        <a href="#"><i class="fa fa-table fa-fw"></i> Посещение<span class="fa arrow"></span></a>
-                        <ul class="nav nav-second-level">
-                            <li>
-                                <a href="/main/control/works">Присутствие на выставке</a>
-                            </li>
-                            <li>
-                                <a href="/main/control/visits">Посещение выставки</a>
-                            </li>
-                        </ul>
-                        <!-- /.nav-second-level -->
-                    </li>
+                    <?php if(Yii::$app->user->can('guard')) : ?>
+                        <li>
+                            <a href="#"><i class="fa fa-table fa-fw"></i> Посещение<span class="fa arrow"></span></a>
+                            <ul class="nav nav-second-level">
+                                <li>
+                                    <a href="/main/control/works">Присутствие на выставке</a>
+                                </li>
+                                <li>
+                                    <a href="/main/control/visits">Посещение выставки</a>
+                                </li>
+                            </ul>
+                            <!-- /.nav-second-level -->
+                        </li>
+                    <?php endif; ?>
+                    <?php if(Yii::$app->user->can('energy')) : ?>
                     <li>
                         <a href="#"><i class="fa fa-lightbulb-o fa-fw"></i> Энергоучет<span class="fa arrow"></span></a>
                         <ul class="nav nav-second-level">
@@ -189,6 +200,8 @@ AppAsset::register($this);
                         </ul>
                         <!-- /.nav-second-level -->
                     </li>
+                    <?php endif; ?>
+                    <?php if(Yii::$app->user->can('admin')) : ?>
                     <li>
                         <a href="#"><i class="fa fa-gear fa-fw"></i> Настройки<span class="fa arrow"></span></a>
                         <ul class="nav nav-second-level">
@@ -210,6 +223,7 @@ AppAsset::register($this);
                         </ul>
                         <!-- /.nav-second-level -->
                     </li>
+                    <?php endif; ?>
                 </ul>
             </div>
             <!-- /.sidebar-collapse -->
