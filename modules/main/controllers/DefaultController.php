@@ -232,6 +232,16 @@ class DefaultController extends Controller
         }
     }
 
+    public function actionClearLog(){
+        if(Yii::$app->user->can('admin')) {
+            if (\Yii::$app->request->isAjax) {
+                $query=Yii::$app->db->createCommand("delete from events where type != 'error' and is_read = 0");
+                $logs = $query->execute();
+                return 'Журнал событий очищен';
+            }
+        }
+    }
+
     public function actionView($id)
     {
         if(Yii::$app->user->can('admin')){

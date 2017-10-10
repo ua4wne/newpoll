@@ -63,7 +63,7 @@ class EnergyForm extends Model
     public static function RentCountReport($year){
         $counts = (new Query())->select('id')->from('ecounter')->where(['=', 'name', 'Главный']); //выбираем счетчики арендаторов
         $data = array();
-        $query=Yii::$app->db->createCommand("select month, sum(delta) as delta, sum(price) as price from main_log where ecounter_id !=1 and year='$year' group by month order by month");
+        $query=Yii::$app->db->createCommand("select month, round(sum(delta),2) as delta, round(sum(price),2) as price from main_log where ecounter_id !=1 and year='$year' group by month order by month");
         $logs = $query->queryAll();
         //return print_r($logs);
         foreach($logs as $log){
@@ -78,7 +78,7 @@ class EnergyForm extends Model
     }
 
     public static function OwnCountReport($year){
-        $query = Yii::$app->db->createCommand("select l.month, sum(l.delta) as delta, sum(l.price) as price from main_log l
+        $query = Yii::$app->db->createCommand("select l.month, round(sum(l.delta),2) as delta, round(sum(l.price),2) as price from main_log l
                                                 join ecounter e on e.id = l.ecounter_id where e.name !='Главный' and year='$year' group by l.month order by l.month");
         $counts = $query->queryAll(); //выбираем показания общих счетчиков
 
@@ -97,7 +97,7 @@ class EnergyForm extends Model
             if($count['id']==$log['ecounter_id'] && $count['month']==$log['month']){
                 $tmp['m'] = $year.'-'.$log['month'];
                 $tmp['d'] = $count['delta'] - $log['delta'];
-                $tmp['p'] = $count['price'] - $log['price'];
+                $tmp['p'] = round($count['price'] - $log['price'],2);
                 array_push($data,$tmp);
             }
         }
@@ -175,7 +175,7 @@ class EnergyForm extends Model
             $log = $logs[$i];
             if($count['id']==$log['ecounter_id']){
                 $tmp['label'] = $count['name'];
-                $tmp['value'] = $count['delta'] - $log['delta'];
+                $tmp['value'] = round($count['delta'] - $log['delta'],2);
                 array_push($data,$tmp);
             }
         }

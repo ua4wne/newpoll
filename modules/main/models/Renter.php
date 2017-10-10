@@ -47,7 +47,7 @@ class Renter extends BaseModel
             [['title'], 'string', 'max' => 100],
             [['area', 'phone1', 'phone2', 'encounter'], 'string', 'max' => 20],
             [['agent'], 'string', 'max' => 50],
-            [['encounter'], 'unique'],
+         //   [['encounter'], 'unique'],
         //    [['division_id'], 'exist', 'skipOnError' => true, 'targetClass' => Division::className(), 'targetAttribute' => ['division_id' => 'id']],
             [['place_id'], 'exist', 'skipOnError' => true, 'targetClass' => Place::className(), 'targetAttribute' => ['place_id' => 'id']],
         ];

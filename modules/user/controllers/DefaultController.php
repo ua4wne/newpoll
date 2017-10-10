@@ -97,7 +97,7 @@ class DefaultController extends Controller
                 $log = new Events();
                 $log->user_id = 1;
                 $log->user_ip = $_SERVER['REMOTE_ADDR'];
-                $log->type = 'access';
+                $log->type = 'error';
                 $log->is_read = 0;
                 $log->msg = $msg;
                 $log->save();
