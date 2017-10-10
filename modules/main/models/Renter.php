@@ -2,7 +2,6 @@
 
 namespace app\modules\main\models;
 
-//use app\modules\main\models\Division;
 use app\models\BaseModel;
 use app\modules\admin\models\Place;
 use app\modules\main\models\Division;
@@ -87,7 +86,7 @@ class Renter extends BaseModel
 
     /* Геттер для названия подразделения */
     public function getDivisionName() {
-        return $this->division->name;
+        return $this->division_id->name;
     }
 
     public function getPlace()

@@ -9,6 +9,7 @@ $db = require(__DIR__ . '/db.php');
 
 $config = [
     'id' => 'newpoll',
+    'name' => 'Интервьюер',
     'defaultRoute' => 'main/default/index',
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log'],

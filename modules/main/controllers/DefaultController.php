@@ -118,9 +118,13 @@ class DefaultController extends Controller
             $result = $connection->createCommand($query)->queryAll();
             if(count($result)>0)
                 $max = (max($result));
+            if(!isset($max))
+                $max = 0;
             $visitors.='<tr><td>Максимально за день</td><td>'.$max['val'].'</td></tr>';
             if(count($result)>0)
                 $min = (min($result));
+            if(!isset($min))
+                $min = 0;
             $visitors.='<tr><td>Минимально за день</td><td>'.$min['val'].'</td></tr>';
             $visitors.='</table>';
             $worktime = '<table class="table table-hover table-striped"><tr  class="tblh"><th>Компания</th><th>Часов в день</th></tr>';
@@ -130,16 +134,25 @@ class DefaultController extends Controller
                 WHERE rent_log.`data` between '$start' AND '$finish'
                 GROUP BY renter.title, renter.area ORDER BY alltime desc";
             $result = $connection->createCommand($query)->queryAll();
-            $res = $result[0]; //это максимум
+            if(count($result))
+                $res = $result[0]; //это максимум
+            if(!isset($res))
+                $res = 1;
             if($res['alldata']>0)
                 $hours = $res['alltime']/$res['alldata'];
-            $hours = round($hours,2);
+            if(isset($hours))
+                $hours = round($hours,2);
+            else
+                $hours = 0;
             if($hours>=9)
                 $worktime.='<tr><td>'.$res['title'].'</td><td class="success">'.$hours.'</td></tr>';
             else
                 $worktime.='<tr><td>'.$res['title'].'</td><td class="danger">'.$hours.'</td></tr>';
             $i = count($result)-1; //это минимум
-            $res = $result[$i];
+            if(isset($result[$i]))
+                $res = $result[$i];
+            else
+                $res = 1;
             if($res['alldata']>0)
                 $hours = $res['alltime']/$res['alldata'];
             if($hours>=9)

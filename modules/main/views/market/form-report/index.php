@@ -20,7 +20,7 @@ $this->params['breadcrumbs'][] = ['label' => Html::encode($this->title)];
         'name' => 'start',
         'type' => DateTimePicker::TYPE_COMPONENT_PREPEND,
         'options' => ['placeholder' => 'Ввод даты/времени...'],
-        'value'=> date("yyyy-MM-dd",$model->start),
+        'value'=> date("yyyy-MM-dd", strtotime($model->start)),
         'convertFormat' => true,
         'pluginOptions' => [
             'format' => 'yyyy-MM-dd',
@@ -35,7 +35,7 @@ $this->params['breadcrumbs'][] = ['label' => Html::encode($this->title)];
         'name' => 'finish',
         'type' => DateTimePicker::TYPE_COMPONENT_PREPEND,
         'options' => ['placeholder' => 'Ввод даты/времени...'],
-        'value'=> date("yyyy-MM-dd",$model->finish),
+        'value'=> date("yyyy-MM-dd",strtotime($model->finish)),
         'convertFormat' => true,
         'pluginOptions' => [
             'format' => 'yyyy-MM-dd',
