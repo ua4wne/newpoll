@@ -127,6 +127,8 @@
                 <ul class="dropdown-menu pull-right" role="menu">
                     <li id="view_table"><a href="#">Показать таблицу</a>
                     </li>
+                    <li id="view_graph"><a href="#">Показать графики</a>
+                    </li>
                     <li class="divider"></li>
                     <li>
                         <a href="/main/default/index">Обновить</a>
@@ -142,7 +144,7 @@
     <div class="panel-body col-md-4">
         <div id="visitor-bar"></div>
     </div>
-    <div class="panel-body col-md-12"><div id="vtbl">Таблица</div></div>
+    <div class="panel-body col-md-12"><div id="vtbl"></div></div>
 </div>
 <?php if(Yii::$app->user->can('admin')) : ?>
     <div class="row">
@@ -159,14 +161,6 @@
 <?php
 $js = <<<JS
 $(document).ready(function(){
-//var now = new Date();
-//var month = now.getMonth().toString();
-//var year = now.getFullYear().toString();
-//if(month.length < 2)
-//    month = '0'+month;
-//var date = now.getDate().toString()
-//if(date.length < 2)
-//    date = '0'+date;
      var start = 'start'; //year+'-'+month+'-01';
      var finish = 'finish'; //year+'-'+month+'-'+date;
      $.ajax({
@@ -207,9 +201,8 @@ $(document).ready(function(){
      alert('Error!');
      }
      });
- });
-
-$('#view_table').click(function(e){
+ 
+ $('#view_table').click(function(e){
     e.preventDefault();
     var action = 'view_table'
     $.ajax({
@@ -218,13 +211,23 @@ $('#view_table').click(function(e){
       data: {'action':action},
       success: function(res){
      //alert("Сервер вернул вот что: " + res);
-       //$("#visitor-chart").empty();
-       $("#vtbl").replaceWith(res);
+       $("#visitor-chart").hide();
+       $("#visitor-bar").hide();
+       $("#vtbl").show();
+       $("#vtbl").html(res);
      },
      error: function(){
      alert('Error!');
      }
-     });
+   });
+});
+
+$('#view_graph').click(function(e){
+    e.preventDefault();
+    $("#vtbl").hide(); 
+    $("#visitor-chart").show();
+    $("#visitor-bar").show();    
+});
 });
 JS;
 
