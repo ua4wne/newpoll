@@ -458,6 +458,11 @@ table.dataTable thead .sorting:after {
 .timeline-body > p + p {
   margin-top: 5px;
 }
+@media (max-width: 1547px){
+  .huge{
+    font-size: 14px;
+  }
+}
 @media (max-width: 767px) {
   ul.timeline:before {
     left: 40px;
