@@ -544,4 +544,33 @@ class Report extends Model {
         $objWriter->save('php://output');
     }
 
+    public static function VisitTable($start,$finish){
+        $content = '<table class="table table-hover table-striped"><tr>
+                        <th>Дата\Период</th><th>10-11</th><th>11-12</th><th>12-13</th><th>13-14</th><th>14-15</th>
+                        <th>15-16</th><th>16-17</th><th>17-18</th><th>18-19</th><th>19-20</th><th>20-21</th><th>Итого за день</th></tr>';
+        $dates = Visit::find()->select(['data'])->distinct()->where(['between', 'data', $start, $finish])->orderBy(['data' => SORT_ASC])->all();
+        foreach($dates as $date){
+            $itog = 0;
+            $data = ['10'=>'0','11'=>'0','12'=>'0','13'=>'0','14'=>'0','15'=>'0','16'=>'0','17'=>'0','18'=>'0','19'=>'0','20'=>'0'];
+            $logs=Visit::find()->select(['data','hours','ucount'])->where(['=','data',$date->data])->orderBy(['hours' => SORT_ASC])->all();
+            foreach($logs as $log){
+                $data[$log->hours] = $log->ucount;
+                $itog+=$log->ucount;
+            }
+            $date=explode("-", $log-data);
+            $numday = date("w", mktime(0, 0, 0, $date[1], $date[2], $date[0]));
+            if($numday==0 || $numday==6)
+                $content.='<tr class="warning"><td>'.$log->data.'</td>'; //это выходные
+            else
+                $content.='<tr><td>'.$log->data.'</td>';
+            foreach($data as $val){
+                $content.='<td>'.$val.'</td>';
+            }
+            $content.='<td>'.$itog.'</td></tr>';
+        }
+
+        $content .= '</table>';
+        return $content;
+    }
+
 }

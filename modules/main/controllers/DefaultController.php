@@ -10,6 +10,7 @@ use app\modules\main\models\MainLog;
 use yii\data\ActiveDataProvider;
 use \yii\web\HttpException;
 use app\modules\main\models\Poll;
+use app\models\Report;
 
 /**
  * Default controller for the `main` module
@@ -220,6 +221,14 @@ class DefaultController extends Controller
         }
         else{
             throw new HttpException(404 ,'Доступ запрещен');
+        }
+    }
+
+    public function actionTable(){
+        if(\Yii::$app->request->isAjax){
+            $start = date('Y-m').'-01';
+            $finish = date('Y-m-d');
+            return Report::VisitTable($start,$finish);
         }
     }
 

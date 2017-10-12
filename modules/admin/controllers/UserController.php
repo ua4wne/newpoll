@@ -86,7 +86,7 @@ class UserController extends Controller
                 $site = Yii::$app->urlManager->createAbsoluteUrl(['/']);
                 $msg = '<html><head><title>Новый пользователь</title></head>
                     <body><h3>Доступ к сайту</h3>
-                    <p>Здравствуйте!<br>Ваши учетные данные для доступа к сайту '.$site.'<br>Логин: '.$model->username.'<br>Пароль: '.$pass.'.</p>
+                    <p>Здравствуйте!<br>Ваши учетные данные для доступа к сайту '.$site.'<br>Логин: '.$model->username.'<br>Пароль: '.$pass.'</p>
                     <em style="color:red;">Письмо отправлено автоматически. Отвечать на него не нужно.</em><br>
                     <p style="color:darkblue;">С уважением,<br> Ваш почтовый робот.</p>
                     </body></html>';

@@ -125,6 +125,9 @@
                     <span class="caret"></span>
                 </button>
                 <ul class="dropdown-menu pull-right" role="menu">
+                    <li id="view_table"><a href="#">Показать таблицу</a>
+                    </li>
+                    <li class="divider"></li>
                     <li>
                         <a href="/main/default/index">Обновить</a>
                     </li>
@@ -139,6 +142,7 @@
     <div class="panel-body col-md-4">
         <div id="visitor-bar"></div>
     </div>
+    <div class="panel-body col-md-12"><div id="vtbl">Таблица</div></div>
 </div>
 <?php if(Yii::$app->user->can('admin')) : ?>
     <div class="row">
@@ -204,6 +208,24 @@ $(document).ready(function(){
      }
      });
  });
+
+$('#view_table').click(function(e){
+    e.preventDefault();
+    var action = 'view_table'
+    $.ajax({
+      url: '/main/default/table',
+      type: 'POST',
+      data: {'action':action},
+      success: function(res){
+     //alert("Сервер вернул вот что: " + res);
+       //$("#visitor-chart").empty();
+       $("#vtbl").replaceWith(res);
+     },
+     error: function(){
+     alert('Error!');
+     }
+     });
+});
 JS;
 
 $this->registerJs($js);

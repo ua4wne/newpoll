@@ -72,22 +72,24 @@ class WorksController extends Controller
         $model->data = date('Y-m-d');
         $renters = $model->GetActiveRenters();
         $select = array();
-        foreach($renters as $renter) {
-            $select[$renter['id']] = $renter['title'].' ('.$renter['area'].')'; //массив для заполнения данных в select формы
+        foreach ($renters as $renter) {
+            $select[$renter['id']] = $renter['title'] . ' (' . $renter['area'] . ')'; //массив для заполнения данных в select формы
         }
-        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+        //if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+        if (\Yii::$app->request->isAjax) {
             $result = $model->SaveData();
-            if(isset($result)){
-                Yii::$app->session->setFlash('success', 'Записи успешно добавлены!');
-                $msg = 'Добавлены данные по работе арендаторов на выставке';
-                BaseModel::AddEventLog('info',$msg);
-            }
-            else {
-                Yii::$app->session->setFlash('error', 'При добавлении записей возникли ошибки!');
+            if (isset($result)) {
+                //Yii::$app->session->setFlash('success', 'Записи успешно добавлены!');
+                //$msg = 'Добавлены данные по работе арендаторов на выставке';
+                //BaseModel::AddEventLog('info',$msg);
+                return 'OK';
+            } else {
+                //Yii::$app->session->setFlash('error', 'При добавлении записей возникли ошибки!');
                 $msg = 'При добавлении данных по работе арендаторов на выставке возникли ошибки';
-                BaseModel::AddEventLog('error',$msg);
+                BaseModel::AddEventLog('error', $msg);
+                return 'ERR';
             }
-            return $this->redirect(['create']);
+            //return $this->redirect(['create']);
         } else {
             return $this->render('create', [
                 'model' => $model,
@@ -95,6 +97,4 @@ class WorksController extends Controller
             ]);
         }
     }
-
-
 }

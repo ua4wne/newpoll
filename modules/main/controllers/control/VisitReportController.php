@@ -39,10 +39,10 @@ class VisitReportController extends Controller
             $model->start = Yii::$app->request->post('start');
             $model->finish = Yii::$app->request->post('finish');
             $data = array();
-            //if($model->start=='start')
-            //    $model->start = date('Y-m').'-01';
-            //if($model->finish=='finish')
-            //    $model->finish = date('Y-m-d');
+            if($model->start=='start')
+                $model->start = date('Y-m').'-01';
+            if($model->finish=='finish')
+                $model->finish = date('Y-m-d');
             $query=Yii::$app->db->createCommand("select `data`, sum(ucount) as ucount from visit where `data` between '$model->start' and '$model->finish' group by `data`");
             $logs = $query->queryAll();
             if($logs) {
