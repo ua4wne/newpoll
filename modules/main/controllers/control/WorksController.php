@@ -69,27 +69,29 @@ class WorksController extends Controller
     public function actionCreate()
     {
         $model = new RentLog();
-        $model->data = date('Y-m-d');
+        $session = Yii::$app->session;
+        $model->data = $session->get('data');
+        if(!isset($model->data))
+            $model->data = date('Y-m-d');
         $renters = $model->GetActiveRenters();
         $select = array();
         foreach ($renters as $renter) {
             $select[$renter['id']] = $renter['title'] . ' (' . $renter['area'] . ')'; //массив для заполнения данных в select формы
         }
-        //if ($model->load(Yii::$app->request->post()) && $model->validate()) {
-        if (\Yii::$app->request->isAjax) {
+        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+            $session->set('data', $model->data);
             $result = $model->SaveData();
             if (isset($result)) {
-                //Yii::$app->session->setFlash('success', 'Записи успешно добавлены!');
+                Yii::$app->session->setFlash('success', 'Записи успешно добавлены!');
                 //$msg = 'Добавлены данные по работе арендаторов на выставке';
                 //BaseModel::AddEventLog('info',$msg);
-                return 'OK';
+
             } else {
-                //Yii::$app->session->setFlash('error', 'При добавлении записей возникли ошибки!');
+                Yii::$app->session->setFlash('error', 'При добавлении записей возникли ошибки!');
                 $msg = 'При добавлении данных по работе арендаторов на выставке возникли ошибки';
                 BaseModel::AddEventLog('error', $msg);
-                return 'ERR';
             }
-            //return $this->redirect(['create']);
+            return $this->redirect(['create']);
         } else {
             return $this->render('create', [
                 'model' => $model,

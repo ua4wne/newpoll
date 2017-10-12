@@ -118,7 +118,6 @@ class RentLog extends BaseModel
         }
         else*/
             $renters=$this->renter_id;
-
         if($this->alltime){
             $fields=',period1,period2,period3,period4,period5,period6,period7,period8,period9,period10,period11';
             $val=',1,1,1,1,1,1,1,1,1,1,1';

@@ -70,8 +70,12 @@ class VisitsController extends Controller
     public function actionCreate()
     {
         $model = new Visit();
-        $model->data = date('Y-m-d');
+        $session = Yii::$app->session;
+        $model->data = $session->get('data');
+        if(!isset($model->data))
+            $model->data = date('Y-m-d');
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+            $session->set('data', $model->data);
             $hours = $model->hours;
             $created_at = date('Y-m-d H:i:s');
             $updated_at = date('Y-m-d H:i:s');
@@ -89,8 +93,8 @@ class VisitsController extends Controller
             $insert_id = \Yii::$app->db->getLastInsertID();
             if(isset($insert_id)){
                 Yii::$app->session->setFlash('success', 'Записи успешно добавлены!');
-                $msg = 'Добавлены данные по посещению на выставке';
-                BaseModel::AddEventLog('info',$msg);
+                //$msg = 'Добавлены данные по посещению на выставке';
+                //BaseModel::AddEventLog('info',$msg);
             }
             else {
                 Yii::$app->session->setFlash('error', 'При добавлении записей возникли ошибки!');
