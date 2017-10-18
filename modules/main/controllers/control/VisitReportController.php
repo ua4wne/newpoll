@@ -79,4 +79,46 @@ class VisitReportController extends Controller
         }
     }
 
+    public function actionTable(){
+        $model = new SearchForm();
+        if(\Yii::$app->request->isAjax) {
+            $model->start = Yii::$app->request->post('start');
+            $model->finish = Yii::$app->request->post('finish');
+            return Report::VisitTable($model->start,$model->finish);
+        }
+    }
+
+    public function actionAnalise(){
+
+        if(\Yii::$app->request->isAjax) {
+            $data = array();
+            $action = Yii::$app->request->post('action');
+            if($action=='year'){
+                $year = date('Y');
+                $query=Yii::$app->db->createCommand("select SUBSTRING(`data`, 6, 2) as `month`, sum(ucount) as ucount from visit where `data` like '$year-%' group by `month`");
+                $logs = $query->queryAll();
+                foreach($logs as $log){
+                    $tmp = array();
+                    $tmp['y'] = $year.'-'.$log['month'];
+                    $tmp['a'] = $log['ucount'];
+                    array_push($data,$tmp);
+                }
+                return json_encode($data);
+            }
+            elseif($action=='all'){
+                $query=Yii::$app->db->createCommand("select SUBSTRING(`data`, 1, 4) as `year`, sum(ucount) as ucount from visit group by `year`");
+                $logs = $query->queryAll();
+                foreach($logs as $log){
+                    $tmp = array();
+                    $tmp['y'] = $log['year'];
+                    $tmp['a'] = $log['ucount'];
+                    array_push($data,$tmp);
+                }
+                return json_encode($data);
+            }
+            else
+                return 'Не известный запрос!';
+        }
+    }
+
 }

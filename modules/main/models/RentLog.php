@@ -100,7 +100,7 @@ class RentLog extends BaseModel
     //выборка всех действующих арендаторов выставки
     public function GetActiveRenters(){
         $place = (new Query())->select('id')->from('place')->where(['like', 'name', 'МС']); //выбираем площадки МС
-        return Renter::find()->select(['id','title','area'])->where(['place_id'=>$place,'status'=>1])->orderBy('title', SORT_ASC)->asArray()->all();
+        return Renter::find()->select(['id','title','area'])->where(['place_id'=>$place,'status'=>1])->orderBy('cast(area as unsigned)')->asArray()->all();
     }
 
     //сохраняем данные по присутствию арендаторов на выставке в базу

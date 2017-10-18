@@ -45,13 +45,27 @@ $this->params['breadcrumbs'][] = $this->title;
         ]) ?>
 
         <div class="form-group">
-            <?= Html::submitButton('<span class="fa  fa-bar-chart-o"></span> Сформировать', ['id' => 'visit-report','name' => 'report','value' => 'report','class' => 'btn btn-primary']) ?>
+            <?= Html::submitButton('<span class="fa  fa-bar-chart-o"></span> График', ['id' => 'visit-report','name' => 'report','value' => 'report','class' => 'btn btn-primary']) ?>
+            <?= Html::submitButton('<span class="fa  fa-table"></span> Таблица', ['id' => 'vtable','name' => 'vtable','value' => 'vtable','class' => 'btn btn-primary']) ?>
             <?= Html::submitButton('<span class="fa  fa-file-excel-o"></span> Скачать', ['name' => 'export','value' => 'export','class' => 'btn btn-primary']) ?>
+            <!-- Раздельная кнопка -->
+            <div class="btn-group">
+                <button type="button" class="btn btn-primary"><span class="fa  fa-bar-chart-o"></span> Аналитика</button>
+                <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <span class="caret"></span>
+                    <span class="sr-only">Toggle Dropdown</span>
+                </button>
+                <ul class="dropdown-menu">
+                    <li id="view_year"><a href="#">Текущий год</a></li>
+                    <li id="view_all"><a href="#">За все время</a></li>
+                </ul>
+            </div>
         </div>
 
         <?php ActiveForm::end(); ?>
 
     </div>
+    <div class="text-center"></div>
     <div class="agileinfo-grap">
         <div id="chart_visit"></div>
     </div>
@@ -63,6 +77,7 @@ $js = <<<JS
      //var data = $("form").serialize();
      var start = $('#searchform-start').val();
      var finish = $('#searchform-finish').val();
+     var msg = '<h4>Динамика посещений выставки за период с '+start+' по '+finish+'</h4>';
      $.ajax({
      url: '/main/control/visit-report',
      type: 'POST',
@@ -77,6 +92,73 @@ $js = <<<JS
           ykeys: ['a'],
           labels: ['Кол-во']
       });
+     $(".text-center").html(msg);
+     },
+     error: function(){
+     alert('Error!');
+     }
+     });
+ });
+$('#vtable').click(function(e){
+     e.preventDefault();
+     //var data = $("form").serialize();
+     var start = $('#searchform-start').val();
+     var finish = $('#searchform-finish').val();
+     var msg = '<h4>Таблица посещений выставки за период с '+start+' по '+finish+'</h4>';
+     $.ajax({
+     url: '/main/control/visit-report/table',
+     type: 'POST',
+     data: {'start':start,'finish':finish},
+     success: function(res){
+     //alert("Сервер вернул вот что: " + res);
+      $("#chart_visit").html(res);
+      $(".text-center").html(msg);
+     },
+     error: function(){
+     alert('Error!');
+     }
+     });
+ });
+$('#view_year').click(function(e){
+     e.preventDefault();
+     $.ajax({
+     url: '/main/control/visit-report/analise',
+     type: 'POST',
+     data: {'action':'year'},
+     success: function(res){
+     //alert("Сервер вернул вот что: " + res);
+       $("#chart_visit").empty();
+     Morris.Bar({
+          element: 'chart_visit',
+          data: JSON.parse(res),
+          xkey: 'y',
+          ykeys: ['a'],
+          labels: ['Кол-во']
+      }); 
+     $(".text-center").html('<h4>Динамика посещений выставки в течении текущего года</h4>');
+     },
+     error: function(){
+     alert('Error!');
+     }
+     });
+ });
+$('#view_all').click(function(e){
+     e.preventDefault();
+     $.ajax({
+     url: '/main/control/visit-report/analise',
+     type: 'POST',
+     data: {'action':'all'},
+     success: function(res){
+     //alert("Сервер вернул вот что: " + res);
+       $("#chart_visit").empty();
+     Morris.Bar({
+          element: 'chart_visit',
+          data: JSON.parse(res),
+          xkey: 'y',
+          ykeys: ['a'],
+          labels: ['Кол-во']
+      });
+     $(".text-center").html('<h4>Динамика посещений выставки за все время</h4>');
      },
      error: function(){
      alert('Error!');
