@@ -3,7 +3,9 @@
 use yii\helpers\Html;
 use sjaakp\gcharts\PieChart;
 use yii\data\ActiveDataProvider;
+use yii\grid\GridView;
 use app\modules\main\models\Questions;
+use app\modules\main\models\Logger;
 
 /* @var $this yii\web\View */
 /* @var $model app\modules\main\models\Form */
@@ -30,8 +32,10 @@ $this->params['breadcrumbs'][] = ['label' => Html::encode($this->title)];
     //return print_r($rows);
     foreach ($rows as $row) {
         $question = Questions::find()->where(['form_id'=>$form_id,'name'=>$row['name']])->limit(1)->all();
+        $sum = Logger::find()->select('answer')->where(['question_id' => $question[0]['id']])
+            ->andWhere(['between', 'data', "$start", "$finish" ])->count();
         $query = new \yii\db\Query();
-        $query->select(['answer', "count(answer) as kol"])->from('logger')->where(['question_id' => $question[0]['id']])
+        $query->select(['answer', "count(answer) as kol", "count(answer)/$sum as percent"])->from('logger')->where(['question_id' => $question[0]['id']])
             ->andWhere(['between', 'data', "$start", "$finish" ])->groupBy('answer')->orderBy('kol DESC');
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
@@ -50,6 +54,30 @@ $this->params['breadcrumbs'][] = ['label' => Html::encode($this->title)];
                 'title' => $row['name']
             ],
         ]);
+        echo '<i class="fa fa-plus-square-o fa-2x" aria-hidden="true"></i>';
+        echo '<div class="other">';
+        echo GridView::widget([
+            'dataProvider' => $dataProvider,
+            'columns' => [
+                ['class' => 'yii\grid\SerialColumn'],
+
+                //'id',
+                [
+                    'attribute' => 'answer',
+                    'label' => 'Ответ'
+                ],
+                [
+                    'attribute' => 'percent',
+                    'label' => '% ответов',
+                    'content'=>function($data){
+                        return round($data[percent]*100,2);
+                    }
+                ],
+                //'updated_at',
+
+            ],
+        ]);
+        echo '</div>';
         echo '</div>
     </div>';
     }
@@ -59,6 +87,22 @@ $this->params['breadcrumbs'][] = ['label' => Html::encode($this->title)];
 <?php
 $js = <<<JS
 $(document).ready(function(){
+    var c=0;
+    $('.other').hide(); //скрыли значения в таблице вывода анкеты
+    $('.fa-plus-square-o').click(function() {// показываем таблицу
+    if(c==0){
+        $(this).removeClass('fa-plus-square-o');
+        $(this).addClass('fa-minus-square-o');
+        $(this).next().show();
+        c=1;
+    }
+    else {
+        $(this).removeClass('fa-minus-square-o');
+        $(this).addClass('fa-plus-square-o');
+        $(this).next().hide();
+        c=0;
+    }
+    });
     
 });
 JS;

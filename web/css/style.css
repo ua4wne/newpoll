@@ -506,3 +506,9 @@ td input[type=text] {
     height: auto;
   }
 }
+@media(max-width:1199px) {
+  .headpan {
+    z-index: 1;
+    height: auto;
+  }
+}
