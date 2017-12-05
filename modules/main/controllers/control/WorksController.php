@@ -69,17 +69,28 @@ class WorksController extends Controller
     public function actionCreate()
     {
         $model = new RentLog();
-        $session = Yii::$app->session;
-        $model->data = $session->get('data');
-        if(!isset($model->data))
+        //$session = Yii::$app->session;
+        //$model->data = $session->get('data');
+        //if(!isset($model->data))
             $model->data = date('Y-m-d');
         $renters = $model->GetActiveRenters();
         $select = array();
         foreach ($renters as $renter) {
             $select[$renter['id']] = $renter['title'] . ' (' . $renter['area'] . ')'; //массив для заполнения данных в select формы
         }
-        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
-            $session->set('data', $model->data);
+        if(\Yii::$app->request->isAjax) {
+            if ($model->load(Yii::$app->request->post()))
+                $model->SaveData();
+            return 'OK';
+        }
+        else {
+            return $this->render('create', [
+                'model' => $model,
+                'renters' => $select,
+            ]);
+        }
+        /*if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+            //$session->set('data', $model->data);
             $result = $model->SaveData();
             if (isset($result)) {
                 Yii::$app->session->setFlash('success', 'Записи успешно добавлены!');
@@ -97,6 +108,6 @@ class WorksController extends Controller
                 'model' => $model,
                 'renters' => $select,
             ]);
-        }
+        }*/
     }
 }

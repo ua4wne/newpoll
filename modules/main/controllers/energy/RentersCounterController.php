@@ -8,6 +8,7 @@ use Codeception\Exception\TestRuntimeException;
 use Yii;
 use app\models\BaseModel;
 use app\modules\main\models\EnergyLog;
+use app\modules\admin\models\Place;
 
 class RentersCounterController extends BaseRcounterController
 {
@@ -35,16 +36,23 @@ class RentersCounterController extends BaseRcounterController
     public function actionIndex()
     {
         $model = new EnergyLog();
-        $renters = $this->GetActiveRenters();
+        $places = Place::find()->select(['id', 'name'])->asArray()->all();
+        $place_id =  $places[0][id];
+        $data = array();
+        //$renters = $this->GetActiveRenters();
+        $renters = $this->GetActiveRentersByPlace($place_id);
         $select = array();
         $month = $this->GetMonths();
-
         $smonth = date("m");
         $year = date('Y');
         if(strlen($smonth)==1)
             $smonth.='0';
         foreach($renters as $renter) {
             $select[$renter['id']] = $renter['title'].' ('.$renter['area'].')'; //массив для заполнения данных в select формы
+        }
+
+        foreach ($places as $place) {
+            $data[$place['id']] = $place['name']; //массив для заполнения данных в select формы
         }
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
             //$model->encount = $model->encount * $model->ecounter->koeff;
@@ -75,6 +83,7 @@ class RentersCounterController extends BaseRcounterController
                 'month' => $month,
                 'year' => $year,
                 'smonth' => $smonth,
+                'place' => $data,
             ]);
             //return 'Load'; //$this->redirect(['view', 'id' => $model->id]);
         } else {
@@ -84,6 +93,7 @@ class RentersCounterController extends BaseRcounterController
                 'month' => $month,
                 'year' => $year,
                 'smonth' => $smonth,
+                'place' => $data,
             ]);
         }
     }
@@ -98,6 +108,53 @@ class RentersCounterController extends BaseRcounterController
         return $this->render('view', [
             'model' => $this->findModel($id),
         ]);
+    }
+
+    //выборка арендаторов в селект в зависимости от выбранной территории
+    public function actionSelrenter(){
+        if(\Yii::$app->request->isAjax) {
+            $place_id = $_POST['selrent'];
+            $renters = $this->GetActiveRentersByPlace($place_id);
+            $content = '';
+            foreach($renters as $renter) {
+                $content.= '<option value="'.$renter['id'] . '">' . $renter['title'].' ('.$renter['area'].')</option>'; //массив для заполнения данных в select формы
+            }
+
+            return $content;
+            //return $_POST['selrent'];
+        }
+    }
+
+    //запись данный через AJAX
+    public function actionCreate(){
+        $model = new EnergyLog();
+        if(\Yii::$app->request->isAjax) {
+            if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+                //$model->encount = $model->encount * $model->ecounter->koeff;
+                $result = $this->CheckCountVal($model->renter_id,$model->encount,$model->year,$model->month);
+                if($result===self::NOT_VAL){
+                    $msg = 'Отсутствует показание счетчика арендатора <strong>'. $model->renter->title .'</strong> за предыдущий месяц!';
+                    BaseModel::AddEventLog('error',$msg);
+                    return 'Отсутствует показание счетчика за предыдущий месяц!';
+                }
+                elseif($result===self::MORE_VAL){
+                    $msg = 'Предыдущее показание счетчика арендатора <strong>'. $model->renter->title .'</strong> больше, чем текущее!';
+                    BaseModel::AddEventLog('error',$msg);
+                    return 'Предыдущее показание счетчика больше, чем текущее! ';
+                }
+                else{
+                    //удаляем, если имеется запись за текущий месяц, чтобы не было дублей
+                    EnergyLog::deleteAll(['renter_id'=>$model->renter_id,'year'=>$model->year,'month'=>$model->month]);
+                    $model->delta = $model->encount - $this->previous;
+                    $model->price = $model->delta * $model->renter->koeff;
+                    $msg = 'Данные счетчика арендатора <strong>'. $model->renter->title .'</strong> успешно добавлены.';
+                    BaseModel::AddEventLog('info',$msg);
+                    $model->save();
+                    return 'Данные успешно записаны!';
+                }
+            }
+            return 'ERR';
+        }
     }
 
     protected function findModel($id)
