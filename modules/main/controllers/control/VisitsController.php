@@ -2,6 +2,7 @@
 
 namespace app\modules\main\controllers\control;
 
+use app\modules\main\models\UploadExcel;
 use Yii;
 use app\modules\main\models\Visit;
 use yii\data\ActiveDataProvider;
@@ -9,6 +10,7 @@ use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use app\models\BaseModel;
+use app\models\Report;
 
 /**
  * VisitsController implements the CRUD actions for Visit model.
@@ -59,6 +61,17 @@ class VisitsController extends Controller
 
         return $this->render('index', [
             'dataProvider' => $dataProvider,
+        ]);
+    }
+
+    public function actionUpload(){
+        Report::VisitTemplate();
+    }
+
+    public function actionDownload(){
+        $model = new UploadExcel();
+        return $this->render('upload', [
+            'model' => $model,
         ]);
     }
 
