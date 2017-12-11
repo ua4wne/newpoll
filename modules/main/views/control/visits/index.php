@@ -32,6 +32,12 @@ $this->params['breadcrumbs'][] = $this->title;
             // 'updated_at',
 
             //['class' => 'yii\grid\ActionColumn'],
+            [
+                'class' => 'yii\grid\ActionColumn',
+                'header'=>'Действия', // заголовок столбца
+                'headerOptions' => ['width' => '100'], // ширина столбца
+                'template' => '{delete}', // кнопка удаления
+            ],
         ],
     ]); ?>
 </div>
