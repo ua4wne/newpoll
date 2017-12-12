@@ -7,11 +7,13 @@ use yii\base\Model;
 class UploadExcel extends Model{
 
     public $fname;
+    public $data;
 
     public function rules(){
         return[
             [['fname'], 'required', 'message' => 'Не выбран файл!'],
             [['fname'], 'file', 'extensions' => 'xls, xlsx'], //не более 512kB!!!
+            [['data'], 'safe'],
         ];
     }
 
@@ -19,6 +21,7 @@ class UploadExcel extends Model{
     {
         return [
             'fname' => 'Выберите Excel-файл для загрузки',
+            'data' => 'Дата',
         ];
     }
 
@@ -43,6 +46,34 @@ class UploadExcel extends Model{
                 }
                 $row++;
             }
+        }
+        return $add;
+    }
+
+    public function ReadWorkToBase(Array $sheet){
+        $row = 0;
+        $add = -1;
+        foreach ($sheet as $values){
+            if($row==0) $data = $values['A'];
+            if($row){
+                $model = new RentLog();
+                $model->renter_id = $values['A'];
+                $model->data = $data;
+                $model->period1 = $values['C'];
+                $model->period2 = $values['D'];
+                $model->period3 = $values['E'];
+                $model->period4 = $values['F'];
+                $model->period5 = $values['G'];
+                $model->period6 = $values['H'];
+                $model->period7 = $values['I'];
+                $model->period8 = $values['J'];
+                $model->period9 = $values['K'];
+                $model->period10 = $values['L'];
+                $model->period11 = $values['M'];
+                $model->save();
+                $add++;
+            }
+            $row++;
         }
         return $add;
     }
