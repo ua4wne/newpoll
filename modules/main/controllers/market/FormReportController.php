@@ -5,6 +5,7 @@ namespace app\modules\main\controllers\market;
 use Yii;
 use app\modules\main\models\Form;
 use app\modules\main\models\FormReport;
+use app\models\Report;
 
 class FormReportController extends \yii\web\Controller
 {
@@ -27,13 +28,21 @@ class FormReportController extends \yii\web\Controller
     {
         $model = new FormReport();
 
-        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
-            $form = Form::findOne($model->form_id);
-            return $this->render('view',[
-                'model' => $model,
-                'form' => $form['name'],
-                'form_id' => $form['id']
-            ]);
+        if (Yii::$app->request->post('report')) {
+            if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+                $form = Form::findOne($model->form_id);
+                return $this->render('view', [
+                    'model' => $model,
+                    'form' => $form['name'],
+                    'form_id' => $form['id']
+                ]);
+            }
+        }
+        elseif (Yii::$app->request->post('export')) {
+            if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+                Report::GetStatistics($model->form_id,$model->version,$model->start,$model->finish);
+            }
+            $this->redirect('index');
         }
         else{
             $model->start = date('Y-m').'-01';

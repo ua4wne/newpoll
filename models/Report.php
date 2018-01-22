@@ -15,6 +15,7 @@ use PHPExcel_IOFactory;
 use PHPExcel_Style_NumberFormat;
 use PHPExcel_Style_Color;
 use PHPExcel_RichText;
+use PHPExcel_Style_Fill;
 use app\modules\main\models\Renter;
 use app\modules\main\models\RentLog;
 use app\modules\main\models\Visit;
@@ -574,6 +575,194 @@ class Report extends Model {
         $content .= '</table>';
         $header = "<p>Всего посетителей: <strong>$sum</strong></p>";
         return $header.$content;
+    }
+
+    public static function GetStatistics($form_id,$ver,$start,$finish){
+        $styleArray = array(
+            'font' => array(
+                'bold' => true,
+            ),
+            'alignment' => array(
+                'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER,
+            ),
+            'borders' => array(
+                'top' => array(
+                    'style' => PHPExcel_Style_Border::BORDER_THIN,
+                ),
+                'bottom' => array(
+                    'style' => PHPExcel_Style_Border::BORDER_THIN,
+                ),
+                'left' => array(
+                    'style' => PHPExcel_Style_Border::BORDER_THIN,
+                ),
+                'right' => array(
+                    'style' => PHPExcel_Style_Border::BORDER_THIN,
+                ),
+            )
+        );
+
+        $styleRow = array(
+            'font' => array(
+                'bold' => false,
+            ),
+            'alignment' => array(
+                'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER,
+            ),
+            'borders' => array(
+                'top' => array(
+                    'style' => PHPExcel_Style_Border::BORDER_THIN,
+                ),
+                'bottom' => array(
+                    'style' => PHPExcel_Style_Border::BORDER_THIN,
+                ),
+                'left' => array(
+                    'style' => PHPExcel_Style_Border::BORDER_THIN,
+                ),
+                'right' => array(
+                    'style' => PHPExcel_Style_Border::BORDER_THIN,
+                ),
+            )
+        );
+        if($ver == 'new'){
+            $fill = array('FFFFEFD5','FFFFDAB9','FFFFF8DC','FFFFE4B5','FFFFE4E1','FFBEBEBE','FF6A5ACD','FF4169E1','FF5F9EA0','FF2E8B57','FFADFF2F','FFDAA520','FFD2B48C','FFFFA500','FFDDA0DD','FFFFDAB9','FFFFF8DC','FFFFE4B5','FFFFE4E1','FFBEBEBE');
+            //определяем вопросы анкеты
+            $query = "select distinct `q`.`id` AS `qid`,`q`.`name` AS `q_name` from (`questions` as q join `logger` as l on((`q`.`id` = `l`.`question_id`))) where `q`.`form_id`=$form_id and data between '$start' and '$finish'";
+            // подключение к базе данных
+            $connection = \Yii::$app->db;
+            // Составляем SQL запрос
+            $model = $connection->createCommand($query);
+            //Осуществляем запрос к базе данных, переменная $model содержит ассоциативный массив с данными
+            $rows = $model->queryAll();
+            // Create new PHPExcel object
+            $objPHPExcel = new PHPExcel();
+            //готовим файл excel
+            $objPHPExcel->setActiveSheetIndex(0);
+            $objPHPExcel->getActiveSheet()->setTitle('Статистика');
+            $objPHPExcel->getActiveSheet()->setCellValue('A1','Номер');
+            $objPHPExcel->getActiveSheet()->mergeCells('A1:A2');
+            $objPHPExcel->getActiveSheet()->getStyle('A1:A2')->applyFromArray($styleArray);
+            $objPHPExcel->getActiveSheet()->getStyle('A1:A2')->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);
+            $objPHPExcel->getActiveSheet()->getStyle('A1:A2')->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID);
+            $objPHPExcel->getActiveSheet()->getStyle('A1:A2')->getFill()->getStartColor()->setARGB($fill[5]);
+            $col=1;
+            $row=1;
+            $step=1; //смещение по второй строке
+            $cell_one = array(); //массив первых ячеек ответов каждого вопроса
+            $qstart =$rows[0][qid]; //первый вопрос анкеты
+            $f = 0;
+            foreach($rows as $arr){
+                //$arr_qst[]=$arr[qid];
+                //выбираем ответы на вопрос
+                $query="SELECT id,`name` FROM answers WHERE question_id=$arr[qid]";
+                // Составляем SQL запрос
+                $model = $connection->createCommand($query);
+                //Осуществляем запрос к базе данных, переменная $model содержит ассоциативный массив с данными
+                $answers = $model->queryAll();
+                // получаем доступ к ячейке по номеру строки
+                // (нумерация с единицы) и столбца (нумерация с нуля)
+                $cell_start = $objPHPExcel->setActiveSheetIndex(0)->getCellByColumnAndRow($col, $row)->getColumn();
+                $cell_one["$arr[qid]"]=$cell_start;
+                for($j=0;$j<count($answers);$j++){ //заполняем заголовки ответов
+                    $ans = $answers[$j];
+                    $curr_cell=$objPHPExcel->setActiveSheetIndex(0)->getCellByColumnAndRow($step, 2)->getColumn();
+                    $objPHPExcel->getActiveSheet()->setCellValue($curr_cell.'2', $ans['name']);
+                    $objPHPExcel->getActiveSheet()->getStyle($curr_cell . '2:'.$curr_cell . '2')->applyFromArray($styleRow);
+                    $step++;
+                }//цикл по ответам
+                $col = $col + count($answers)-1;
+                $cell_end = $objPHPExcel->setActiveSheetIndex(0)->getCellByColumnAndRow($col, $row)->getColumn();
+                $col++;
+
+                $objPHPExcel->getActiveSheet()->setCellValue($cell_start.$row, $arr['q_name'].'?');
+                $objPHPExcel->getActiveSheet()->mergeCells($cell_start.$row.':'.$cell_end.$row);
+                $objPHPExcel->getActiveSheet()->getStyle($cell_start.$row.':'.$cell_end.$row)->applyFromArray($styleArray);
+                $objPHPExcel->getActiveSheet()->getStyle($cell_start.$row.':'.$cell_end.$row)->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);
+                $objPHPExcel->getActiveSheet()->getStyle($cell_start.$row.':'.$cell_end.$row)->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID);
+                $objPHPExcel->getActiveSheet()->getStyle($cell_start.$row.':'.$cell_end.$row)->getFill()->getStartColor()->setARGB($fill[$f]);
+                $f++;
+            }
+
+            $month_cell=$objPHPExcel->setActiveSheetIndex(0)->getCellByColumnAndRow($step, 2)->getColumn();
+            $objPHPExcel->getActiveSheet()->setCellValue($month_cell.$row, 'Месяц опроса');
+            $objPHPExcel->getActiveSheet()->mergeCells($month_cell.'1:'.$month_cell.'2');
+            $objPHPExcel->getActiveSheet()->getStyle($month_cell.'1:'.$month_cell.'2')->applyFromArray($styleArray);
+            $objPHPExcel->getActiveSheet()->getStyle($month_cell.'1:'.$month_cell.'2')->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);
+            $objPHPExcel->getActiveSheet()->getStyle($month_cell.'1:'.$month_cell.'2')->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID);
+            $objPHPExcel->getActiveSheet()->getStyle($month_cell.'1:'.$month_cell.'2')->getFill()->getStartColor()->setARGB($fill[$f]);
+
+            $objPHPExcel->getActiveSheet()->getRowDimension('1')->setRowHeight(140);
+
+            //заполняем ответами на вопросы по анкете
+            $query="SELECT id,`data`,question_id,answer_id,answer FROM logger WHERE form_id=$form_id AND `data` BETWEEN '$start' AND '$finish'";
+            // Составляем SQL запрос
+            $model = $connection->createCommand($query);
+            //Осуществляем запрос к базе данных, переменная $model содержит ассоциативный массив с данными
+            $dat = $model->queryAll();
+            $data_row=4;
+            $num = 1; //порядковый номер анкеты
+            $k=0;
+            foreach($dat as $val){
+                $idq = $val['question_id'];
+                $cell_start = $cell_one["$idq"];
+                $curr_cell = $cell_start;
+                //выбираем ответы на текущий вопрос
+                $query="SELECT id,name FROM answers WHERE question_id=$idq";
+                // Составляем SQL запрос
+                $model = $connection->createCommand($query);
+                //Осуществляем запрос к базе данных, переменная $model содержит ассоциативный массив с данными
+                $answ = $model->queryAll();
+                $month = substr($val['data'],5,2); //выделяем месяц
+                $arr_ans = array(); //массив ответов на вопрос
+                for($i=0;$i<count($answ);$i++){
+                    $tmp = $answ[$i];
+                    //$arr_ans[$i] = $tmp[tid];
+                    $arr_ans["$tmp[id]"] = $tmp['name'];
+                }
+                //return print_r($answ);
+                foreach ($arr_ans as $key=>$value) {
+                    //$val = $objPHPExcel->getActiveSheet()->getCell($curr_cell . $data_row)->getCalculatedValue();
+                    if($key==$val['answer_id']) {
+                        $pos = strpos($value, 'укажите');
+                        if ($pos === false)
+                            $objPHPExcel->getActiveSheet()->setCellValue($curr_cell . $data_row, 1);
+                        else
+                            $objPHPExcel->getActiveSheet()->setCellValue($curr_cell . $data_row, $val['name']);
+                        $objPHPExcel->getActiveSheet()->setCellValue($month_cell . $data_row, $month);
+                        $objPHPExcel->getActiveSheet()->getStyle($month_cell . $data_row.':'.$month_cell . $data_row)->applyFromArray($styleRow);
+                    }
+                    //if($val!=1)
+                    //	$objPHPExcel->getActiveSheet()->setCellValue($curr_cell . $data_row, 0);
+                    $curr_cell++;
+                }
+                $curr_cell = $cell_start;
+                for($i=0;$i<count($arr_ans);$i++){
+                    $val = $objPHPExcel->getActiveSheet()->getCell($curr_cell . $data_row)->getCalculatedValue();
+                    if(strlen($val)==0)
+                        $objPHPExcel->getActiveSheet()->setCellValue($curr_cell . $data_row, 0);
+                    $objPHPExcel->getActiveSheet()->getStyle($curr_cell . $data_row.':'.$curr_cell . $data_row)->applyFromArray($styleRow);
+                    $curr_cell++;
+                }
+
+                //$objPHPExcel->getActiveSheet()->setCellValue($curr_cell.$data_row, 1);
+                if($idq==$qstart&&$k>3){
+                    $objPHPExcel->getActiveSheet()->setCellValue('A'.$data_row, $num);
+                    $objPHPExcel->getActiveSheet()->getStyle('A' . $data_row.':A' . $data_row)->applyFromArray($styleRow);
+                    $data_row++;
+                    $num++;
+                }
+                $k++;
+            }
+
+            header('Content-Type: application/vnd.ms-excel');
+            $filename = "statistics.xls";
+            header('Content-Disposition: attachment;filename='.$filename .' ');
+            header('Cache-Control: max-age=0');
+            $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
+            $objWriter->save('php://output');
+        }
+        else{
+            Yii::$app->session->setFlash('error', 'Выбранная версия экспорта не поддерживается! Обратитесь к администратору.');
+        }
     }
 
 }
