@@ -17,6 +17,11 @@ class BaseRcounterController extends Controller
         return Renter::find()->select(['id','title','area'])->where(['status'=>1])->orderBy('title', SORT_ASC)->asArray()->all();
     }
 
+    //выборка всех действующих арендаторов
+    public function GetActiveRentersByPlace($place_id){
+        return Renter::find()->select(['id','title','area'])->where(['status'=>1,'place_id'=>$place_id])->orderBy('title', SORT_ASC)->asArray()->all();
+    }
+
     //выборка всех месяцев
     public function GetMonths(){
         return array('01'=>'Январь','02'=>'Февраль','03'=>'Март','04'=>'Апрель','05'=>'Май','06'=>'Июнь','07'=>'Июль',

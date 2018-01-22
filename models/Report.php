@@ -467,6 +467,214 @@ class Report extends Model {
         $objWriter->save('php://output');
     }
 
+    public static function VisitTemplate(){
+        $currd = date('Y-m');
+        $start = $currd.'-01';
+        $finish = date('Y-m-t');
+        $max = date('t');
+
+        $styleArray = array(
+            'font' => array(
+                'bold' => true,
+            ),
+            'alignment' => array(
+                'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER,
+            ),
+            'borders' => array(
+                'top' => array(
+                    'style' => PHPExcel_Style_Border::BORDER_THIN,
+                ),
+                'bottom' => array(
+                    'style' => PHPExcel_Style_Border::BORDER_THIN,
+                ),
+                'left' => array(
+                    'style' => PHPExcel_Style_Border::BORDER_THIN,
+                ),
+                'right' => array(
+                    'style' => PHPExcel_Style_Border::BORDER_THIN,
+                ),
+            )
+        );
+        $objPHPExcel = new PHPExcel();
+        //готовим файл excel
+        $objPHPExcel->setActiveSheetIndex(0);
+        $objPHPExcel->getActiveSheet()->setTitle('Посетители выставки');
+        $k=1;
+        $objPHPExcel->getActiveSheet()->getStyle('A'.$k.':L'.$k)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        //    $k++;
+        $objPHPExcel->setActiveSheetIndex(0)
+            ->setCellValue('A'.$k, 'Дата\Период');
+        $objPHPExcel->setActiveSheetIndex(0)
+            ->setCellValue('B'.$k, '10-11');
+        $objPHPExcel->setActiveSheetIndex(0)
+            ->setCellValue('C'.$k, '11-12');
+        $objPHPExcel->setActiveSheetIndex(0)
+            ->setCellValue('D'.$k, '12-13');
+        $objPHPExcel->setActiveSheetIndex(0)
+            ->setCellValue('E'.$k, '13-14');
+        $objPHPExcel->setActiveSheetIndex(0)
+            ->setCellValue('F'.$k, '14-15');
+        $objPHPExcel->setActiveSheetIndex(0)
+            ->setCellValue('G'.$k, '15-16');
+        $objPHPExcel->setActiveSheetIndex(0)
+            ->setCellValue('H'.$k, '16-17');
+        $objPHPExcel->setActiveSheetIndex(0)
+            ->setCellValue('I'.$k, '17-18');
+        $objPHPExcel->setActiveSheetIndex(0)
+            ->setCellValue('J'.$k, '18-19');
+        $objPHPExcel->setActiveSheetIndex(0)
+            ->setCellValue('K'.$k, '19-20');
+        $objPHPExcel->setActiveSheetIndex(0)
+            ->setCellValue('L'.$k, '20-21');
+        $objPHPExcel->getActiveSheet()->getStyle('A'.$k.':L'.$k)->applyFromArray($styleArray);
+        $k++;
+        for($i=1;$i<=$max;$i++)
+        {
+            $d = $i;
+            if(strlen($d)==1)
+                $d = '0'.$d;
+            $objPHPExcel->setActiveSheetIndex(0)
+                ->setCellValue('A'.$k, $currd.'-'.$d);
+            $k++;
+        }
+
+        $objPHPExcel->getActiveSheet()->getColumnDimension('A')->setAutoSize(true);
+        $objPHPExcel->getActiveSheet()->getColumnDimension('B')->setAutoSize(true);
+        $objPHPExcel->getActiveSheet()->getColumnDimension('C')->setAutoSize(true);
+        $objPHPExcel->getActiveSheet()->getColumnDimension('D')->setAutoSize(true);
+        $objPHPExcel->getActiveSheet()->getColumnDimension('E')->setAutoSize(true);
+        $objPHPExcel->getActiveSheet()->getColumnDimension('F')->setAutoSize(true);
+        $objPHPExcel->getActiveSheet()->getColumnDimension('G')->setAutoSize(true);
+        $objPHPExcel->getActiveSheet()->getColumnDimension('H')->setAutoSize(true);
+        $objPHPExcel->getActiveSheet()->getColumnDimension('I')->setAutoSize(true);
+        $objPHPExcel->getActiveSheet()->getColumnDimension('J')->setAutoSize(true);
+        $objPHPExcel->getActiveSheet()->getColumnDimension('K')->setAutoSize(true);
+        $objPHPExcel->getActiveSheet()->getColumnDimension('L')->setAutoSize(true);
+        header('Content-Type: application/vnd.ms-excel');
+        $filename = "template.xls";
+        header('Content-Disposition: attachment;filename='.$filename .' ');
+        header('Cache-Control: max-age=0');
+        $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
+        $objWriter->save('php://output');
+    }
+
+    public static function WorkTemplate($date){
+        $styleArray = array(
+            'font' => array(
+                'bold' => true,
+            ),
+            'alignment' => array(
+                'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER,
+            ),
+            'borders' => array(
+                'top' => array(
+                    'style' => PHPExcel_Style_Border::BORDER_THIN,
+                ),
+                'bottom' => array(
+                    'style' => PHPExcel_Style_Border::BORDER_THIN,
+                ),
+                'left' => array(
+                    'style' => PHPExcel_Style_Border::BORDER_THIN,
+                ),
+                'right' => array(
+                    'style' => PHPExcel_Style_Border::BORDER_THIN,
+                ),
+            )
+        );
+        $objPHPExcel = new PHPExcel();
+        //готовим файл excel
+        $objPHPExcel->setActiveSheetIndex(0);
+        $objPHPExcel->getActiveSheet()->setTitle('Присутствие на выставке');
+        $objPHPExcel->setActiveSheetIndex(0)
+            ->setCellValue('A1', $date);
+        $k=2;
+        $objPHPExcel->getActiveSheet()->getStyle('A'.$k.':L'.$k)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        //    $k++;
+        $objPHPExcel->setActiveSheetIndex(0)
+            ->setCellValue('A'.$k, 'ID');
+        $objPHPExcel->setActiveSheetIndex(0)
+            ->setCellValue('B'.$k, 'Арендатор\Период');
+        $objPHPExcel->setActiveSheetIndex(0)
+            ->setCellValue('C'.$k, '10-11');
+        $objPHPExcel->setActiveSheetIndex(0)
+            ->setCellValue('D'.$k, '11-12');
+        $objPHPExcel->setActiveSheetIndex(0)
+            ->setCellValue('E'.$k, '12-13');
+        $objPHPExcel->setActiveSheetIndex(0)
+            ->setCellValue('F'.$k, '13-14');
+        $objPHPExcel->setActiveSheetIndex(0)
+            ->setCellValue('G'.$k, '14-15');
+        $objPHPExcel->setActiveSheetIndex(0)
+            ->setCellValue('H'.$k, '15-16');
+        $objPHPExcel->setActiveSheetIndex(0)
+            ->setCellValue('I'.$k, '16-17');
+        $objPHPExcel->setActiveSheetIndex(0)
+            ->setCellValue('J'.$k, '17-18');
+        $objPHPExcel->setActiveSheetIndex(0)
+            ->setCellValue('K'.$k, '18-19');
+        $objPHPExcel->setActiveSheetIndex(0)
+            ->setCellValue('L'.$k, '19-20');
+        $objPHPExcel->setActiveSheetIndex(0)
+            ->setCellValue('M'.$k, '20-21');
+        $objPHPExcel->getActiveSheet()->getStyle('A'.$k.':M'.$k)->applyFromArray($styleArray);
+        $k++;
+        $in = Yii::$app->params['place_mc'];
+        $rents = Renter::find()->select(['id','title','area'])->where(['status'=>1])->andWhere(['in','place_id',$in])->orderBy(['cast(area as unsigned)'=>SORT_ASC])->all();
+        foreach ($rents as $rent){
+            $objPHPExcel->setActiveSheetIndex(0)
+                ->setCellValue('A'.$k, $rent->id);
+            $objPHPExcel->setActiveSheetIndex(0)
+                ->setCellValue('B'.$k, $rent->title . '    участок № ' . $rent->area);
+            $objPHPExcel->getActiveSheet()->getStyle('A'.$k.':A'.$k)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+            $objPHPExcel->setActiveSheetIndex(0)
+                ->setCellValue('C'.$k, 0);
+            $objPHPExcel->setActiveSheetIndex(0)
+                ->setCellValue('D'.$k, 0);
+            $objPHPExcel->setActiveSheetIndex(0)
+                ->setCellValue('E'.$k, 0);
+            $objPHPExcel->setActiveSheetIndex(0)
+                ->setCellValue('F'.$k, 0);
+            $objPHPExcel->setActiveSheetIndex(0)
+                ->setCellValue('G'.$k, 0);
+            $objPHPExcel->setActiveSheetIndex(0)
+                ->setCellValue('H'.$k, 0);
+            $objPHPExcel->setActiveSheetIndex(0)
+                ->setCellValue('I'.$k, 0);
+            $objPHPExcel->setActiveSheetIndex(0)
+                ->setCellValue('J'.$k, 0);
+            $objPHPExcel->setActiveSheetIndex(0)
+                ->setCellValue('K'.$k, 0);
+            $objPHPExcel->setActiveSheetIndex(0)
+                ->setCellValue('L'.$k, 0);
+            $objPHPExcel->setActiveSheetIndex(0)
+                ->setCellValue('M'.$k, 0);
+            $objPHPExcel->getActiveSheet()->getStyle('C'.$k.':M'.$k)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+            $k++;
+        }
+        $objPHPExcel->getActiveSheet()->getColumnDimension('A')->setAutoSize(true);
+        $objPHPExcel->getActiveSheet()->getColumnDimension('B')->setAutoSize(true);
+        $objPHPExcel->getActiveSheet()->getColumnDimension('C')->setAutoSize(true);
+        $objPHPExcel->getActiveSheet()->getColumnDimension('D')->setAutoSize(true);
+        $objPHPExcel->getActiveSheet()->getColumnDimension('E')->setAutoSize(true);
+        $objPHPExcel->getActiveSheet()->getColumnDimension('F')->setAutoSize(true);
+        $objPHPExcel->getActiveSheet()->getColumnDimension('G')->setAutoSize(true);
+        $objPHPExcel->getActiveSheet()->getColumnDimension('H')->setAutoSize(true);
+        $objPHPExcel->getActiveSheet()->getColumnDimension('I')->setAutoSize(true);
+        $objPHPExcel->getActiveSheet()->getColumnDimension('J')->setAutoSize(true);
+        $objPHPExcel->getActiveSheet()->getColumnDimension('K')->setAutoSize(true);
+        $objPHPExcel->getActiveSheet()->getColumnDimension('L')->setAutoSize(true);
+        $objPHPExcel->getActiveSheet()->getColumnDimension('M')->setAutoSize(true);
+
+        $objWriter = new PHPExcel_Writer_Excel2007($objPHPExcel);
+        $objWriter->save("./download/template.xlsx");
+        /*header('Content-Type: application/vnd.ms-excel');
+        $filename = "template.xls";
+        header('Content-Disposition: attachment;filename='.$filename .' ');
+        header('Cache-Control: max-age=0');
+        $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
+        $objWriter->save('php://output');*/
+    }
+
     public static function CalculateToExcel($year,$renters){
 
         $styleArray = array(

@@ -20,6 +20,7 @@ use Yii;
  */
 class EnergyLog extends BaseModel
 {
+    public $place_id;
     /**
      * @inheritdoc
      */
@@ -57,6 +58,7 @@ class EnergyLog extends BaseModel
             'encount' => 'Текущие показания, кВт.',
             'delta' => 'Потребление, кВт.',
             'price' => 'Цена, руб.',
+            'place_id' => 'Территория',
             'created_at' => 'Дата создания',
             'updated_at' => 'Дата обновления',
         ];

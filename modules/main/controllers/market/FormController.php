@@ -84,17 +84,20 @@ class FormController extends Controller
     {
         if(Yii::$app->user->can('guard')) {
             $id = 7; //Опрос посетителей выставки домов Малоэтажная Страна
-
+            $kol = 0;
             if (\Yii::$app->request->isAjax) {
-                $date = $_POST['date'];
-                $kol = $_POST['kolvo'];
-                if ($kol > 0) {
-                    while ($kol) {
-                        self::SavePoll($id, $date);
-                        $kol--;
+                    $date = $_POST['date'];
+                    $kol = $_POST['kolvo'];
+                    if ($kol > 1) {
+                        while ($kol) {
+                            self::SavePoll($id, $date);
+                            $kol--;
+                        }
                     }
-                }
-                return 'OK';
+                    elseif ($kol==1)
+                        self::SavePoll($id, $date);
+                    return 'OK';
+
             }
 
             /*if(Yii::$app->request->post()){
@@ -391,12 +394,6 @@ class FormController extends Controller
                         $model->answer = $val;
                         $model->user_id = $iduser;
                         $model->save();
-                        /*$query="INSERT INTO logger(`data`,form_id,question_id,answer_id,answer,user_id) VALUES('$date',".$idform.",".$question->id.",".$answer['id'].",'".$val."',$iduser)";
-                        // подключение к базе данных
-                        $connection = \Yii::$app->db;
-                        // Составляем SQL запрос
-                        $model = $connection->createCommand($query);
-                        $model->execute();*/
                     }
                 }
                 else{
@@ -419,12 +416,6 @@ class FormController extends Controller
                     $model->answer = $val;
                     $model->user_id = $iduser;
                     $model->save();
-                    /*$query="INSERT INTO logger(`data`,form_id,question_id,answer_id,answer,user_id) VALUES('$date',".$idform.",".$question->id.",".$answer['id'].",'".$val."',$iduser)";
-                    // подключение к базе данных
-                    $connection = \Yii::$app->db;
-                    // Составляем SQL запрос
-                    $model = $connection->createCommand($query);
-                    $model->execute();*/
                 }
             }
         }

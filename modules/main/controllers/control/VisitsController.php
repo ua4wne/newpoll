@@ -2,6 +2,7 @@
 
 namespace app\modules\main\controllers\control;
 
+use app\modules\main\models\UploadExcel;
 use Yii;
 use app\modules\main\models\Visit;
 use yii\data\ActiveDataProvider;
@@ -9,6 +10,10 @@ use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use app\models\BaseModel;
+use app\models\Report;
+use yii\web\UploadedFile;
+use PHPExcel;
+//use PHPExcel\IOFactory;
 
 /**
  * VisitsController implements the CRUD actions for Visit model.
@@ -62,6 +67,30 @@ class VisitsController extends Controller
         ]);
     }
 
+    public function actionUpload(){
+        Report::VisitTemplate();
+    }
+
+    public function actionDownload(){
+        $model = new UploadExcel();
+        if ($model->load(Yii::$app->request->post())){
+            $model->fname = UploadedFile::getInstance($model, 'fname');
+            /*if ($model->validate()) {
+                $path = Yii::$app->params['pathUploads'] . 'download/';
+                $model->fname->saveAs( $path . $model->fname);
+            } */
+            $file = $model->fname;
+            $PHPReader = \PHPExcel_IOFactory::load($file->tempName );
+            $sheetData = $PHPReader->getActiveSheet()->toArray(null, true, true, true);
+            $result = $model->ReadExcelToBase($sheetData);
+            Yii::$app->session->setFlash('success', 'Количество успешно добавленых в базу записей - '.$result);
+            return $this->redirect('index');
+        }
+        return $this->render('upload', [
+            'model' => $model,
+        ]);
+    }
+
      /**
      * Creates a new Visit model.
      * If creation is successful, the browser will be redirected to the 'view' page.
@@ -109,4 +138,33 @@ class VisitsController extends Controller
             ]);
         }
     }
+
+    /**
+     * Deletes an existing Form model.
+     * If deletion is successful, the browser will be redirected to the 'index' page.
+     * @param integer $id
+     * @return mixed
+     */
+    public function actionDelete($id)
+    {
+        $this->findModel($id)->delete();
+        return $this->redirect(['index']);
+    }
+
+    /**
+     * Finds the Form model based on its primary key value.
+     * If the model is not found, a 404 HTTP exception will be thrown.
+     * @param integer $id
+     * @return Form the loaded model
+     * @throws NotFoundHttpException if the model cannot be found
+     */
+    protected function findModel($id)
+    {
+        if (($model = Visit::findOne($id)) !== null) {
+            return $model;
+        } else {
+            throw new NotFoundHttpException('The requested page does not exist.');
+        }
+    }
+
 }

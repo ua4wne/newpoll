@@ -2,6 +2,9 @@
 
 namespace app\modules\main\controllers\control;
 
+use app\models\Report;
+use app\modules\main\models\Renter;
+use app\modules\main\models\UploadExcel;
 use Yii;
 use app\modules\main\models\RentLog;
 use yii\data\ActiveDataProvider;
@@ -9,6 +12,8 @@ use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use app\models\BaseModel;
+use yii\web\UploadedFile;
+use PHPExcel;
 
 /**
  * WorksController implements the CRUD actions for RentLog model.
@@ -45,8 +50,23 @@ class WorksController extends Controller
      */
     public function actionIndex()
     {
+        $model = new UploadExcel();
+
+        if (Yii::$app->request->isAjax) {
+            //$model = new LoginForm();
+            if ($model->load(Yii::$app->request->post())) {
+                if ($model->data) {
+                    Report::WorkTemplate($model->data);
+                    return 'OK';
+                } else {
+                    Yii::$app->response->format = yii\web\Response::FORMAT_JSON;
+                    return \yii\widgets\ActiveForm::validate($model);
+                }
+            }
+        }
         $start = date('Y-m').'-01';
         $now = date('Y-m-d');
+        $model->data = $now;
         $query = RentLog::find()->where(['between', 'data', $start, $now]);
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
@@ -58,6 +78,7 @@ class WorksController extends Controller
 
         return $this->render('index', [
             'dataProvider' => $dataProvider,
+            'model' => $model,
         ]);
     }
 
@@ -69,17 +90,28 @@ class WorksController extends Controller
     public function actionCreate()
     {
         $model = new RentLog();
-        $session = Yii::$app->session;
-        $model->data = $session->get('data');
-        if(!isset($model->data))
+        //$session = Yii::$app->session;
+        //$model->data = $session->get('data');
+        //if(!isset($model->data))
             $model->data = date('Y-m-d');
         $renters = $model->GetActiveRenters();
         $select = array();
         foreach ($renters as $renter) {
             $select[$renter['id']] = $renter['title'] . ' (' . $renter['area'] . ')'; //массив для заполнения данных в select формы
         }
-        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
-            $session->set('data', $model->data);
+        if(\Yii::$app->request->isAjax) {
+            if ($model->load(Yii::$app->request->post()))
+                $model->SaveData();
+            return 'OK';
+        }
+        else {
+            return $this->render('create', [
+                'model' => $model,
+                'renters' => $select,
+            ]);
+        }
+        /*if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+            //$session->set('data', $model->data);
             $result = $model->SaveData();
             if (isset($result)) {
                 Yii::$app->session->setFlash('success', 'Записи успешно добавлены!');
@@ -97,6 +129,50 @@ class WorksController extends Controller
                 'model' => $model,
                 'renters' => $select,
             ]);
+        }*/
+    }
+
+    public function actionDownload(){
+        $model = new UploadExcel();
+        if ($model->load(Yii::$app->request->post())){
+            $model->fname = UploadedFile::getInstance($model, 'fname');
+            $file = $model->fname;
+            $PHPReader = \PHPExcel_IOFactory::load($file->tempName );
+            $sheetData = $PHPReader->getActiveSheet()->toArray(null, true, true, true);
+            $result = $model->ReadWorkToBase($sheetData);
+            //Yii::$app->session->setFlash('success', 'Количество успешно добавленых в базу записей - '.$result);
+            return $this->redirect('index');
+        }
+        return $this->render('upload', [
+            'model' => $model,
+        ]);
+    }
+
+    /**
+     * Deletes an existing Form model.
+     * If deletion is successful, the browser will be redirected to the 'index' page.
+     * @param integer $id
+     * @return mixed
+     */
+    public function actionDelete($id)
+    {
+        $this->findModel($id)->delete();
+        return $this->redirect(['index']);
+    }
+
+    /**
+     * Finds the Form model based on its primary key value.
+     * If the model is not found, a 404 HTTP exception will be thrown.
+     * @param integer $id
+     * @return Form the loaded model
+     * @throws NotFoundHttpException if the model cannot be found
+     */
+    protected function findModel($id)
+    {
+        if (($model = RentLog::findOne($id)) !== null) {
+            return $model;
+        } else {
+            throw new NotFoundHttpException('The requested page does not exist.');
         }
     }
 }

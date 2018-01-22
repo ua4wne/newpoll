@@ -20,3 +20,30 @@ $this->params['breadcrumbs'][] = $this->title;
     ]) ?>
 
 </div>
+
+<?php
+$js = <<<JS
+$('form').on('beforeSubmit', function(){
+ var data = $(this).serialize();
+ $.ajax({
+ url: '/main/control/works/create',
+ type: 'POST',
+ data: data,
+ success: function(res){
+     //alert("Сервер вернул вот что: " + res);
+     if(res=='OK'){
+        alert("Данные успешно добавлены!");
+        $('#rentlog-period option').each(function(){
+            $(this).prop("selected", false);
+        });
+     }
+ },
+ error: function(){
+    alert('Error!');
+ }
+ });
+ return false;
+ });
+JS;
+$this->registerJs($js);
+?>

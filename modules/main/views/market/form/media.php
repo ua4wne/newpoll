@@ -29,10 +29,8 @@ $this->params['breadcrumbs'][] = ['label' => Html::encode($this->title)];
 
 <?php
 $js = <<<JS
-$(document).ready(function(){
-    $('form').submit(function(e){
+    $('form').on('beforeSubmit', function(){
         var err = 0;
-        e.preventDefault();
         $(".table").find(":input[name*='other']").each(function() {// проверяем каждое поле ввода в форме
 			if($(this).prev().is(':checked')){ //если выбран чекбокс
 				if(!$(this).val()){// если поле пустое
@@ -62,26 +60,26 @@ $(document).ready(function(){
                 }
             }
         })
-        
-        if(err) return false;
-        var fData = $("form[id='fMedia']").serialize();
-        $.ajax({
-            url: '/main/market/form/media',
-            type: 'POST',
-            data: fData,
-            success: function(res){
-                //alert("Сервер вернул вот что: " + res);
-                if(res=='OK'){
-                    alert("Данные успешно добавлены!");
-                    //$('#kolvo').val('');
+        if(!err){
+            var fData = $("form[id='fMedia']").serialize();
+            $.ajax({
+                url: '/main/market/form/media',
+                type: 'POST',
+                data: fData,
+                success: function(res){
+                    alert("Сервер вернул вот что: " + res);
+                    if(res=='OK'){
+                        alert("Данные успешно добавлены!");
+                        $('#kolvo').val('');
+                    }
+                },
+                error: function(){
+                    alert('Error!');
                 }
-            },
-            error: function(){
-                alert('Error!');
-            }
-        });
+            });
+        }
+        return false;
     });
-});
 JS;
 
 $this->registerJs($js);
