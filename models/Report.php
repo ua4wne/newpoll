@@ -665,14 +665,14 @@ class Report extends Model {
         $objPHPExcel->getActiveSheet()->getColumnDimension('L')->setAutoSize(true);
         $objPHPExcel->getActiveSheet()->getColumnDimension('M')->setAutoSize(true);
 
-        $objWriter = new PHPExcel_Writer_Excel2007($objPHPExcel);
-        $objWriter->save("./download/template.xlsx");
-        /*header('Content-Type: application/vnd.ms-excel');
+        //$objWriter = new PHPExcel_Writer_Excel2007($objPHPExcel);
+        //$objWriter->save("./download/template.xlsx");
+        header('Content-Type: application/vnd.ms-excel');
         $filename = "template.xls";
         header('Content-Disposition: attachment;filename='.$filename .' ');
         header('Cache-Control: max-age=0');
         $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
-        $objWriter->save('php://output');*/
+        $objWriter->save('php://output');
     }
 
     public static function CalculateToExcel($year,$renters){

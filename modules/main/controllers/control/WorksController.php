@@ -52,18 +52,17 @@ class WorksController extends Controller
     {
         $model = new UploadExcel();
 
-        if (Yii::$app->request->isAjax) {
-            //$model = new LoginForm();
+        //if (Yii::$app->request->isAjax) {
             if ($model->load(Yii::$app->request->post())) {
-                if ($model->data) {
+                if ($model->data)
                     Report::WorkTemplate($model->data);
-                    return 'OK';
-                } else {
-                    Yii::$app->response->format = yii\web\Response::FORMAT_JSON;
-                    return \yii\widgets\ActiveForm::validate($model);
-                }
+                    //return 'OK';
+                //} else {
+                //    Yii::$app->response->format = yii\web\Response::FORMAT_JSON;
+                //    return \yii\widgets\ActiveForm::validate($model);
+                //}
             }
-        }
+        //}
         $start = date('Y-m').'-01';
         $now = date('Y-m-d');
         $model->data = $now;
@@ -140,7 +139,7 @@ class WorksController extends Controller
             $PHPReader = \PHPExcel_IOFactory::load($file->tempName );
             $sheetData = $PHPReader->getActiveSheet()->toArray(null, true, true, true);
             $result = $model->ReadWorkToBase($sheetData);
-            //Yii::$app->session->setFlash('success', 'Количество успешно добавленых в базу записей - '.$result);
+            Yii::$app->session->setFlash('success', 'Количество успешно добавленых в базу записей - '.$result);
             return $this->redirect('index');
         }
         return $this->render('upload', [

@@ -27,8 +27,8 @@ $this->params['breadcrumbs'][] = $this->title;
 
         $form = ActiveForm::begin([
             'id' => 'template-form',
-            'enableAjaxValidation' => true,
-            'action' => ['/main/control/works/index']
+            //'enableAjaxValidation' => true,
+            'action' => ['index']
         ]); ?>
 
         <?= $form->field($model, 'data')->widget(DateTimePicker::className(),[
@@ -93,24 +93,8 @@ $this->params['breadcrumbs'][] = $this->title;
 
 <?php
 $js = <<<JS
-$('#upload').click(function(e) {
-	e.preventDefault();
-	var data = $('form').serialize();
-	// отправляем AJAX запрос
-	$.ajax({
-		type: "POST",
-		url: "/main/control/works/index",
-		//dataType: "json",
-	    data: data,
-		// success - это обработчик удачного выполнения событий
-		success: function(res) {
-	        if(res=='OK');
-	            window.location.href = "/web/download/template.xlsx"; //редирект
-		},
-		error: function(){
-            alert('Error!');
-        }
-    });
+$('#upload').click(function() {
+	return true;
 });
 JS;
 
