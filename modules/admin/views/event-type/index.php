@@ -6,7 +6,7 @@ use yii\grid\GridView;
 /* @var $this yii\web\View */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Event Types';
+$this->title = 'Виды событий';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="event-type-index">
@@ -14,19 +14,18 @@ $this->params['breadcrumbs'][] = $this->title;
     <h1><?= Html::encode($this->title) ?></h1>
 
     <p>
-        <?= Html::a('Create Event Type', ['create'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a('Новая запись', ['create'], ['class' => 'btn btn-success']) ?>
     </p>
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
 
-            'id',
+            //'id',
             'text',
             'code',
-            'flag',
             'created_at',
-            // 'updated_at',
+            'updated_at',
 
             ['class' => 'yii\grid\ActionColumn'],
         ],

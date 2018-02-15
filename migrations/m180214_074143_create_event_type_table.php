@@ -19,8 +19,7 @@ class m180214_074143_create_event_type_table extends Migration
         $this->createTable('event_type', [
             'id' => $this->primaryKey(),
             'text' => $this->string(70)->notNull(),
-            'code' => $this->string(3)->notNull()->unique(),
-            'flag' => $this->string(70)->notNull(),
+            'code' => $this->smallInteger()->notNull()->unique(),
             'created_at' => $this->dateTime()->notNull(),
             'updated_at' => $this->dateTime()->notNull(),
         ], $tableOptions);

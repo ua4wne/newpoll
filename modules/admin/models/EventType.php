@@ -11,7 +11,6 @@ use app\models\BaseModel;
  * @property integer $id
  * @property string $text
  * @property string $code
- * @property string $flag
  * @property string $created_at
  * @property string $updated_at
  */
@@ -31,10 +30,11 @@ class EventType extends BaseModel
     public function rules()
     {
         return [
-            [['text', 'code', 'flag'], 'required'],
+            [['text', 'code'], 'required'],
             [['created_at', 'updated_at'], 'safe'],
-            [['text', 'flag'], 'string', 'max' => 70],
-            [['code'], 'string', 'max' => 3],
+            [['text'], 'string', 'max' => 70],
+            [['code'], 'unique'],
+            [['code'], 'number'],
         ];
     }
 
@@ -45,11 +45,10 @@ class EventType extends BaseModel
     {
         return [
             'id' => 'ID',
-            'text' => 'Text',
-            'code' => 'Code',
-            'flag' => 'Flag',
-            'created_at' => 'Created At',
-            'updated_at' => 'Updated At',
+            'text' => 'Событие',
+            'code' => 'Код события',
+            'created_at' => 'Дата создания',
+            'updated_at' => 'Дата обновления',
         ];
     }
 }
