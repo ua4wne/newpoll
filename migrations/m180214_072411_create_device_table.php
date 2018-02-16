@@ -26,10 +26,7 @@ class m180214_072411_create_device_table extends Migration
             'text' => $this->string(255),
             'is_active' => $this->boolean()->notNull()->defaultValue(0),
             'mode' => $this->smallInteger()->notNull()->defaultValue(0),
-            'zone' => $this->smallInteger()->notNull(),
-            'tbegin' => $this->dateTime(),
-            'tend' => $this->dateTime(),
-            'days' => $this->boolean()->notNull()->defaultValue(0),
+            'zone_id' => $this->integer()->notNull(),
             'created_at' => $this->dateTime()->notNull(),
             'updated_at' => $this->dateTime()->notNull(),
         ], $tableOptions);
