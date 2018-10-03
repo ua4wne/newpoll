@@ -24,7 +24,7 @@ class FormReport extends Model
         return [
             // name, question_id and htmlcode are required
             [['start', 'form_id', 'finish', 'version'], 'required'],
-            [['form_id'], 'integer'],
+            [['form_id'], 'safe'],
         ];
     }
 

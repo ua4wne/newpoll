@@ -2,6 +2,8 @@
 
 namespace app\modules\main\controllers\market;
 
+use app\modules\main\models\CloneForm;
+use app\modules\main\models\FormQty;
 use app\modules\main\models\Logger;
 use app\modules\main\models\Questions;
 use Yii;
@@ -151,6 +153,65 @@ class FormController extends Controller
                     'statsel' => $statsel,
                     'worksel' => $worksel,
                     'qstcount' => $qstcount,
+                ]);
+            }
+        }
+        else{
+            throw new HttpException(404 ,'Доступ запрещен');
+        }
+    }
+
+    /**
+     * Clone a new Form model.
+     * If creation is successful, the browser will be redirected to the 'view' page.
+     * @return mixed
+     */
+    public function actionClone($id)
+    {
+        if(Yii::$app->user->can('market')) {
+            $model = new CloneForm();
+
+            if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+                //формируем анкету-клон
+                $anket = new Form();
+                $anket->name = $model->name;
+                $anket->is_active = 0;
+                $anket->is_work = 0;
+                $anket->created_at = date('Y-m-d H:i:s');
+                $anket->save();
+                $questions = $model->questions;
+                foreach($questions as $question){
+                    $name = Questions::findOne($question)->name;
+                    $new_qst = new Questions();
+                    $new_qst->form_id = $anket->id;
+                    $new_qst->name = $name;
+                    $new_qst->save();
+                    if($model->answers){
+                        $answers = Answers::find()->where(['question_id' => $question])->all();
+                        foreach ($answers as $answer){
+                            $new_ans = new Answers();
+                            $new_ans->question_id = $new_qst->id;
+                            $new_ans->name = $answer->name;
+                            $new_ans->htmlcode = $answer->htmlcode;
+                            $new_ans->source = $answer->source;
+                            $new_ans->save();
+                        }
+                    }
+                }
+                $msg = 'Добавлена новая анкета  <strong>' . $model->name . '</strong> пользователем <strong>' . Yii::$app->user->identity->fname . ' ' . Yii::$app->user->identity->lname . '</strong>.';
+                $anket->save();
+                BaseModel::AddEventLog('info', $msg);
+                return $this->redirect('/main/market/form/index');
+            } else {
+                $questions = Questions::find(['form_id'=>$id])->all();
+                $qst = array();
+                foreach($questions as $question){
+                    $qst[$question->id] = $question->name;
+                    //array_push($qst,$question->name);
+                }
+                return $this->render('clone', [
+                    'model' => $model,
+                    'questions' => $qst,
                 ]);
             }
         }
@@ -418,6 +479,23 @@ class FormController extends Controller
                     $model->save();
                 }
             }
+        }
+        //после сохранения анкеты увеличиваем счетчик опрошенных в таблице form_qty
+        $table = FormQty::findOne(['form_id'=>$idform, 'date'=>$date]);
+        if(empty($table)){
+            $new = new FormQty();
+            $new->form_id = $idform;
+            $new->date = $date;
+            $new->qty = 1;
+            $new->created_at = date('Y-m-d H:i:s');
+            $new->updated_at = $new->created_at;
+            $new->save();
+        }
+        else{
+            $qty = $table->qty;
+            $qty++;
+            $table->qty = $qty;
+            $table->update();
         }
     }
 }

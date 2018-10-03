@@ -220,24 +220,6 @@ AppAsset::register($this);
                             <li>
                                 <a href="/admin/catalog">Справочники</a>
                             </li>
-                            <li>
-                                <a href="#">СКУД <span class="fa arrow"></span></a>
-                                <ul class="nav nav-third-level">
-                                    <li>
-                                        <a href="/admin/time-zone">Временные зоны</a>
-                                    </li>
-                                    <li>
-                                        <a href="/admin/event-type">Виды событий</a>
-                                    </li>
-                                    <li>
-                                        <a href="/admin/car-type">Виды автотранспорта</a>
-                                    </li>
-                                    <li>
-                                        <a href="/admin/doc-type">Виды документов</a>
-                                    </li>
-                                </ul>
-                                <!-- /.nav-third-level -->
-                            </li>
                         </ul>
                         <!-- /.nav-second-level -->
                     </li>

@@ -64,7 +64,16 @@ $this->params['breadcrumbs'][] = $this->title;
             'created_at',
             // 'updated_at',
 
-            ['class' => 'yii\grid\ActionColumn'],
+            //['class' => 'yii\grid\ActionColumn'],
+            [
+                'class' => 'yii\grid\ActionColumn',
+                'template' => '{view} {update} {delete} {clone}',
+                'buttons' => [
+                    'clone' => function ($url,$model,$key) {
+                        return Html::a('<span class="glyphicon glyphicon-retweet"></span>', $url,['title'=>'Клонировать анкету','aria-label'=>'Клонировать анкету', 'data-pjax'=>'0']);
+                    },
+                ],
+            ],
         ],
     ]); ?>
 <?php Pjax::end(); ?></div>

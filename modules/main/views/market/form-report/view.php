@@ -16,7 +16,7 @@ $this->params['breadcrumbs'][] = ['label' => Html::encode($this->title)];
 ?>
 <div class="container">
     <h1><?= $form; ?></h1>
-    <h4>за период с <?= $model->start; ?> по <?= $model->finish; ?></h4>
+    <h4 class="text-center">за период с <?= $model->start; ?> по <?= $model->finish; ?> опрошено человек: <?= $qty ?></h4>
 
     <?php
     $start = $model->start;
@@ -65,6 +65,10 @@ $this->params['breadcrumbs'][] = ['label' => Html::encode($this->title)];
                 [
                     'attribute' => 'answer',
                     'label' => 'Ответ'
+                ],
+                [
+                    'attribute' => 'kol',
+                    'label' => 'Кол-во ответов',
                 ],
                 [
                     'attribute' => 'percent',

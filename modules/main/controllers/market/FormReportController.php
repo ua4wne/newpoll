@@ -2,6 +2,7 @@
 
 namespace app\modules\main\controllers\market;
 
+use app\modules\main\models\FormQty;
 use Yii;
 use app\modules\main\models\Form;
 use app\modules\main\models\FormReport;
@@ -27,16 +28,20 @@ class FormReportController extends \yii\web\Controller
     public function actionIndex()
     {
         $model = new FormReport();
-
+        //ini_set('max_execution_time', 800);
+        set_time_limit(800);
         if (Yii::$app->request->post('report')) {
             if ($model->load(Yii::$app->request->post()) && $model->validate()) {
                 $form = Form::findOne($model->form_id);
+                $qty = $this->getOuantity($model->start,$model->finish);
                 return $this->render('view', [
                     'model' => $model,
                     'form' => $form['name'],
-                    'form_id' => $form['id']
+                    'form_id' => $form['id'],
+                    'qty' => $qty,
                 ]);
             }
+            return print_r($model->errors);
         }
         elseif (Yii::$app->request->post('export')) {
             if ($model->load(Yii::$app->request->post()) && $model->validate()) {
@@ -58,5 +63,10 @@ class FormReportController extends \yii\web\Controller
                 'verselect' => $verselect,
             ]);
         }
+    }
+
+    private function getOuantity($from,$to){
+        $qty = FormQty::find()->where(['between', 'date', $from, $to])->sum('qty');
+        return $qty;
     }
 }

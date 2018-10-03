@@ -10,6 +10,9 @@ use kartik\datetime\DateTimePicker;
 $this->title = 'Анкетирование';
 //$this->params['breadcrumbs'][] = ['label' => 'Анкеты', 'url' => ['/main/market/form']];
 $this->params['breadcrumbs'][] = ['label' => Html::encode($this->title)];
+$this->registerCssFile('/css/select2.min.css');
+$this->registerJsFile('/js/select2.full.min.js',
+    ['depends' => [\yii\web\JqueryAsset::className()]]);
 ?>
 
 <div class="form-report-form">
@@ -46,7 +49,13 @@ $this->params['breadcrumbs'][] = ['label' => Html::encode($this->title)];
         ]
     ]) ?>
 
-    <?= $form->field($model, 'form_id')->dropDownList($formselect) ?>
+    <?= $form->field($model, 'form_id')->dropDownList($formselect,[
+        'multiple' => true,
+        'size' => 20,
+        //'style' => 'background:gray;color:#fff;'
+        'class'=>'form-control select2',
+        'data-placeholder'=>'Выберите анкеты'
+    ]) ?>
 
     <?= $form->field($model, 'version')->dropDownList($verselect) ?>
 
@@ -59,3 +68,12 @@ $this->params['breadcrumbs'][] = ['label' => Html::encode($this->title)];
     <?php ActiveForm::end(); ?>
 
 </div>
+<?php
+$js = <<<JS
+$(document).ready(function(){
+    $(".select2").select2();
+});
+JS;
+
+$this->registerJs($js);
+?>

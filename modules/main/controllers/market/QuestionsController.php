@@ -124,7 +124,7 @@ class QuestionsController extends Controller
         if($ans)
             Yii::$app->session->setFlash('error', 'У вопроса есть не удаленные ответы. Удаление не возможно!');
         else {
-            $msg = 'Вопрос  <strong>'. $this->findModel($id)->name .'</strong> был удален из анкеты <strong>'.$anket.'</strong> пользователем <strong>'.Yii::$app->user->identity->fname .' '.Yii::$app->user->identity->lname.'</strong>.';
+            $msg = 'Вопрос  <strong>'. $this->findModel($id)->name .'</strong> был удален из анкеты <strong>'.$anket->name.'</strong> пользователем <strong>'.Yii::$app->user->identity->fname .' '.Yii::$app->user->identity->lname.'</strong>.';
             $this->findModel($id)->delete();
             BaseModel::AddEventLog('info',$msg);
         }

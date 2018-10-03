@@ -3,6 +3,8 @@
 namespace app\models;
 
 use app\modules\main\models\EnergyLog;
+use app\modules\main\models\FormQty;
+use app\modules\main\models\Questions;
 use Yii;
 use yii\base\Model;
 use app\controllers\HelpController;
@@ -834,7 +836,7 @@ class Report extends Model {
         if($ver == 'new'){
             $fill = array('FFFFEFD5','FFFFDAB9','FFFFF8DC','FFFFE4B5','FFFFE4E1','FFBEBEBE','FF6A5ACD','FF4169E1','FF5F9EA0','FF2E8B57','FFADFF2F','FFDAA520','FFD2B48C','FFFFA500','FFDDA0DD','FFFFDAB9','FFFFF8DC','FFFFE4B5','FFFFE4E1','FFBEBEBE');
             //определяем вопросы анкеты
-            $query = "select distinct `q`.`id` AS `qid`,`q`.`name` AS `q_name` from (`questions` as q join `logger` as l on((`q`.`id` = `l`.`question_id`))) where `q`.`form_id`=$form_id and data between '$start' and '$finish'";
+            $query = "select distinct `q`.`id` AS `qid`,`q`.`name` AS `q_name` from (`questions` as q join `logger` as l on((`q`.`id` = `l`.`question_id`))) where `q`.`form_id`=$form_id[0] and data between '$start' and '$finish'";
             // подключение к базе данных
             $connection = \Yii::$app->db;
             // Составляем SQL запрос
@@ -901,7 +903,7 @@ class Report extends Model {
             $objPHPExcel->getActiveSheet()->getRowDimension('1')->setRowHeight(140);
 
             //заполняем ответами на вопросы по анкете
-            $query="SELECT id,`data`,question_id,answer_id,answer FROM logger WHERE form_id=$form_id AND `data` BETWEEN '$start' AND '$finish'";
+            $query="SELECT id,`data`,question_id,answer_id,answer FROM logger WHERE form_id=$form_id[0] AND `data` BETWEEN '$start' AND '$finish'";
             // Составляем SQL запрос
             $model = $connection->createCommand($query);
             //Осуществляем запрос к базе данных, переменная $model содержит ассоциативный массив с данными
@@ -969,7 +971,72 @@ class Report extends Model {
             $objWriter->save('php://output');
         }
         else{
-            Yii::$app->session->setFlash('error', 'Выбранная версия экспорта не поддерживается! Обратитесь к администратору.');
+            //Yii::$app->session->setFlash('error', 'Выбранная версия экспорта не поддерживается! Обратитесь к администратору.');
+            //определяем все вопросы анкеты
+            $questions = Questions::find(['form_id'=>$form_id])->all();
+            $objPHPExcel = new PHPExcel();
+            $p=0;
+            $objPHPExcel->setActiveSheetIndex($p);
+            $objPHPExcel->getActiveSheet()->setTitle('Статистика');
+            $k=1;
+            $objPHPExcel->setActiveSheetIndex($p)
+                ->setCellValue('A'.$k, 'Статистика по анкетированию за период с '.$start.' по '.$finish);
+            $objPHPExcel->getActiveSheet()->mergeCells('A'.$k.':B'.$k);
+            $objPHPExcel->getActiveSheet()->getStyle('A'.$k.':B'.$k)->getFont()->setBold(true);
+            $objPHPExcel->getActiveSheet()->getStyle('A'.$k.':B'.$k)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+            $k++;
+            $qty = FormQty::find()->where(['between', 'date', $start, $finish])->sum('qty');
+            $objPHPExcel->setActiveSheetIndex($p)
+                ->setCellValue('A'.$k, 'Опрошено человек: ');
+            $objPHPExcel->setActiveSheetIndex($p)
+                ->setCellValue('B'.$k, $qty);
+            $objPHPExcel->getActiveSheet()->getStyle('B'.$k.':B'.$k)->getFont()->setBold(true);
+            //$objPHPExcel->getActiveSheet()->getStyle('A'.$k.':B'.$k)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+            $k=4;
+            // подключение к базе данных
+            $connection = \Yii::$app->db;
+            foreach ($questions as $question){
+                if($question->name != 'Ваши контакты'){
+                    $objPHPExcel->setActiveSheetIndex($p)
+                        ->setCellValue('A'.$k, $question->name);
+                    $objPHPExcel->getActiveSheet()->mergeCells('A'.$k.':B'.$k);
+                    $objPHPExcel->getActiveSheet()->getStyle('A'.$k.':B'.$k)->getFont()->setBold(true);
+                    $objPHPExcel->getActiveSheet()->getStyle('A'.$k.':B'.$k)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+                    $k++;
+                    $objPHPExcel->getActiveSheet()->getStyle('A'.$k.':B'.$k)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+                    $objPHPExcel->setActiveSheetIndex($p)
+                        ->setCellValue('A'.$k, 'Ответ');
+                    $objPHPExcel->setActiveSheetIndex($p)
+                        ->setCellValue('B'.$k, 'Общее кол-во');
+
+                    $objPHPExcel->getActiveSheet()->getStyle('A'.$k.':B'.$k)->applyFromArray($styleArray);
+                    $k++;
+                    $query = "select answer,count(answer) as qty from logger where question_id=$question->id and data between '$start' and '$finish' group by answer";
+                    // Составляем SQL запрос
+                    $model = $connection->createCommand($query);
+                    //Осуществляем запрос к базе данных, переменная $model содержит ассоциативный массив с данными
+                    $rows = $model->queryAll();
+                    foreach ($rows as $row){
+                        $objPHPExcel->getActiveSheet()->getStyle('A'.$k.':B'.$k)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+                        $objPHPExcel->setActiveSheetIndex($p)
+                            ->setCellValue('A'.$k, $row['answer']);
+                        $objPHPExcel->setActiveSheetIndex($p)
+                            ->setCellValue('B'.$k, $row['qty']);
+
+                        $objPHPExcel->getActiveSheet()->getStyle('A'.$k.':B'.$k)->applyFromArray($styleRow);
+                        $k++;
+                    }
+                    $k++;
+                }
+            }
+            $objPHPExcel->getActiveSheet()->getColumnDimension('A')->setAutoSize(true);
+            $objPHPExcel->getActiveSheet()->getColumnDimension('B')->setAutoSize(true);
+            header('Content-Type: application/vnd.ms-excel');
+            $filename = "statpoll.xls";
+            header('Content-Disposition: attachment;filename='.$filename .' ');
+            header('Cache-Control: max-age=0');
+            $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
+            $objWriter->save('php://output');
         }
     }
 
