@@ -49,7 +49,7 @@ class RenterController extends Controller
             ]);
         }
         else{
-            throw new HttpException(404 ,'Доступ запрещен');
+            throw new HttpException(500 ,'Доступ запрещен');
         }
     }
 
@@ -66,7 +66,7 @@ class RenterController extends Controller
             ]);
         }
         else{
-            throw new HttpException(404 ,'Доступ запрещен');
+            throw new HttpException(500 ,'Доступ запрещен');
         }
     }
 
@@ -105,7 +105,7 @@ class RenterController extends Controller
             }
         }
         else{
-            throw new HttpException(404 ,'Доступ запрещен');
+            throw new HttpException(500 ,'Доступ запрещен');
         }
     }
 

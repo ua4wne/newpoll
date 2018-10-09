@@ -23,6 +23,7 @@ class AppAsset extends AssetBundle
         'css/morris.css',
         'css/font-awesome.css',
         'css/metisMenu.min.css',
+        'css/select2.min.css',
         //'//fonts.googleapis.com/css?family=Roboto:700,500,300,100italic,100,400',
         //'//fonts.googleapis.com/css?family=Montserrat:400,700',
         //'css/icon-font.min.css',
@@ -37,6 +38,7 @@ class AppAsset extends AssetBundle
         'js/morris.js',
         'js/control.js',
         'js/sb-admin-2.js',
+        'js/select2.min.js',
     ];
     public $jsOptions = [
         //'position' => \yii\web\View::POS_HEAD, //влияет на работу фильтрации в таблицах представлений - виджет GridView!!!
