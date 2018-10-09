@@ -63,6 +63,7 @@ $js = <<<JS
     
     //select2
 	$('.select2').css('width','100%').select2({allowClear:false})
+	
 
 JS;
 $this->registerJs($js);

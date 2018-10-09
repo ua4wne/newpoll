@@ -92,10 +92,7 @@ AppAsset::register($this);
                                 <a href="/main/energy/billing/calculate">Расчет по арендатору</a>
                             </li>
                             <li>
-                                <a href="/main/renter/connect">Подключения к интернет</a>
-                            </li>
-                            <li>
-                                <a href="/main/renter/disconnect">Отключения от интернет</a>
+                                <a href="/main/inet/report">Подключения к интернет</a>
                             </li>
                         </ul>
                         <!-- /.nav-second-level -->

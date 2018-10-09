@@ -13,7 +13,6 @@ $this->params['breadcrumbs'][] = $this->title;
 <div class="renter-index">
 
     <h1 class="text-center"><?= Html::encode($this->title) ?></h1>
-    <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <p>
         <?= Html::a('Новая запись', ['create'], ['class' => 'btn btn-success']) ?>
@@ -46,7 +45,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         'span',
                         $active ? 'Динамический IP' : 'Выделенный IP',
                         [
-                            'class' => 'label label-' . ($active ? 'success' : 'danger'),
+                            'class' => 'label label-' . ($active ? 'success' : 'primary'),
                         ]
                     );
                 },
@@ -55,7 +54,12 @@ $this->params['breadcrumbs'][] = $this->title;
             // 'created_at',
             // 'updated_at',
 
-            ['class' => 'yii\grid\ActionColumn'],
+            [
+                'class' => 'yii\grid\ActionColumn',
+                'header'=>'Действия',
+                'headerOptions' => ['width' => '80'],
+                'template' => '{update} {delete}',
+            ],
         ],
     ]); ?>
 </div>

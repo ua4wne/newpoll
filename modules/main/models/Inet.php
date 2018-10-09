@@ -51,7 +51,7 @@ class Inet extends \yii\db\ActiveRecord
             'renter_id' => 'Арендатор',
             'connect' => 'Дата подключения',
             'disconnect' => 'Дата отключения',
-            'ip' => 'IP адрес',
+            'ip' => 'Тип подключения',
             'comment' => 'Комментарий',
             'created_at' => 'Дата создания',
             'updated_at' => 'Дата обновления',
