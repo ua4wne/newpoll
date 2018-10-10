@@ -31,29 +31,44 @@ class InetController extends \yii\web\Controller
     public function actionReport(){
         $content = '<table class="table table-bordered table-hover">'.PHP_EOL;
         $content .= '<tr>
+                        <th>Площадка</th>
                         <th>Арендатор</th>
+                        <th>Участок</th>
                         <th>Дата подключения</th>
                         <th>Дата отключения</th>
                         <th>Тип подключения</th>
                         <th>Примечание</th>
                     </tr>';
-        $rows = Inet::find()->all();
+        //$rows = Inet::find()->all();
+        //выборка по арендаторам
+        $query="select r.title, p.name, r.area, i.connect, i.disconnect, i.ip, i.comment from inet i
+                join renter r on r.id = i.renter_id
+                join place p on p.id = r.place_id
+                order by p.name, CAST(r.area AS UNSIGNED)";
+        // подключение к базе данных
+        $connection = \Yii::$app->db;
+        // Составляем SQL запрос
+        $model = $connection->createCommand($query);
+        //Осуществляем запрос к базе данных, переменная $model содержит ассоциативный массив с данными
+        $rows = $model->queryAll();
         foreach ($rows as $row){
-            if($row->ip=='static')
+            if($row['ip']=='static')
                 $type = 'Выделенный IP';
-            if($row->ip=='dynamic')
+            if($row['ip']=='dynamic')
                 $type = 'Динамический IP';
-            if(empty($row->disconnect)){
+            if(empty($row['disconnect'])){
                 $content .= '<tr>';
             }
             else{
                 $content .= '<tr class="danger">';
             }
-            $content .= '<td>'. $row->renter->title .'</td>
-                                <td>'. $row->connect .'</td>
-                                <td>'. $row->disconnect .'</td>
+            $content .= '<td>'. $row['name'] .'</td>
+                                <td>'. $row['title'] .'</td>
+                                <td>'. $row['area'] .'</td>
+                                <td>'. $row['connect'] .'</td>
+                                <td>'. $row['disconnect'] .'</td>
                                 <td>'. $type .'</td>
-                                <td>'. $row->comment .'</td>
+                                <td>'. $row['comment'] .'</td>
                              </tr>'.PHP_EOL;
         }
         $content .= '</table>'.PHP_EOL;
@@ -76,7 +91,7 @@ class InetController extends \yii\web\Controller
             } else {
                 //return print_r($model->errors);
                 $statsel = array('dynamic' => 'Динамический IP','static' => 'Выделенный IP');
-                $renters = Renter::find()->select(['id', 'title', 'area'])->asArray()->all();
+                $renters = Renter::find()->select(['id', 'title', 'area'])->where(['status'=>1])->asArray()->all();
                 $rentsel = array();
                 foreach ($renters as $renter) {
                     $rentsel[$renter['id']] = $renter['title'].' ('.$renter['area'].')'; //массив для заполнения данных в select формы
@@ -111,7 +126,7 @@ class InetController extends \yii\web\Controller
             } else {
                 //return print_r($model->errors);
                 $statsel = array('dynamic' => 'Динамический IP','static' => 'Выделенный IP');
-                $renters = Renter::find()->select(['id', 'title', 'area'])->asArray()->all();
+                $renters = Renter::find()->select(['id', 'title', 'area'])->where(['status'=>1])->asArray()->all();
                 $rentsel = array();
                 foreach ($renters as $renter) {
                     $rentsel[$renter['id']] = $renter['title'].' ('.$renter['area'].')'; //массив для заполнения данных в select формы
