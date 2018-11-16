@@ -12,6 +12,7 @@ class SearchForm extends Model
 {
     public $start;
     public $finish;
+    public $group;
 
     /**
      * @return array the validation rules.
@@ -32,6 +33,7 @@ class SearchForm extends Model
         return [
             'start' => 'Начало периода',
             'finish' => 'Конец периода',
+            'group' => 'Группировка данных',
         ];
     }
 

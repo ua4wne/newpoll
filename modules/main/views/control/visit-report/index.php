@@ -44,6 +44,8 @@ $this->params['breadcrumbs'][] = $this->title;
             ]
         ]) ?>
 
+        <?= $form->field($model, 'group')->dropDownList(['not'=>'Без группировки','byday'=>'По дням недели','byweek'=>'По неделям','bymonth'=>'По месяцам']) ?>
+
         <div class="form-group">
             <?= Html::submitButton('<span class="fa  fa-bar-chart-o"></span> График', ['id' => 'visit-report','name' => 'report','value' => 'report','class' => 'btn btn-primary']) ?>
             <?= Html::submitButton('<span class="fa  fa-table"></span> Таблица', ['id' => 'vtable','name' => 'vtable','value' => 'vtable','class' => 'btn btn-primary']) ?>
@@ -77,21 +79,34 @@ $js = <<<JS
      //var data = $("form").serialize();
      var start = $('#searchform-start').val();
      var finish = $('#searchform-finish').val();
+     var group = $('#searchform-group').val();
      var msg = '<h4>Динамика посещений выставки за период с '+start+' по '+finish+'</h4>';
      $.ajax({
      url: '/main/control/visit-report',
      type: 'POST',
-     data: {'start':start,'finish':finish},
+     data: {'start':start,'finish':finish,'group':group},
      success: function(res){
      //alert("Сервер вернул вот что: " + res);
       $("#chart_visit").empty();
-     Morris.Line({
+      if(group=='not'){
+          Morris.Line({
           element: 'chart_visit',
           data: JSON.parse(res),
           xkey: 'y',
           ykeys: ['a'],
           labels: ['Кол-во']
-      });
+        });
+      }
+      else{
+          Morris.Bar({
+          element: 'chart_visit',
+          data: JSON.parse(res),
+          xkey: 'y',
+          ykeys: ['a'],
+          labels: ['Кол-во']
+        });
+      }
+     
      $(".text-center").html(msg);
      },
      error: function(){

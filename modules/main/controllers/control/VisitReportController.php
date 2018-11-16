@@ -38,16 +38,49 @@ class VisitReportController extends Controller
         if(\Yii::$app->request->isAjax){
             $model->start = Yii::$app->request->post('start');
             $model->finish = Yii::$app->request->post('finish');
+            $model->group = Yii::$app->request->post('group');
             $data = array();
             if($model->start=='start')
                 $model->start = date('Y-m').'-01';
             if($model->finish=='finish')
                 $model->finish = date('Y-m-d');
-            $query=Yii::$app->db->createCommand("select `data`, sum(ucount) as ucount from visit where `data` between '$model->start' and '$model->finish' group by `data`");
+            if($model->group=='byday')
+                $query=Yii::$app->db->createCommand("select WEEKDAY(`data`) as data, sum(ucount) as ucount from visit where `data` between '$model->start' and '$model->finish' group by WEEKDAY(`data`)");
+            else if($model->group=='byweek')
+                $query=Yii::$app->db->createCommand("select date_format(`data`, \"%Y-%v\") as data, sum(ucount) as ucount from visit where `data` between '$model->start' and '$model->finish' group by date_format(`data`, \"%Y-%v\")");
+            else if($model->group=='bymonth')
+                $query=Yii::$app->db->createCommand("select date_format(`data`, \"%Y-%m\") as data, sum(ucount) as ucount from visit where `data` between '$model->start' and '$model->finish' group by date_format(`data`, \"%Y-%m\")");
+            else
+                $query=Yii::$app->db->createCommand("select `data`, sum(ucount) as ucount from visit where `data` between '$model->start' and '$model->finish' group by `data`");
             $logs = $query->queryAll();
             if($logs) {
                 foreach($logs as $log){
                     $tmp = array();
+                    switch ($log['data']) {
+                        case 0:
+                            $log['data']='ПН';
+                            break;
+                        case 1:
+                            $log['data']='ВТ';
+                            break;
+                        case 2:
+                            $log['data']='СР';
+                            break;
+                        case 3:
+                            $log['data']='ЧТ';
+                            break;
+                        case 4:
+                            $log['data']='ПТ';
+                            break;
+                        case 5:
+                            $log['data']='СБ';
+                            break;
+                        case 6:
+                            $log['data']='ВС';
+                            break;
+                        default:
+                            break;
+                    }
                     $tmp['y'] = $log['data'];
                     $tmp['a'] = $log['ucount'];
                     array_push($data,$tmp);
