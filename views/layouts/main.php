@@ -92,6 +92,9 @@ AppAsset::register($this);
                                 <a href="/main/energy/billing/calculate">Расчет по арендатору</a>
                             </li>
                             <li>
+                                <a href="/main/energy/billing/summary">Расчет за период</a>
+                            </li>
+                            <li>
                                 <a href="/main/inet/report">Подключения к интернет</a>
                             </li>
                         </ul>

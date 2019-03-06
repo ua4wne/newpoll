@@ -67,7 +67,7 @@ $js = <<<JS
                 type: 'POST',
                 data: fData,
                 success: function(res){
-                    alert("Сервер вернул вот что: " + res);
+                    //alert("Сервер вернул вот что: " + res);
                     if(res=='OK'){
                         alert("Данные успешно добавлены!");
                         $('#kolvo').val('');

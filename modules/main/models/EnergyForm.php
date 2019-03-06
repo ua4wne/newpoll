@@ -358,4 +358,8 @@ class EnergyForm extends Model
         return $content;
     }
 
+    public static function SummaryReport($from,$to,$renters){
+        return $from . ' | ' . $to;
+    }
+
 }

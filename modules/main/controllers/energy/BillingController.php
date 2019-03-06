@@ -3,7 +3,9 @@
 namespace app\modules\main\controllers\energy;
 use app\models\Report;
 use app\modules\admin\models\Describer;
+use app\modules\admin\models\Place;
 use app\modules\main\models\EnergyForm;
+use app\modules\main\models\WorkReport;
 use Yii;
 use yii\data\ActiveDataProvider;
 use app\modules\main\models\EnergyLog;
@@ -141,6 +143,59 @@ class BillingController extends Controller
         }
         else{
             throw new HttpException(404 ,'Действие запрещено');
+        }
+    }
+
+    public function actionSummary(){
+        if(Yii::$app->user->can('manager')) {
+            $model = new WorkReport();
+            $model->start = date('Y-m').'-01';
+            $model->finish  = date('Y-m-d');
+            $renters = Renter::find()->select(['id','title','area'])->where(['place_id'=>1,'status'=>1])->orderBy('title', SORT_ASC)->asArray()->all();
+            $select = array();
+            foreach($renters as $renter) {
+                $select[$renter['id']] = $renter['title'].' ('.$renter['area'].')'; //массив для заполнения данных в select формы
+            }
+            $locations = Place::find()->select(['id','name'])->all();
+            $locs = array();
+            foreach($locations as $location) {
+                $locs[$location['id']] = $location['name']; //массив для заполнения данных в select формы
+            }
+
+            if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+                if (Yii::$app->request->post('report')) {
+                    $content = EnergyForm::SummaryReport($model->start, $model->finish, $model->renter_id);
+                    return $this->render('calculate', [
+                        'content' => $content,
+                        'year' => $model->start,
+                    ]);
+                }
+                if (Yii::$app->request->post('export')) {
+                    if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+                        return 'SummaryExport';
+                        //Report::CalculateToExcel($model->data, $model->renter_id);
+                    }
+                }
+
+            } else {
+                return $this->render('sum_filter', [
+                    'model' => $model,
+                    'renters' => $select,
+                    'locs' => $locs,
+                ]);
+            }
+        }
+        else{
+            throw new HttpException(404 ,'Доступ запрещен');
+        }
+    }
+
+    public function actionGetRenters()
+    {
+        //$model = new Renter();
+        if(\Yii::$app->request->isAjax){
+            $place_id = Yii::$app->request->post('place');
+            return Renter::getRenters($place_id);
         }
     }
 }

@@ -381,18 +381,35 @@ class FormController extends Controller
                 if(strpos($answer->htmlcode,"select size=",0)!=false)
                 {
                     $html='<option value="" selected disabled>Выберите из списка</option>';
-                    $query="SELECT name FROM ".$answer->source;
-                    // подключение к базе данных
-                    $connection = \Yii::$app->db;
-                    // Составляем SQL запрос
-                    $model = $connection->createCommand($query);
-                    //Осуществляем запрос к базе данных, переменная $model содержит ассоциативный массив с данными
-                    $rows = $model->queryAll();
-                    foreach($rows as $row){
-                        if($row[name]!='Другое (свой вариант)')
-                            $html.='<option value="'.$row[name].'">'.$row[name].'</option>';
+                    if($answer->source =='renter'){
+                        $query="SELECT title FROM ".$answer->source." WHERE status=1 AND place_id IN(1,6)";
+                        // подключение к базе данных
+                        $connection = \Yii::$app->db;
+                        // Составляем SQL запрос
+                        $model = $connection->createCommand($query);
+                        //Осуществляем запрос к базе данных, переменная $model содержит ассоциативный массив с данными
+                        $rows = $model->queryAll();
+                        foreach($rows as $row){
+                            if($row[name]!='Другое (свой вариант)')
+                                $html.='<option value="'.$row['title'].'">'.$row['title'].'</option>';
+                        }
+                        $html.='</select>';
                     }
-                    $html.='</select>';
+                    else{
+                        $query="SELECT name FROM ".$answer->source;
+                        // подключение к базе данных
+                        $connection = \Yii::$app->db;
+                        // Составляем SQL запрос
+                        $model = $connection->createCommand($query);
+                        //Осуществляем запрос к базе данных, переменная $model содержит ассоциативный массив с данными
+                        $rows = $model->queryAll();
+                        foreach($rows as $row){
+                            if($row[name]!='Другое (свой вариант)')
+                                $html.='<option value="'.$row['name'].'">'.$row['name'].'</option>';
+                        }
+                        $html.='</select>';
+                    }
+
                     $content.= '<td>'.$answer->htmlcode.$html.'</td>';
                 }
                 else

@@ -111,4 +111,13 @@ class Renter extends BaseModel
     {
         return $this->hasMany(RentLog::className(), ['renter_id' => 'id']);
     }
+
+    public static function getRenters($place_id){
+        $rows = Renter::find()->where(['place_id'=>$place_id])->select(['id','title','area'])->orderBy(['title'=>SORT_ASC])->all();
+        $content = '';
+        foreach ($rows as $row){
+            $content .= '<option value="'. $row->id .'">'. $row->title . ' ('. $row->area .')</option>';
+        }
+        return $content;
+    }
 }

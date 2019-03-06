@@ -12,11 +12,10 @@ $this->params['breadcrumbs'][] = ['label' => 'Расчет потреблени�
 <div class="energy-index">
     <h1>Укажите период расчета</h1>
     <?php $form = ActiveForm::begin(); ?>
-
     <?= $form->field($model, 'data')->textInput(['value'=>$data]) ?>
     <?= $form->field($model, 'renter_id')->dropDownList($renter_id,[
         'multiple' => true,
-        'size' => 10,
+        'size' => 20,
     ]) ?>
 
     <div class="form-group">

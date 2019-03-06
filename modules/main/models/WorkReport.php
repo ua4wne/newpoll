@@ -12,6 +12,8 @@ class WorkReport extends Model
     public $finish;
     public $renter_id;
     public $allrent = false;
+    public $email;
+    public $location;
 
     /**
      * @inheritdoc
@@ -20,8 +22,9 @@ class WorkReport extends Model
     {
         return [
             [['renter_id', 'start','finish'], 'required'],
-            [['created_at', 'updated_at'], 'safe'],
+            [['created_at', 'updated_at', 'email', 'location'], 'safe'],
             [['allrent'], 'boolean'],
+            ['email', 'email'],
             //[['renter_id'], 'exist', 'skipOnError' => true, 'targetClass' => Renter::className(), 'targetAttribute' => ['renter_id' => 'id']],
         ];
     }
@@ -36,6 +39,8 @@ class WorkReport extends Model
             'finish' => 'Конец периода',
             'renter_id' => 'Арендатор',
             'allrent' => 'Все арендаторы',
+            'email' => 'E-mail получателя',
+            'location' => 'Территория'
         ];
     }
 
