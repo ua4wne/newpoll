@@ -706,16 +706,21 @@ class Report extends Model {
         $p=0;
         foreach($renters as $renter){
             $logs = EnergyLog::find()->select(['month','encount','delta','price'])->where(['=','renter_id',$renter])->andWhere(['=','year',$year])->orderBy('month', SORT_ASC)->all();
-            $title = Renter::findOne($renter);
+            $rent = Renter::findOne($renter);
             $objPHPExcel->setActiveSheetIndex($p);
-            $objPHPExcel->getActiveSheet()->setTitle($title->title.' ('.$title->area.')');
+            $objPHPExcel->getActiveSheet()->setTitle('Лист №'.$p);
             $k=1;
             $objPHPExcel->setActiveSheetIndex($p)
-                ->setCellValue('A'.$k, 'Расчет энергопотребления за '.$year.' год');
+                ->setCellValue('A'.$k, 'Расчет энергопотребления за '.$year.' год.');
+            $objPHPExcel->getActiveSheet()->mergeCells('A'.$k.':D'.$k);
+            $objPHPExcel->getActiveSheet()->getStyle('A'.$k.':D'.$k)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+            $k=3;
+            $objPHPExcel->setActiveSheetIndex($p)
+                ->setCellValue('A'.$k, $rent->title.' ('.$rent->area.')');
             $objPHPExcel->getActiveSheet()->mergeCells('A'.$k.':D'.$k);
             $objPHPExcel->getActiveSheet()->getStyle('A'.$k.':D'.$k)->getFont()->setBold(true);
             $objPHPExcel->getActiveSheet()->getStyle('A'.$k.':D'.$k)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-            $k=3;
+            $k=5;
             $objPHPExcel->getActiveSheet()->getStyle('A'.$k.':L'.$k)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
             $objPHPExcel->setActiveSheetIndex($p)
                 ->setCellValue('A'.$k, 'Месяц');
@@ -1039,5 +1044,238 @@ class Report extends Model {
             $objWriter->save('php://output');
         }
     }
+
+    public static function SummaryToExcel($from,$to,$renters, $save=FALSE){
+
+        $styleArray = array(
+            'font' => array(
+                'bold' => true,
+            ),
+            'alignment' => array(
+                'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER,
+            ),
+            'borders' => array(
+                'top' => array(
+                    'style' => PHPExcel_Style_Border::BORDER_THIN,
+                ),
+                'bottom' => array(
+                    'style' => PHPExcel_Style_Border::BORDER_THIN,
+                ),
+                'left' => array(
+                    'style' => PHPExcel_Style_Border::BORDER_THIN,
+                ),
+                'right' => array(
+                    'style' => PHPExcel_Style_Border::BORDER_THIN,
+                ),
+            )
+        );
+        //выделяем год и месяц периода
+        $start = explode('-',$from);
+        $from_year = $start[0];
+        $from_month = $start[1];
+        $finish = explode('-',$to);
+        $to_year = $finish[0];
+        $to_month = $finish[1];
+        if($from_year == $to_year && $from_month == $to_month){ //данные за месяц
+            $objPHPExcel = new PHPExcel();
+            //готовим файл excel
+            $p=0;
+            foreach($renters as $renter){
+                $logs = EnergyLog::find()->select(['encount','delta','price'])->where(['=','renter_id',$renter])->andWhere(['=','year',$from_year])->andWhere(['=','month',$from_month])->all();
+                $rent = Renter::findOne($renter);
+                if(count($logs)<1) continue; //нет данных, идем на следующую итерацию
+                $objPHPExcel->setActiveSheetIndex($p);
+                $objPHPExcel->getActiveSheet()->setTitle('Лист №'.$p);
+                $k=1;
+                $objPHPExcel->setActiveSheetIndex($p)
+                    ->setCellValue('A'.$k, 'Расчет энергопотребления за период с '.$from_year.'-'.$from_month.' по '.$to_year.'-'.$to_month);
+                $objPHPExcel->getActiveSheet()->mergeCells('A'.$k.':D'.$k);
+                $objPHPExcel->getActiveSheet()->getStyle('A'.$k.':D'.$k)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+                $k=3;
+                $objPHPExcel->setActiveSheetIndex($p)
+                    ->setCellValue('A'.$k, $rent->title.' ('.$rent->area.')');
+                $objPHPExcel->getActiveSheet()->mergeCells('A'.$k.':D'.$k);
+                $objPHPExcel->getActiveSheet()->getStyle('A'.$k.':D'.$k)->getFont()->setBold(true);
+                $objPHPExcel->getActiveSheet()->getStyle('A'.$k.':D'.$k)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+                $k=5;
+                $objPHPExcel->getActiveSheet()->getStyle('A'.$k.':L'.$k)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+                $objPHPExcel->setActiveSheetIndex($p)
+                    ->setCellValue('A'.$k, 'Показания счетчика, кВт');
+                $objPHPExcel->setActiveSheetIndex($p)
+                    ->setCellValue('B'.$k, 'Потребление, кВт');
+                $objPHPExcel->setActiveSheetIndex($p)
+                    ->setCellValue('C'.$k, 'Сумма, руб');
+                $objPHPExcel->getActiveSheet()->getStyle('A'.$k.':C'.$k)->applyFromArray($styleArray);
+                $k++;
+                foreach ($logs as $log){
+                    $month = HelpController::SetMonth($log->month);
+                    $objPHPExcel->setActiveSheetIndex($p)
+                        ->setCellValue('A'.$k, $log->encount);
+                    //сначала заполняем все нулями
+                    $objPHPExcel->setActiveSheetIndex($p)
+                        ->setCellValue('B'.$k, $log->delta);
+                    $objPHPExcel->setActiveSheetIndex($p)
+                        ->setCellValue('C'.$k, $log->price);
+                    $k++;
+                }
+                $p++;
+                $objPHPExcel->getActiveSheet()->getColumnDimension('A')->setAutoSize(true);
+                $objPHPExcel->getActiveSheet()->getColumnDimension('B')->setAutoSize(true);
+                $objPHPExcel->getActiveSheet()->getColumnDimension('C')->setAutoSize(true);
+                $objPHPExcel->createSheet();
+            }
+        }
+        else if($from_year == $to_year && $from_month != $to_month) { //один год, но разные месяцы
+            $objPHPExcel = new PHPExcel();
+            //готовим файл excel
+            $p=0;
+            foreach($renters as $renter){
+                $logs = EnergyLog::find()->select(['month','encount','delta','price'])->where(['=','renter_id',$renter])->andWhere(['=','year',$from_year])->andWhere(['between','month',$from_month,$to_month])->orderBy('month', SORT_ASC)->all();
+                $rent = Renter::findOne($renter);
+                if(count($logs)<1) continue; //нет данных, идем на следующую итерацию
+                $objPHPExcel->setActiveSheetIndex($p);
+                $objPHPExcel->getActiveSheet()->setTitle('Лист №'.$p);
+                $k=1;
+                $objPHPExcel->setActiveSheetIndex($p)
+                    ->setCellValue('A'.$k, 'Расчет энергопотребления за период с '.$from_year.'-'.$from_month.' по '.$to_year.'-'.$to_month);
+                $objPHPExcel->getActiveSheet()->mergeCells('A'.$k.':D'.$k);
+                $objPHPExcel->getActiveSheet()->getStyle('A'.$k.':D'.$k)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+                $k=3;
+                $objPHPExcel->setActiveSheetIndex($p)
+                    ->setCellValue('A'.$k, $rent->title.' ('.$rent->area.')');
+                $objPHPExcel->getActiveSheet()->mergeCells('A'.$k.':D'.$k);
+                $objPHPExcel->getActiveSheet()->getStyle('A'.$k.':D'.$k)->getFont()->setBold(true);
+                $objPHPExcel->getActiveSheet()->getStyle('A'.$k.':D'.$k)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+                $k=5;
+                $objPHPExcel->getActiveSheet()->getStyle('A'.$k.':L'.$k)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+                $objPHPExcel->setActiveSheetIndex($p)
+                    ->setCellValue('A'.$k, 'Месяц');
+                $objPHPExcel->setActiveSheetIndex($p)
+                    ->setCellValue('B'.$k, 'Показания счетчика, кВт');
+                $objPHPExcel->setActiveSheetIndex($p)
+                    ->setCellValue('C'.$k, 'Потребление, кВт');
+                $objPHPExcel->setActiveSheetIndex($p)
+                    ->setCellValue('D'.$k, 'Сумма, руб');
+                $objPHPExcel->getActiveSheet()->getStyle('A'.$k.':D'.$k)->applyFromArray($styleArray);
+                $k++;
+                foreach ($logs as $log){
+                    $month = HelpController::SetMonth($log->month);
+                    $objPHPExcel->setActiveSheetIndex($p)
+                        ->setCellValue('A'.$k, $month);
+                    //сначала заполняем все нулями
+                    $objPHPExcel->setActiveSheetIndex($p)
+                        ->setCellValue('B'.$k, $log->encount);
+                    $objPHPExcel->setActiveSheetIndex($p)
+                        ->setCellValue('C'.$k, $log->delta);
+                    $objPHPExcel->setActiveSheetIndex($p)
+                        ->setCellValue('D'.$k, $log->price);
+                    $k++;
+                }
+                $p++;
+                $objPHPExcel->getActiveSheet()->getColumnDimension('A')->setAutoSize(true);
+                $objPHPExcel->getActiveSheet()->getColumnDimension('B')->setAutoSize(true);
+                $objPHPExcel->getActiveSheet()->getColumnDimension('C')->setAutoSize(true);
+                $objPHPExcel->getActiveSheet()->getColumnDimension('D')->setAutoSize(true);
+                $objPHPExcel->createSheet();
+            }
+        }
+        else{
+            $objPHPExcel = new PHPExcel();
+            //готовим файл excel
+            $p=0;
+            foreach($renters as $renter){
+                $logs = EnergyLog::find()->select(['year','month','encount','delta','price'])->where(['=','renter_id',$renter])->andWhere(['between','year',$from_year,$to_year])->orderBy(['year' => SORT_ASC,'month' => SORT_ASC])->all();
+                $rent = Renter::findOne($renter);
+                if(count($logs)<1) continue; //нет данных, идем на следующую итерацию
+                $objPHPExcel->setActiveSheetIndex($p);
+                $objPHPExcel->getActiveSheet()->setTitle('Лист №'.$p);
+                $k=1;
+                $objPHPExcel->setActiveSheetIndex($p)
+                    ->setCellValue('A'.$k, 'Расчет энергопотребления за период с '.$from_year.'-'.$from_month.' по '.$to_year.'-'.$to_month);
+                $objPHPExcel->getActiveSheet()->mergeCells('A'.$k.':D'.$k);
+                $objPHPExcel->getActiveSheet()->getStyle('A'.$k.':D'.$k)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+                $k=3;
+                $objPHPExcel->setActiveSheetIndex($p)
+                    ->setCellValue('A'.$k, $rent->title.' ('.$rent->area.')');
+                $objPHPExcel->getActiveSheet()->mergeCells('A'.$k.':D'.$k);
+                $objPHPExcel->getActiveSheet()->getStyle('A'.$k.':D'.$k)->getFont()->setBold(true);
+                $objPHPExcel->getActiveSheet()->getStyle('A'.$k.':D'.$k)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+                $k=5;
+                $objPHPExcel->getActiveSheet()->getStyle('A'.$k.':L'.$k)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+                $objPHPExcel->setActiveSheetIndex($p)
+                    ->setCellValue('A'.$k, 'Месяц');
+                $objPHPExcel->setActiveSheetIndex($p)
+                    ->setCellValue('B'.$k, 'Показания счетчика, кВт');
+                $objPHPExcel->setActiveSheetIndex($p)
+                    ->setCellValue('C'.$k, 'Потребление, кВт');
+                $objPHPExcel->setActiveSheetIndex($p)
+                    ->setCellValue('D'.$k, 'Сумма, руб');
+                $objPHPExcel->getActiveSheet()->getStyle('A'.$k.':D'.$k)->applyFromArray($styleArray);
+                $k++;
+                foreach ($logs as $log){
+                    if($log->year == $from_year && (int)$log->month >= (int)$from_month){
+                        $month = HelpController::SetMonth($log->month);
+                        $objPHPExcel->setActiveSheetIndex($p)
+                            ->setCellValue('A'.$k, $month.'-'.$log->year);
+                        //сначала заполняем все нулями
+                        $objPHPExcel->setActiveSheetIndex($p)
+                            ->setCellValue('B'.$k, $log->encount);
+                        $objPHPExcel->setActiveSheetIndex($p)
+                            ->setCellValue('C'.$k, $log->delta);
+                        $objPHPExcel->setActiveSheetIndex($p)
+                            ->setCellValue('D'.$k, $log->price);
+                        $k++;
+                    }
+                    else if($log->year == $to_year && (int)$log->month <= (int)$to_month){
+                        $month = HelpController::SetMonth($log->month);
+                        $objPHPExcel->setActiveSheetIndex($p)
+                            ->setCellValue('A'.$k, $month.'-'.$log->year);
+                        //сначала заполняем все нулями
+                        $objPHPExcel->setActiveSheetIndex($p)
+                            ->setCellValue('B'.$k, $log->encount);
+                        $objPHPExcel->setActiveSheetIndex($p)
+                            ->setCellValue('C'.$k, $log->delta);
+                        $objPHPExcel->setActiveSheetIndex($p)
+                            ->setCellValue('D'.$k, $log->price);
+                        $k++;
+                    }
+                    else if((int)$log->year>(int)$from_year && (int)$log->year<(int)$to_year){
+                        $month = HelpController::SetMonth($log->month);
+                        $objPHPExcel->setActiveSheetIndex($p)
+                            ->setCellValue('A'.$k, $month.'-'.$log->year);
+                        //сначала заполняем все нулями
+                        $objPHPExcel->setActiveSheetIndex($p)
+                            ->setCellValue('B'.$k, $log->encount);
+                        $objPHPExcel->setActiveSheetIndex($p)
+                            ->setCellValue('C'.$k, $log->delta);
+                        $objPHPExcel->setActiveSheetIndex($p)
+                            ->setCellValue('D'.$k, $log->price);
+                        $k++;
+                    }
+                }
+                $p++;
+                $objPHPExcel->getActiveSheet()->getColumnDimension('A')->setAutoSize(true);
+                $objPHPExcel->getActiveSheet()->getColumnDimension('B')->setAutoSize(true);
+                $objPHPExcel->getActiveSheet()->getColumnDimension('C')->setAutoSize(true);
+                $objPHPExcel->getActiveSheet()->getColumnDimension('D')->setAutoSize(true);
+                $objPHPExcel->createSheet();
+            }
+        }
+
+        if($save){
+            $objWriter = new PHPExcel_Writer_Excel2007($objPHPExcel);
+            $objWriter->save("./download/summary-$from_year-$from_month-$to_year-$to_month.xlsx");
+            return "./download/summary-$from_year-$from_month-$to_year-$to_month.xlsx";
+        }
+        else{
+            header('Content-Type: application/vnd.ms-excel');
+            $filename = "summary.xls";
+            header('Content-Disposition: attachment;filename='.$filename .' ');
+            header('Cache-Control: max-age=0');
+            $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
+            $objWriter->save('php://output');
+        }
+    }
+
 
 }

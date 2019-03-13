@@ -2,7 +2,7 @@
 
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
-use kartik\datetime\DateTimePicker;
+use kartik\date\DatePicker;
 
 /* @var $this yii\web\View */
 /* @var $model app\modules\main\models\RentLog */
@@ -10,15 +10,14 @@ use kartik\datetime\DateTimePicker;
 $this->title = 'Присутствие арендаторов на выставке';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-
+<div id="loader"></div> <!--  идентификатор загрузки (анимация) - ожидания выполнения-->
 <div class="work-report-form">
     <h1>Задайте условия отбора</h1>
     <?php $form = ActiveForm::begin(); ?>
 
-    <?= $form->field($model, 'start')->widget(DateTimePicker::className(),[
+    <?= $form->field($model, 'start')->widget(DatePicker::className(),[
         'name' => 'start',
-        'type' => DateTimePicker::TYPE_COMPONENT_PREPEND,
-        'options' => ['placeholder' => 'Ввод даты/времени...'],
+        'options' => ['placeholder' => 'Ввод даты'],
         'value'=> date("yyyy-MM-dd", strtotime($model->start)),
         'convertFormat' => true,
         'pluginOptions' => [
@@ -30,10 +29,9 @@ $this->params['breadcrumbs'][] = $this->title;
         ]
     ]) ?>
 
-    <?= $form->field($model, 'finish')->widget(DateTimePicker::className(),[
+    <?= $form->field($model, 'finish')->widget(DatePicker::className(),[
         'name' => 'finish',
-        'type' => DateTimePicker::TYPE_COMPONENT_PREPEND,
-        'options' => ['placeholder' => 'Ввод даты/времени...'],
+        'options' => ['placeholder' => 'Ввод даты'],
         'value'=> date("yyyy-MM-dd", strtotime($model->finish)),
         'convertFormat' => true,
         'pluginOptions' => [
@@ -61,3 +59,17 @@ $this->params['breadcrumbs'][] = $this->title;
     <?php ActiveForm::end(); ?>
 
 </div>
+
+<?php
+$js = <<<JS
+$(document).ready(function(){
+    $('.btn').click(function(){
+        $(".work-report-form").fadeTo(0, 0.3);
+        $("#loader").show("slow");
+        return true;
+    });
+});
+JS;
+
+$this->registerJs($js);
+?>

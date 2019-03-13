@@ -10,7 +10,7 @@ $this->title = 'Расчет потребления';
 $this->params['breadcrumbs'][] = ['label' => 'Расчет потребления', 'url' => ['calculate']];
 ?>
 <div class="energy-index">
-    <h1>Укажите период расчета</h1>
+    <h1 class="text-center">Укажите год, за который нужно вывести расчет</h1>
     <?php $form = ActiveForm::begin(); ?>
     <?= $form->field($model, 'data')->textInput(['value'=>$data]) ?>
     <?= $form->field($model, 'renter_id')->dropDownList($renter_id,[

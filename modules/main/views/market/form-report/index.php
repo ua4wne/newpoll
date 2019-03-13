@@ -2,7 +2,7 @@
 
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
-use kartik\datetime\DateTimePicker;
+use kartik\date\DatePicker;
 
 /* @var $this yii\web\View */
 /* @var $model app\modules\main\models\RentLog */
@@ -11,18 +11,18 @@ $this->title = 'Анкетирование';
 //$this->params['breadcrumbs'][] = ['label' => 'Анкеты', 'url' => ['/main/market/form']];
 $this->params['breadcrumbs'][] = ['label' => Html::encode($this->title)];
 $this->registerCssFile('/css/select2.min.css');
-$this->registerJsFile('/js/select2.full.min.js',
+$this->registerJsFile('/js/select2.min.js',
     ['depends' => [\yii\web\JqueryAsset::className()]]);
 ?>
 
+<div id="loader"></div> <!--  идентификатор загрузки (анимация) - ожидания выполнения-->
 <div class="form-report-form">
 
     <?php $form = ActiveForm::begin(); ?>
 
-    <?= $form->field($model, 'start')->widget(DateTimePicker::className(),[
+    <?= $form->field($model, 'start')->widget(DatePicker::className(),[
         'name' => 'start',
-        'type' => DateTimePicker::TYPE_COMPONENT_PREPEND,
-        'options' => ['placeholder' => 'Ввод даты/времени...'],
+        'options' => ['placeholder' => 'Ввод даты'],
         'value'=> date("yyyy-MM-dd", strtotime($model->start)),
         'convertFormat' => true,
         'pluginOptions' => [
@@ -34,10 +34,9 @@ $this->registerJsFile('/js/select2.full.min.js',
         ]
     ]) ?>
 
-    <?= $form->field($model, 'finish')->widget(DateTimePicker::className(),[
+    <?= $form->field($model, 'finish')->widget(DatePicker::className(),[
         'name' => 'finish',
-        'type' => DateTimePicker::TYPE_COMPONENT_PREPEND,
-        'options' => ['placeholder' => 'Ввод даты/времени...'],
+        'options' => ['placeholder' => 'Ввод даты'],
         'value'=> date("yyyy-MM-dd",strtotime($model->finish)),
         'convertFormat' => true,
         'pluginOptions' => [
@@ -72,6 +71,12 @@ $this->registerJsFile('/js/select2.full.min.js',
 $js = <<<JS
 $(document).ready(function(){
     $(".select2").select2();
+    
+    $('.btn').click(function(){
+        $(".form-report-form").fadeTo(0, 0.3);
+        $("#loader").show("slow");
+        return true;
+    });
 });
 JS;
 

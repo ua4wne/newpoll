@@ -2,7 +2,7 @@
 
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
-use kartik\datetime\DateTimePicker;
+use kartik\date\DatePicker;
 
 /* @var $this yii\web\View */
 /* @var $dataProvider yii\data\ActiveDataProvider */
@@ -10,14 +10,14 @@ use kartik\datetime\DateTimePicker;
 $this->title = 'Посещение выставки';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
+<div id="loader"></div> <!--  идентификатор загрузки (анимация) - ожидания выполнения-->
     <div class="visit-index">
         <h1>Задайте условия отбора</h1>
         <?php $form = ActiveForm::begin(['id' => 'search-form']); ?>
 
-        <?= $form->field($model, 'start')->widget(DateTimePicker::className(),[
+        <?= $form->field($model, 'start')->widget(DatePicker::className(),[
             'name' => 'start',
-            'type' => DateTimePicker::TYPE_COMPONENT_PREPEND,
-            'options' => ['placeholder' => 'Ввод даты/времени...'],
+            'options' => ['placeholder' => 'Ввод даты'],
             'value'=> date("yyyy-MM-dd",$model->start),
             'convertFormat' => true,
             'pluginOptions' => [
@@ -29,10 +29,9 @@ $this->params['breadcrumbs'][] = $this->title;
             ]
         ]) ?>
 
-        <?= $form->field($model, 'finish')->widget(DateTimePicker::className(),[
+        <?= $form->field($model, 'finish')->widget(DatePicker::className(),[
             'name' => 'finish',
-            'type' => DateTimePicker::TYPE_COMPONENT_PREPEND,
-            'options' => ['placeholder' => 'Ввод даты/времени...'],
+            'options' => ['placeholder' => 'Ввод даты'],
             'value'=> date("yyyy-MM-dd",$model->finish),
             'convertFormat' => true,
             'pluginOptions' => [
@@ -76,6 +75,8 @@ $this->params['breadcrumbs'][] = $this->title;
 $js = <<<JS
  $('#visit-report').click(function(e){
      e.preventDefault();
+     $(".visit-index").fadeTo(0, 0.3);
+     $("#loader").show();
      //var data = $("form").serialize();
      var start = $('#searchform-start').val();
      var finish = $('#searchform-finish').val();
@@ -107,15 +108,20 @@ $js = <<<JS
         });
       }
      
-     $(".text-center").html(msg);
+        $(".text-center").html(msg);
+        $(".visit-index").fadeTo(0, 1);
+        $("#loader").hide();
      },
      error: function(){
      alert('Error!');
      }
      });
+     $('#loader').css('display:none');
  });
 $('#vtable').click(function(e){
      e.preventDefault();
+     $(".visit-index").fadeTo(0, 0.3);
+     $("#loader").show();
      //var data = $("form").serialize();
      var start = $('#searchform-start').val();
      var finish = $('#searchform-finish').val();
@@ -128,6 +134,8 @@ $('#vtable').click(function(e){
      //alert("Сервер вернул вот что: " + res);
       $("#chart_visit").html(res);
       $(".text-center").html(msg);
+      $(".visit-index").fadeTo(0, 1);
+     $("#loader").hide();
      },
      error: function(){
      alert('Error!');

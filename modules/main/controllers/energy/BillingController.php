@@ -1,6 +1,7 @@
 <?php
 
 namespace app\modules\main\controllers\energy;
+
 use app\models\Report;
 use app\modules\admin\models\Describer;
 use app\modules\admin\models\Place;
@@ -21,7 +22,7 @@ class BillingController extends Controller
 {
     public function actionIndex()
     {
-        if(Yii::$app->user->can('manager')) {
+        if (Yii::$app->user->can('manager')) {
             $year = date('Y');
             $month = date('m');
             $period = explode('-', date('Y-m', strtotime("$year-$month-01 -1 month"))); //определяем предыдущий период
@@ -53,16 +54,15 @@ class BillingController extends Controller
                 'delta' => $delta,
                 'price' => $price,
             ]);
-        }
-        else{
-            throw new HttpException(404 ,'Доступ запрещен');
+        } else {
+            throw new HttpException(404, 'Доступ запрещен');
         }
     }
 
     //отправка почты получателям
     public function actionSendMail()
     {
-        if(Yii::$app->user->can('energy')) {
+        if (Yii::$app->user->can('energy')) {
             Report::EnergyReport(true); //создание excel-файла отчета по потреблению арендаторами с сохранением на сервере
             if (file_exists('./download/billing.xlsx')) {
                 //определяем наличие активных подписчиков
@@ -92,14 +92,14 @@ class BillingController extends Controller
                     Yii::$app->session->setFlash('error', 'Возникли ошибки при отправке почты следующим получателям:<br>' . $err);
                 return $this->redirect(['index']);
             }
-        }
-        else{
-            throw new HttpException(404 ,'Действие запрещено');
+        } else {
+            throw new HttpException(404, 'Действие запрещено');
         }
     }
 
-    public function actionCalculate(){
-        if(Yii::$app->user->can('manager')) {
+    public function actionCalculate()
+    {
+        if (Yii::$app->user->can('manager')) {
             $model = new RentLog();
             $year = date('Y');
             $renters = Renter::find()->select(['id', 'title', 'area'])->where(['status' => 1])->orderBy('title', SORT_ASC)->asArray()->all();
@@ -130,50 +130,61 @@ class BillingController extends Controller
                     'renter_id' => $select,
                 ]);
             }
-        }
-        else{
-            throw new HttpException(404 ,'Доступ запрещен');
+        } else {
+            throw new HttpException(404, 'Доступ запрещен');
         }
     }
 
     public function actionReport()
     {
-        if(Yii::$app->user->can('manager')) {
+        if (Yii::$app->user->can('manager')) {
             Report::EnergyReport(false); //выгрузка excel-файла отчета по потреблению арендаторами без сохранения на сервере
-        }
-        else{
-            throw new HttpException(404 ,'Действие запрещено');
+        } else {
+            throw new HttpException(404, 'Действие запрещено');
         }
     }
 
-    public function actionSummary(){
-        if(Yii::$app->user->can('manager')) {
+    public function actionSummary()
+    {
+        if (Yii::$app->user->can('manager')) {
             $model = new WorkReport();
-            $model->start = date('Y-m').'-01';
-            $model->finish  = date('Y-m-d');
-            $renters = Renter::find()->select(['id','title','area'])->where(['place_id'=>1,'status'=>1])->orderBy('title', SORT_ASC)->asArray()->all();
+            $model->start = date('Y-m') . '-01';
+            $model->finish = date('Y-m-d');
+            $renters = Renter::find()->select(['id', 'title', 'area'])->where(['place_id' => 1, 'status' => 1])->orderBy('title', SORT_ASC)->asArray()->all();
             $select = array();
-            foreach($renters as $renter) {
-                $select[$renter['id']] = $renter['title'].' ('.$renter['area'].')'; //массив для заполнения данных в select формы
+            foreach ($renters as $renter) {
+                $select[$renter['id']] = $renter['title'] . ' (' . $renter['area'] . ')'; //массив для заполнения данных в select формы
             }
-            $locations = Place::find()->select(['id','name'])->all();
+            $locations = Place::find()->select(['id', 'name'])->all();
             $locs = array();
-            foreach($locations as $location) {
+            foreach ($locations as $location) {
                 $locs[$location['id']] = $location['name']; //массив для заполнения данных в select формы
             }
 
             if ($model->load(Yii::$app->request->post()) && $model->validate()) {
                 if (Yii::$app->request->post('report')) {
                     $content = EnergyForm::SummaryReport($model->start, $model->finish, $model->renter_id);
-                    return $this->render('calculate', [
+                    return $this->render('summary', [
                         'content' => $content,
-                        'year' => $model->start,
+                        'from' => $model->start,
+                        'to' => $model->finish
                     ]);
                 }
                 if (Yii::$app->request->post('export')) {
                     if ($model->load(Yii::$app->request->post()) && $model->validate()) {
-                        return 'SummaryExport';
-                        //Report::CalculateToExcel($model->data, $model->renter_id);
+                        Report::SummaryToExcel($model->start, $model->finish, $model->renter_id);
+                    }
+                }
+                if (Yii::$app->request->post('email')) {
+                    if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+                        $file = Report::SummaryToExcel($model->start, $model->finish, $model->renter_id,true);
+                        $err = self::MailReport($file,$model->email);
+                        if ($err == 0) {
+                            Yii::$app->session->setFlash('success', 'Почта успешно отправлена!');
+                        } else
+                            Yii::$app->session->setFlash('error', 'Возникли ошибки при отправке почты следующим получателям: ' . $model->email);
+                        unlink($file); //удаляем файл
+                        return $this->redirect(['summary']);
                     }
                 }
 
@@ -184,18 +195,42 @@ class BillingController extends Controller
                     'locs' => $locs,
                 ]);
             }
-        }
-        else{
-            throw new HttpException(404 ,'Доступ запрещен');
+        } else {
+            throw new HttpException(404, 'Доступ запрещен');
         }
     }
 
     public function actionGetRenters()
     {
         //$model = new Renter();
-        if(\Yii::$app->request->isAjax){
+        if (\Yii::$app->request->isAjax) {
             $place_id = Yii::$app->request->post('place');
             return Renter::getRenters($place_id);
         }
+    }
+
+    //отправка почты получателям
+    private function MailReport($file, $email)
+    {
+        $err = 0;
+        if (file_exists($file)) {
+            $subj = 'Расчеты по оплате электроэнергии';
+            //отправляем сообщение пользователю
+            $msg = '<html><head><title>Расчеты по электроэнергии</title></head>
+                    <body><h3>Расчеты по электроэнергии</h3>
+                    <p>Здравствуйте!<br>Во вложении находится файл, содержащий расчеты по электроэнергии.</p>
+                    <em style="color:red;">Письмо отправлено автоматически. Отвечать на него не нужно.</em><br>
+                    <p style="color:darkblue;">С уважением,<br> Почтовый робот МС.</p>
+                    </body></html>';
+            if (Report::sendToMail($subj, $msg, $email, $file)) {
+                $log = 'На email <strong>' . $email . '</strong> отправлен расчет по электроэнергии.';
+                BaseModel::AddEventLog('info', $log);
+            } else {
+                $log = 'Возникла ошибка при отправке письма на email <strong>' . $email . '</strong>!';
+                BaseModel::AddEventLog('error', $log);
+                $err = 1;
+            }
+        }
+        return $err;
     }
 }

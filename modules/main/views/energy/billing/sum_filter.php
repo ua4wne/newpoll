@@ -10,7 +10,9 @@ use kartik\date\DatePicker;
 $this->title = 'Расчет за период';
 $this->params['breadcrumbs'][] = ['label' => 'Расчет потребления за период', 'url' => ['summary']];
 ?>
+<div id="loader"></div> <!--  идентификатор загрузки (анимация) - ожидания выполнения-->
 <div class="energy-index">
+
     <h1 class="text-center">Задайте условия отбора</h1>
     <?php $form = ActiveForm::begin(); ?>
 
@@ -55,9 +57,12 @@ $this->params['breadcrumbs'][] = ['label' => 'Расчет потреблени�
 
     <?= $form->field($model, 'allrent')->checkbox(['id'=>'allrent']) ?>
 
+    <?= $form->field($model, 'email')->textInput(['id'=>'email']) ?>
+
     <div class="form-group">
         <?= Html::submitButton('<span class="fa  fa-bar-chart-o"></span> Сформировать', ['name' => 'report', 'value' => 'report', 'class' => 'btn btn-primary']) ?>
-        <?= Html::submitButton('<span class="fa  fa-file-excel-o"></span> Скачать', ['name' => 'export', 'value' => 'export', 'class' => 'btn btn-primary']) ?>
+        <?= Html::submitButton('<span class="fa  fa-file-excel-o"></span> Скачать', ['name' => 'export', 'value' => 'export', 'class' => 'btn btn-info']) ?>
+        <?= Html::submitButton('<span class="fa  fa-envelope-o"></span> Отправить', ['name' => 'email', 'value' => 'email', 'class' => 'btn btn-success']) ?>
     </div>
     <?php ActiveForm::end(); ?>
 
@@ -65,6 +70,17 @@ $this->params['breadcrumbs'][] = ['label' => 'Расчет потреблени�
 
 <?php
 $js = <<<JS
+    
+    $('.btn-success').click(function(){
+        if($('#email').val().length < 4){
+            alert('Адрес e-mail указан неверно!');
+            $('#email').focus();
+            return false;
+        }
+        $(".energy-index").fadeTo(0, 0.3);
+        $("#loader").show("slow");
+        return true;
+    });
     
      $('#location').change(function(){
          //e.preventDefault();

@@ -344,9 +344,9 @@ class EnergyForm extends Model
         $content='';
         foreach($renters as $renter){
             $logs = EnergyLog::find()->select(['month','encount','delta','price'])->where(['=','renter_id',$renter])->andWhere(['=','year',$year])->orderBy('month', SORT_ASC)->all();
-            $title = Renter::findOne($renter);
+            $rent = Renter::findOne($renter);
             $content.='<div class="agileinfo-grap">';
-            $content.='<p class="text-info">Данные расчета для '.$title->title.' ('.$title->area.')</p>';
+            $content.='<p class="text-info">Данные расчета для '.$rent->title.' ('.$rent->area.')</p>';
             $content.='<table class="table table-hover table-striped">
             <tr><th>Месяц</th><th>Показания счетчика, кВт</th><th>Потребление, кВт</th><th>Сумма, руб</th></tr>';
             foreach ($logs as $log){
@@ -359,7 +359,62 @@ class EnergyForm extends Model
     }
 
     public static function SummaryReport($from,$to,$renters){
-        return $from . ' | ' . $to;
+        //выделяем год и месяц периода
+        $start = explode('-',$from);
+        $from_year = $start[0];
+        $from_month = $start[1];
+        $finish = explode('-',$to);
+        $to_year = $finish[0];
+        $to_month = $finish[1];
+        if($from_year == $to_year && $from_month == $to_month){ //данные за месяц
+            return self::ViewCalculate($from_year,$renters);
+        }
+        else if($from_year == $to_year && $from_month != $to_month){ //один год, но разные месяцы
+            $content = '';
+            foreach($renters as $renter){
+                $logs = EnergyLog::find()->select(['month','encount','delta','price'])->where(['=','renter_id',$renter])->andWhere(['=','year',$from_year])->andWhere(['between','month',$from_month,$to_month])->orderBy('month', SORT_ASC)->all();
+                $rent = Renter::findOne($renter);
+                $content.='<div class="agileinfo-grap">';
+                $content.='<p class="text-info">Данные расчета для '.$rent->title.' ('.$rent->area.')</p>';
+                $content.='<table class="table table-hover table-striped">
+            <tr><th>Месяц</th><th>Показания счетчика, кВт</th><th>Потребление, кВт</th><th>Сумма, руб</th></tr>';
+                foreach ($logs as $log){
+                    $month = HelpController::SetMonth($log->month);
+                    $content.='<tr><td>'.$month.'</td><td>'.$log->encount.'</td><td>'.$log->delta.'</td><td>'.$log->price.'</td></tr>';
+                }
+                $content.='</table></div>';
+            }
+            return $content;
+        }
+        else{ //данные за период по арендаторам за разные года
+            $content = '';
+            foreach($renters as $renter){
+                //сначала выбираем все записи за период
+                $logs = EnergyLog::find()->select(['year','month','encount','delta','price'])->where(['=','renter_id',$renter])->andWhere(['between','year',$from_year,$to_year])->orderBy(['year' => SORT_ASC,'month' => SORT_ASC])->all();
+                $rent = Renter::findOne($renter);
+                $content.='<div class="agileinfo-grap">';
+                $content.='<p class="text-info">Данные расчета для '.$rent->title.' ('.$rent->area.')</p>';
+                $content.='<table class="table table-hover table-striped">
+                            <tr><th>Год</th><th>Месяц</th><th>Показания счетчика, кВт</th><th>Потребление, кВт</th><th>Сумма, руб</th></tr>';
+                foreach ($logs as $log){
+                    if($log->year == $from_year && (int)$log->month >= (int)$from_month){
+                        $month = HelpController::SetMonth($log->month);
+                        $content.='<tr><td>'.$log->year.'</td><td>'.$month.'</td><td>'.$log->encount.'</td><td>'.$log->delta.'</td><td>'.$log->price.'</td></tr>';
+                    }
+                    else if($log->year == $to_year && (int)$log->month <= (int)$to_month){
+                        $month = HelpController::SetMonth($log->month);
+                        $content.='<tr><td>'.$log->year.'</td><td>'.$month.'</td><td>'.$log->encount.'</td><td>'.$log->delta.'</td><td>'.$log->price.'</td></tr>';
+                    }
+                    else if((int)$log->year>(int)$from_year && (int)$log->year<(int)$to_year){
+                        $month = HelpController::SetMonth($log->month);
+                        $content.='<tr><td>'.$log->year.'</td><td>'.$month.'</td><td>'.$log->encount.'</td><td>'.$log->delta.'</td><td>'.$log->price.'</td></tr>';
+                    }
+
+                }
+                $content.='</table></div>';
+            }
+            return $content;
+        }
     }
 
 }

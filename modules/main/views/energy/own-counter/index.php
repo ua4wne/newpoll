@@ -11,7 +11,7 @@ $this->title = 'Собственное потребление';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="visit-index">
-    <h1>Задайте условия отбора</h1>
+    <h1 class="text-center">Задайте условия отбора</h1>
     <?php $form = ActiveForm::begin(['id' => 'search-form']); ?>
 
     <?= $form->field($model, 'year')?>
