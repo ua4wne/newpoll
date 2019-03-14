@@ -18,7 +18,7 @@ $this->params['breadcrumbs'][] = $this->title;
         <?= $form->field($model, 'start')->widget(DatePicker::className(),[
             'name' => 'start',
             'options' => ['placeholder' => 'Ввод даты'],
-            'value'=> date("yyyy-MM-dd",$model->start),
+            'value'=> date("yyyy-MM-dd",strtotime($model->start)),
             'convertFormat' => true,
             'pluginOptions' => [
                 'format' => 'yyyy-MM-dd',
@@ -32,7 +32,7 @@ $this->params['breadcrumbs'][] = $this->title;
         <?= $form->field($model, 'finish')->widget(DatePicker::className(),[
             'name' => 'finish',
             'options' => ['placeholder' => 'Ввод даты'],
-            'value'=> date("yyyy-MM-dd",$model->finish),
+            'value'=> date("yyyy-MM-dd",strtotime($model->finish)),
             'convertFormat' => true,
             'pluginOptions' => [
                 'format' => 'yyyy-MM-dd',
