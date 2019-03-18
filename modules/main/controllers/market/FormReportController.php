@@ -28,8 +28,7 @@ class FormReportController extends \yii\web\Controller
     public function actionIndex()
     {
         $model = new FormReport();
-        //ini_set('max_execution_time', 800);
-        set_time_limit(800);
+
         if (Yii::$app->request->post('report')) {
             if ($model->load(Yii::$app->request->post()) && $model->validate()) {
                 $form = Form::findOne($model->form_id);

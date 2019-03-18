@@ -86,7 +86,7 @@ class Renter extends BaseModel
 
     /* Геттер для названия подразделения */
     public function getDivisionName() {
-        return $this->division_id->name;
+        return $this->division_id['name'];
     }
 
     public function getPlace()
@@ -96,7 +96,7 @@ class Renter extends BaseModel
 
     /* Геттер для названия территории */
     public function getPlaceName() {
-        return $this->place->name;
+        return $this->place['name'];
     }
 
     /**

@@ -18,14 +18,13 @@
         "yiisoft/yii2": "~2.0.5",
         "yiisoft/yii2-bootstrap": "~2.0.0",
         "yiisoft/yii2-swiftmailer": "~2.0.0",
-        "yiisoft/yii2-jui": "^2.0",
-        "codemix/yii2-excelexport": "*",
-        "moonlandsoft/yii2-phpexcel": "*",
-        "kartik-v/yii2-widget-datetimepicker": "*",
+        "kartik-v/yii2-mpdf": "*",
         "sjaakp/yii2-gcharts": "*",
-        "bower-asset/jquery": "1.*",
-        "kartik-v/yii2-widget-timepicker": "*",
-        "kartik-v/yii2-widget-datepicker": "^1.4"
+        "kartik-v/yii2-widget-datetimepicker": "*",
+        "fxp/composer-asset-plugin": "^1.4",
+        "kartik-v/yii2-widget-datepicker": "@dev",
+        "moonlandsoft/yii2-phpexcel": "*",
+        "phpoffice/phpexcel": "^1.8"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.0.0",

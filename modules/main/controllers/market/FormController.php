@@ -390,7 +390,7 @@ class FormController extends Controller
                         //Осуществляем запрос к базе данных, переменная $model содержит ассоциативный массив с данными
                         $rows = $model->queryAll();
                         foreach($rows as $row){
-                            if($row[name]!='Другое (свой вариант)')
+                            if($row['title']!='Другое (свой вариант)')
                                 $html.='<option value="'.$row['title'].'">'.$row['title'].'</option>';
                         }
                         $html.='</select>';
@@ -404,7 +404,7 @@ class FormController extends Controller
                         //Осуществляем запрос к базе данных, переменная $model содержит ассоциативный массив с данными
                         $rows = $model->queryAll();
                         foreach($rows as $row){
-                            if($row[name]!='Другое (свой вариант)')
+                            if($row['name']!='Другое (свой вариант)')
                                 $html.='<option value="'.$row['name'].'">'.$row['name'].'</option>';
                         }
                         $html.='</select>';
