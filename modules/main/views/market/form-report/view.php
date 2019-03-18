@@ -74,7 +74,7 @@ $this->params['breadcrumbs'][] = ['label' => Html::encode($this->title)];
                     'attribute' => 'percent',
                     'label' => '% ответов',
                     'content'=>function($data){
-                        return round($data[percent]*100,2);
+                        return round($data['percent']*100,2);
                     }
                 ],
                 //'updated_at',

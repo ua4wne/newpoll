@@ -100,7 +100,7 @@ class InetSearch extends Inet
 
         // Фильтр по арендатору
         $query->joinWith(['renter' => function ($q) {
-            $q->where('renter.title LIKE "%' . $this->renterName . '%"');
+            $q->where('renter.title LIKE "%' . $this->renterTitle . '%"');
         }]);
 
         return $dataProvider;

@@ -37,7 +37,7 @@ class RentersCounterController extends BaseRcounterController
     {
         $model = new EnergyLog();
         $places = Place::find()->select(['id', 'name'])->asArray()->all();
-        $place_id =  $places[0][id];
+        $place_id =  $places[0]['id'];
         $data = array();
         //$renters = $this->GetActiveRenters();
         $renters = $this->GetActiveRentersByPlace($place_id);

@@ -66,8 +66,8 @@ class Inet extends \yii\db\ActiveRecord
         return $this->hasOne(Renter::className(), ['id' => 'renter_id']);
     }
 
-    /* Геттер для названия территории */
-    public function getRenterName() {
-        return $this->renter->title;
+    /* Геттер для названия арендатора */
+    public function getRenterTitle() {
+        return $this->renter['title'];
     }
 }
