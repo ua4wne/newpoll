@@ -186,6 +186,9 @@ AppAsset::register($this);
                                 <a href="/main/energy/main-counter">Счетчики общие</a>
                             </li>
                             <li>
+                                <a href="/main/energy/own-ecounter">Собственные счетчики</a>
+                            </li>
+                            <li>
                                 <a href="/main/energy/renters-counter">Счетчики арендаторов</a>
                             </li>
                             <li>
@@ -193,6 +196,9 @@ AppAsset::register($this);
                                 <ul class="nav nav-third-level">
                                     <li>
                                         <a href="/main/energy/init-main">Счетчики общие</a>
+                                    </li>
+                                    <li>
+                                        <a href="/main/energy/init-own">Собственные счетчики</a>
                                     </li>
                                     <li>
                                         <a href="/main/energy/init-counter">Счетчики арендаторов</a>
@@ -213,6 +219,9 @@ AppAsset::register($this);
                         <ul class="nav nav-second-level">
                             <li>
                                 <a href="/admin/ecounter">Счетчики общие</a>
+                            </li>
+                            <li>
+                                <a href="/admin/own-ecounter">Собственные счетчики</a>
                             </li>
                             <li>
                                 <a href="/admin/place">Территории</a>

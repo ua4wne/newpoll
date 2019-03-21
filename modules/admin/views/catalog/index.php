@@ -27,7 +27,10 @@ $this->params['breadcrumbs'][] = 'Каталог справочников';
             'created_at',
             'updated_at',
 
-            ['class' => 'yii\grid\ActionColumn'],
+            ['class' => 'yii\grid\ActionColumn',
+                'header'=>'Действия',
+                'headerOptions' => ['width' => '70'],
+            ]
         ],
     ]); ?>
 <?php Pjax::end(); ?></div>

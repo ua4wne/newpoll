@@ -1,11 +1,13 @@
 <?php
 
 namespace app\modules\main\controllers\energy;
-use Yii;
-use app\modules\main\models\MainLog;
-use app\models\BaseModel;
 
-class InitMainController extends BaseEcounterController
+use app\models\BaseModel;
+use app\modules\admin\models\OwnEcounter;
+use Yii;
+use app\modules\main\models\OwnLog;
+
+class InitOwnController extends BaseEcounterController
 {
     public function behaviors()
     {
@@ -24,8 +26,8 @@ class InitMainController extends BaseEcounterController
 
     public function actionIndex()
     {
-        $model = new MainLog();
-        $counters = $this->GetCounters();
+        $model = new OwnLog();
+        $counters = $this->GetOwnCounters();
         $select = array();
         $month = $this->GetMonths();
 
@@ -38,19 +40,26 @@ class InitMainController extends BaseEcounterController
         }
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
             //удаляем, если имеется запись за текущий месяц, чтобы не было дублей
-            MainLog::deleteAll(['ecounter_id'=>$model->ecounter_id,'year'=>$model->year,'month'=>$model->month]);
-            $model->encount = $model->encount * $model->ecounter->koeff;
-            $model->delta = $model->delta * $model->ecounter->koeff;
-            $model->price = $model->delta * $model->ecounter->tarif;
+            OwnLog::deleteAll(['own_ecounter_id'=>$model->own_ecounter_id,'year'=>$model->year,'month'=>$model->month]);
+            $own = OwnEcounter::findOne($model->own_ecounter_id);
+            $model->encount = $model->encount * $own->koeff;
+            $model->delta = $model->delta * $own->koeff;
+            $model->price = $model->delta * $own->tarif;
             if($model->isNewRecord)
-                $msg = 'Добавлены начальные данные счетчика <strong>'. $model->ecounter->name .'</strong> за '. $this->SetMonth($model->month) . ' месяц ' . $model->year . ' года.';
+                $msg = 'Добавлены начальные данные счетчика <strong>'. $own->name .'</strong> за '. $this->SetMonth($model->month) . ' месяц ' . $model->year . ' года.';
             else
-                $msg = 'Начальные данные счетчика <strong>'. $model->ecounter->name .'</strong> за '. $this->SetMonth($model->month) . ' месяц ' . $model->year . ' года были обновлены.';
+                $msg = 'Начальные данные счетчика <strong>'. $own->name .'</strong> за '. $this->SetMonth($model->month) . ' месяц ' . $model->year . ' года были обновлены.';
             $model->save();
             BaseModel::AddEventLog('info',$msg);
             $model->encount = '';
             $model->delta = 0;
         }
+        /*else if ($model->load(Yii::$app->request->post()) && !$model->validate()) {
+            foreach ($model->getErrors() as $key => $value) {
+                echo $key.': '.$value[0];
+            }
+            return;
+        }*/
         return $this->render('index',[
                 'model' => $model,
                 'selmain' => $select,
@@ -59,7 +68,6 @@ class InitMainController extends BaseEcounterController
                 'smonth' => $smonth,
             ]
         );
-
     }
 
 }

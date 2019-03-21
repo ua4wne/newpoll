@@ -101,6 +101,17 @@ class EnergyForm extends Model
                 array_push($data,$tmp);
             }
         }
+        $query = Yii::$app->db->createCommand("select l.month, round(sum(l.delta),2) as delta, round(sum(l.price),2) as price from own_log l
+                                                join own_ecounter e on e.id = l.own_ecounter_id where year='$year' group by l.month order by l.month");
+        $owns = $query->queryAll(); //выбираем показания своих счетчиков
+        $arr = array();
+        foreach ($owns as $own){
+            $arr['m'] = $year.'-'.$own['month'];
+            $arr['d'] = $own['delta'];
+            $arr['p'] = $own['price'];
+            array_push($data,$arr);
+        }
+
         return json_encode($data);
         //return print_r($data);
     }
@@ -114,6 +125,7 @@ class EnergyForm extends Model
                                             where year='$year' group by ecounter_id");
         $logs = $query->queryAll();
         //return print_r($logs);
+
         foreach($logs as $log){
             $tmp = array();
             if($log['name']=='Главный'){
@@ -126,10 +138,12 @@ class EnergyForm extends Model
                 $encount = $encount + $log['delta'];
             }
         }
+
         $err = $main - $encount;
         $tmp['label'] = 'Потери';
         $tmp['value'] = $err;
         array_push($data,$tmp);
+
         return json_encode($data);
     }
 
@@ -166,19 +180,39 @@ class EnergyForm extends Model
         $query=Yii::$app->db->createCommand("select p.ecounter_id, round(sum(l.delta),2) as delta, round(sum(l.price),2) as price from energy_log l
                                             join renter r on r.id=l.renter_id
                                             join place p on p.id=r.place_id
-                                            where year = '$year' group by p.ecounter_id order by p.ecounter_id, l.month");
+                                            where year = '$year' group by p.ecounter_id order by p.ecounter_id");
         $logs = $query->queryAll();
-        //return print_r($logs);
+
+        $query=Yii::$app->db->createCommand("select e.name, round(sum(l.delta),2) as delta from own_log l
+                                            join own_ecounter e on e.id = l.own_ecounter_id
+                                            where year='$year' group by l.own_ecounter_id");
+        $owns = $query->queryAll(); //выбираем сумму показаний своих счетчиков
+
+        //return print_r($owns);
         $tmp = array();
+        $own_sum = 0;
         for($i=0;$i<count($counts);$i++){
             $count = $counts[$i];
             $log = $logs[$i];
+            $own = $owns[$i];
+            $own_sum+=$own['delta'];
             if($count['id']==$log['ecounter_id']){
                 $tmp['label'] = $count['name'];
-                $tmp['value'] = round($count['delta'] - $log['delta'],2);
+                if(strpos($count['name'],'МС'))
+                    $tmp['value'] = round($count['delta'] - $log['delta'] - $own_sum, 2); //вычитаем показания собственных счетчиков из главного счетчика АЗ
+                else
+                    $tmp['value'] = round($count['delta'] - $log['delta'],2);
                 array_push($data,$tmp);
             }
         }
+
+        foreach ($owns as $own){
+            //$tmp = array();
+            $tmp['label'] = $own['name'];
+            $tmp['value'] = $own['delta'];
+            array_push($data,$tmp);
+        }
+
         return json_encode($data);
     }
 
@@ -297,6 +331,8 @@ class EnergyForm extends Model
                 <th>Октябрь</th><th>Ноябрь</th><th>Декабрь</th>
             </tr>';
 
+        $cols = [0,0,0,0,0,0,0,0,0,0,0,0];
+
         $query = Yii::$app->db->createCommand("select e.name, e.id, l.month, l.delta, l.price from main_log l
                                               join ecounter e on e.id = l.ecounter_id where e.name !='Главный' and year='$year' order by e.id, l.month");
         $counts = $query->queryAll(); //выбираем показания общих счетчиков
@@ -336,7 +372,24 @@ class EnergyForm extends Model
             $k++;
         }
         $content .='</tr>';
-        $content.='</table>';
+        $query = Yii::$app->db->createCommand("select e.name, e.id, l.month, l.delta, l.price from own_log l
+                                              join own_ecounter e on e.id = l.own_ecounter_id where year='$year' order by e.id, l.month");
+        $owns = $query->queryAll(); //выбираем показания общих счетчиков
+        $k = 0;
+        foreach ($owns as $own){
+            $cols[$k] = $own['delta'];
+            $k++;
+        }
+        for($i=0; $i<count($cols); $i++){
+            $own = $owns[$i];
+            if($i==0){
+                $content.='<tr><td>'.$own['name'].'</td><td>'.$cols[$i].'</td>';
+            }
+            else{
+                $content.='<td>'.$cols[$i].'</td>';
+            }
+        }
+        $content.='</tr></table>';
         return $content;
     }
 
