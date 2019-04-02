@@ -11,6 +11,7 @@ $this->params['breadcrumbs'][] = ['label' => 'Общие счетчики', 'url
 ?>
 <div class="energy-index">
     <h1 class="text-center">Ввод показаний общих счетчиков</h1>
+    <div class="alert alert-warning">Для главного счетчика вводим его фактическое потребление. Для остальных счетчиков вводим их показания!</div>
     <?php $form = ActiveForm::begin(); ?>
 
     <?= $form->field($model, 'ecounter_id')->dropDownList($selmain) ?>
