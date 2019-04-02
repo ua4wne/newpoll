@@ -774,7 +774,7 @@ class Report extends Model {
                 $data[$log->hours] = $log->ucount;
                 $itog+=$log->ucount;
             }
-            $date=explode("-", $log-data);
+            $date=explode("-", $log->data);
             $numday = date("w", mktime(0, 0, 0, $date[1], $date[2], $date[0]));
             if($numday==0 || $numday==6)
                 $content.='<tr class="warning"><td>'.$log->data.'</td>'; //это выходные
