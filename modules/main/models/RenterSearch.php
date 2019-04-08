@@ -24,7 +24,7 @@ class RenterSearch extends Renter
     {
         return [
             [['id', 'place_id', 'status', 'division_id', 'created_at', 'updated_at'], 'integer'],
-            [['title', 'area', 'agent', 'phone1', 'phone2', 'encounter'], 'safe'],
+            [['title', 'name', 'area', 'agent', 'phone1', 'phone2', 'encounter'], 'safe'],
             [['koeff'], 'number'],
             [['division.name','place.name'], 'safe'],
         ];
@@ -97,6 +97,7 @@ class RenterSearch extends Renter
         ]);
 
         $query->andFilterWhere(['like', 'title', $this->title])
+            ->andFilterWhere(['like', 'name', $this->name])
             ->andFilterWhere(['like', 'area', $this->area])
             ->andFilterWhere(['like', 'agent', $this->agent])
             ->andFilterWhere(['like', 'phone1', $this->phone1])

@@ -863,12 +863,12 @@ class Report extends Model {
             $row=1;
             $step=1; //смещение по второй строке
             $cell_one = array(); //массив первых ячеек ответов каждого вопроса
-            $qstart =$rows[0][qid]; //первый вопрос анкеты
+            $qstart =$rows[0]['qid']; //первый вопрос анкеты
             $f = 0;
             foreach($rows as $arr){
                 //$arr_qst[]=$arr[qid];
                 //выбираем ответы на вопрос
-                $query="SELECT id,`name` FROM answers WHERE question_id=$arr[qid]";
+                $query="SELECT id,`name` FROM answers WHERE question_id=$arr->qid";
                 // Составляем SQL запрос
                 $model = $connection->createCommand($query);
                 //Осуществляем запрос к базе данных, переменная $model содержит ассоциативный массив с данными
@@ -941,7 +941,7 @@ class Report extends Model {
                         if ($pos === false)
                             $objPHPExcel->getActiveSheet()->setCellValue($curr_cell . $data_row, 1);
                         else
-                            $objPHPExcel->getActiveSheet()->setCellValue($curr_cell . $data_row, $val['name']);
+                            $objPHPExcel->getActiveSheet()->setCellValue($curr_cell . $data_row, $val['answer']);
                         $objPHPExcel->getActiveSheet()->setCellValue($month_cell . $data_row, $month);
                         $objPHPExcel->getActiveSheet()->getStyle($month_cell . $data_row.':'.$month_cell . $data_row)->applyFromArray($styleRow);
                     }

@@ -69,7 +69,7 @@ class WorksController extends Controller
         $query = RentLog::find()->where(['between', 'data', $start, $now]);
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
-            'sort'=> ['defaultOrder' => ['id'=>SORT_ASC]],
+            'sort'=> ['defaultOrder' => ['id'=>SORT_DESC]],
             'pagination' => [
                 'pageSize' => Yii::$app->params['page_size'],
             ],
@@ -100,6 +100,8 @@ class WorksController extends Controller
         }
         if(\Yii::$app->request->isAjax) {
             if ($model->load(Yii::$app->request->post()))
+                $dbl = RentLog::findOne(['renter_id'=>$model->renter_id,'data'=>$model->data]);
+                if(!empty($dbl)) $dbl->delete(); //удаляем дубли, если есть
                 $model->SaveData();
             return 'OK';
         }
