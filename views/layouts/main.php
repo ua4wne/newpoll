@@ -150,6 +150,11 @@ AppAsset::register($this);
                             <li>
                                 <a href="/main/control/work-report">Присутствие на выставке</a>
                             </li>
+                            <?php if (Yii::$app->user->can('director')) : ?>
+                                <li>
+                                    <a href="/main/it-report">Затраты ИТ</a>
+                                </li>
+                            <?php endif; ?>
                             <li>
                                 <a href="#">Потребление эл. энергии <span class="fa arrow"></span></a>
                                 <ul class="nav nav-third-level">

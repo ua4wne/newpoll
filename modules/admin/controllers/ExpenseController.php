@@ -27,6 +27,15 @@ class ExpenseController extends Controller
                     'delete' => ['POST'],
                 ],
             ],
+            'access' => [
+                'class' => \yii\filters\AccessControl::className(),
+                'rules' => [
+                    [
+                        'allow' => true,
+                        'roles' => ['adminTask']
+                    ],
+                ],
+            ],
         ];
     }
 
@@ -38,6 +47,9 @@ class ExpenseController extends Controller
     {
         $dataProvider = new ActiveDataProvider([
             'query' => Expense::find(),
+            'pagination' => [
+                'pageSize' => Yii::$app->params['page_size'],
+            ],
         ]);
 
         return $this->render('index', [

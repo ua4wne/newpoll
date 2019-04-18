@@ -49,8 +49,13 @@ class CostController extends Controller
      */
     public function actionIndex()
     {
+        $year = date('Y');
         $dataProvider = new ActiveDataProvider([
-            'query' => Cost::find(),
+            'query' => Cost::find()->where(['like','created_at',$year]),
+            'sort'=> ['defaultOrder' => ['id'=>SORT_DESC]],
+            'pagination' => [
+                'pageSize' => Yii::$app->params['page_size'],
+            ],
         ]);
 
         return $this->render('index', [
