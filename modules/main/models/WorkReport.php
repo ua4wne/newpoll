@@ -1,6 +1,7 @@
 <?php
 namespace app\modules\main\models;
 
+use app\modules\admin\models\Place;
 use Yii;
 use app\modules\main\models\Renter;
 use yii\base\Model;
@@ -12,6 +13,7 @@ class WorkReport extends Model
     public $finish;
     public $renter_id;
     public $allrent = false;
+    public $places;
     public $email;
     public $location;
 
@@ -22,7 +24,7 @@ class WorkReport extends Model
     {
         return [
             [['renter_id', 'start','finish'], 'required'],
-            [['created_at', 'updated_at', 'email', 'location'], 'safe'],
+            [['created_at', 'updated_at', 'email', 'location', 'places'], 'safe'],
             [['allrent'], 'boolean'],
             ['email', 'email'],
             //[['renter_id'], 'exist', 'skipOnError' => true, 'targetClass' => Renter::className(), 'targetAttribute' => ['renter_id' => 'id']],
@@ -40,7 +42,8 @@ class WorkReport extends Model
             'renter_id' => 'Арендатор',
             'allrent' => 'Все арендаторы',
             'email' => 'E-mail получателя',
-            'location' => 'Территория'
+            'location' => 'Территория',
+            'places' => 'Площадки',
         ];
     }
 
@@ -54,8 +57,13 @@ class WorkReport extends Model
 
     //выборка всех действующих арендаторов выставки
     public function GetActiveRenters(){
-        $place = (new Query())->select('id')->from('place')->where(['like', 'name', 'МС']); //выбираем площадки МС
-        return Renter::find()->select(['id','title','area'])->where(['place_id'=>$place,'status'=>1])->orderBy('title', SORT_ASC)->asArray()->all();
+        $place = Place::find()->select('id')->where(['like', 'name', 'МС'])->limit(1)->all(); //выбираем площадку МС
+        return Renter::find()->select(['id','name','area'])->where(['place_id'=>$place[0]['id'],'status'=>1])->orderBy('name', SORT_ASC)->asArray()->all();
+    }
+
+    //выборка всех площадок выставки
+    public function GetPlaces(){
+        return Place::find()->select(['id','name'])->from('place')->where(['like', 'name', 'МС'])->orderBy('name', SORT_ASC)->asArray()->all(); //выбираем площадки МС
     }
 
     //выборка в отчет для одного арендатора
@@ -92,14 +100,14 @@ class WorkReport extends Model
         $connection = \Yii::$app->db;
         foreach($renters as $renter){
             //группировка по датам и периодам
-            $query="SELECT renter.title, renter.area, Sum(period1)+Sum(period2)+Sum(period3)+Sum(period4)+Sum(period5)+Sum(period6)+Sum(period7)+Sum(period8)+Sum(period9)+Sum(period10)+Sum(period11) AS alltime,";
+            $query="SELECT renter.name, renter.area, Sum(period1)+Sum(period2)+Sum(period3)+Sum(period4)+Sum(period5)+Sum(period6)+Sum(period7)+Sum(period8)+Sum(period9)+Sum(period10)+Sum(period11) AS alltime,";
             $query.="count(rent_log.data) AS alldata FROM rent_log INNER JOIN renter ON renter.id = rent_log.renter_id";
             $query.=" WHERE renter_id=". $renter ." AND rent_log.`data` BETWEEN '".$s."' AND '".$f."'";
-            $query.=" GROUP BY renter.title, renter.area ORDER BY renter.area+0";
+            $query.=" GROUP BY renter.name, renter.area ORDER BY renter.area+0";
             $result = $connection->createCommand($query)->queryAll();
             if(count($result)==0)
                 continue;
-            $content.='<tr><td>'.$result[0]['area'].'</td><td>'.$result[0]['title'].'</td>';
+            $content.='<tr><td>'.$result[0]['area'].'</td><td>'.$result[0]['name'].'</td>';
             $content.='<td>'.$result[0]['alltime'].'</td><td>'.$result[0]['alldata'].'</td>';
             if($result[0]['alldata'] > 0)
                 $avg=round($result[0]['alltime']/$result[0]['alldata'],2);

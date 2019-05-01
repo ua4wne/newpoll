@@ -14,6 +14,8 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'title')->textInput(['maxlength' => true]) ?>
 
+    <?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>
+
     <?= $form->field($model, 'area')->textInput(['maxlength' => true]) ?>
 
     <?= $form->field($model, 'agent')->textInput(['maxlength' => true]) ?>
@@ -28,10 +30,8 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'status')->dropDownList($statsel) ?>
 
-    <?//= $form->field($model, 'place_id')->textInput() ?>
     <?= $form->field($model, 'place_id')->dropDownList($place) ?>
 
-    <?//= $form->field($model, 'division_id')->textInput() ?>
     <?= $form->field($model, 'division_id')->dropDownList($division) ?>
 
     <div class="form-group">

@@ -2,6 +2,7 @@
 
 namespace app\modules\main\controllers\energy;
 
+use app\modules\admin\models\OwnEcounter;
 use yii\web\Controller;
 use app\modules\admin\models\Ecounter;
 
@@ -12,9 +13,14 @@ class BaseEcounterController extends Controller
         return $this->render('index');
     }
 
-    //выборка всех действующих арендаторов
+    //выборка всех счетчиков
     public function GetCounters(){
         return Ecounter::find()->select(['id','name','text'])->orderBy('name', SORT_ASC)->asArray()->all();
+    }
+
+    //выборка всех собственных счетчиков
+    public function GetOwnCounters(){
+        return OwnEcounter::find()->select(['id','name','text'])->orderBy('name', SORT_ASC)->asArray()->all();
     }
 
     //выборка всех месяцев

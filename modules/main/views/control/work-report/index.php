@@ -43,9 +43,16 @@ $this->params['breadcrumbs'][] = $this->title;
         ]
     ]) ?>
 
+    <?= $form->field($model, 'places')->dropDownList($places,[
+        'multiple' => true,
+        'size' => 4,
+        'id' => 'place',
+        //'style' => 'background:gray;color:#fff;'
+    ]) ?>
+
     <?= $form->field($model, 'renter_id')->dropDownList($renters,[
         'multiple' => true,
-        'size' => 5,
+        'size' => 7,
         //'style' => 'background:gray;color:#fff;'
     ]) ?>
 
@@ -63,10 +70,28 @@ $this->params['breadcrumbs'][] = $this->title;
 <?php
 $js = <<<JS
 $(document).ready(function(){
-    $('.btn').click(function(){
+    /*$('.btn').click(function(){
         $(".work-report-form").fadeTo(0, 0.3);
         $("#loader").show("slow");
         return true;
+    });*/
+        
+    $("#place :first").attr("selected", "selected");
+    $("#place").change(function(){
+        var place = $("#place").val();
+        $.ajax({
+         url: '/main/control/work-report/selected',
+         type: 'POST',
+         data: {'place':place},
+         success: function(res){
+         //alert("Сервер вернул вот что: " + res);
+            $("#workreport-renter_id").empty();
+            $("#workreport-renter_id").append($(res));
+         },
+         error: function(xhr, response){
+         alert('Error! '+ xhr.responseText);
+         }
+       });
     });
 });
 JS;

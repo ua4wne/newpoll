@@ -1,4 +1,3 @@
-/yii
 # phpstorm project files
 .idea
 
@@ -15,6 +14,8 @@ Thumbs.db
 
 # composer vendor dir
 /vendor
+/runtime
+/tests
 
 # composer itself is not needed
 composer.phar

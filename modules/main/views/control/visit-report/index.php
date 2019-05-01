@@ -137,8 +137,8 @@ $('#vtable').click(function(e){
       $(".visit-index").fadeTo(0, 1);
      $("#loader").hide();
      },
-     error: function(){
-     alert('Error!');
+     error: function(xhr, response){
+     alert('Error! '+ xhr.responseText);
      }
      });
  });

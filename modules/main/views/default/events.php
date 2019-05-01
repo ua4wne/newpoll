@@ -14,7 +14,6 @@ $this->params['breadcrumbs'][] = $this->title;
     <h1><?= Html::encode($this->title) ?></h1>
     <div class="form-group">
         <?= Html::Button('Очистить лог', ['class' => 'btn btn-danger', 'name' => 'clear_log', 'id' => 'clear_log']) ?>
-        <?//= Html::a('<span class="fa  fa-bar-chart-o"></span> Выбрать', ['/main/poll','id'=>$model->form_id], ['class' => 'btn btn-primary btn-lg']) ?>
     </div>
     <div class="events">
         <?= GridView::widget([

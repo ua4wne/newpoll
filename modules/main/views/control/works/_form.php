@@ -2,7 +2,7 @@
 
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
-use kartik\datetime\DateTimePicker;
+use kartik\date\DatePicker;
 
 /* @var $this yii\web\View */
 /* @var $model app\modules\main\models\RentLog */
@@ -13,10 +13,9 @@ use kartik\datetime\DateTimePicker;
 
     <?php $form = ActiveForm::begin(); ?>
 
-    <?= $form->field($model, 'data')->widget(DateTimePicker::className(),[
+    <?= $form->field($model, 'data')->widget(DatePicker::className(),[
         'name' => 'data',
-        'type' => DateTimePicker::TYPE_COMPONENT_PREPEND,
-        'options' => ['placeholder' => 'Ввод даты/времени...'],
+        'options' => ['placeholder' => 'Ввод даты'],
         'value'=> date("yyyy-MM-dd",strtotime($model->data)),
         'convertFormat' => true,
         'pluginOptions' => [

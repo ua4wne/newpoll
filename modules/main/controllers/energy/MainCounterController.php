@@ -2,7 +2,7 @@
 
 namespace app\modules\main\controllers\energy;
 
-use app\modules\main\controllers\energy\BaseEcounterController;
+use app\modules\admin\models\Ecounter;
 use Yii;
 use app\modules\main\models\MainLog;
 use app\models\BaseModel;
@@ -45,7 +45,21 @@ class MainCounterController extends BaseEcounterController
             $select[$count['id']] = $count['name'].' ('.$count['text'].')'; //массив для заполнения данных в select формы
         }
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
-            $model->encount = $model->encount * $model->ecounter->koeff;
+            $name = Ecounter::findOne($model->ecounter_id)->name;
+            if($name == 'Главный'){// это главный счетчик, по нему представляют только потребление, показания нужно вычислять самим
+                $model->delta = $model->encount;
+                $period = explode('-', date('Y-m', strtotime("$model->year-$model->month-01 -1 month"))); //определяем предыдущий период
+                $y = $period[0];
+                $m = $period[1];
+                //выбираем данные за предыдущий период
+                $numrow = MainLog::find()->where(['ecounter_id'=>$model->ecounter_id,'year'=>$y,'month'=>$m])->count();
+                if($numrow) {
+                    $row = MainLog::find()->where(['ecounter_id'=>$model->ecounter_id,'year'=>$y,'month'=>$m])->limit(1)->asArray()->all();
+                    $model->encount += $row[0]['encount'];
+                }
+            }
+            else
+                $model->encount = $model->encount * $model->ecounter->koeff;
             $result = $this->CheckCountVal($model->ecounter_id,$model->encount,$model->year,$model->month);
             if($result===self::NOT_VAL){
                 Yii::$app->session->setFlash('error', 'Отсутствует показание счетчика за предыдущий месяц!');
@@ -60,7 +74,9 @@ class MainCounterController extends BaseEcounterController
             else{
                 //удаляем, если имеется запись за текущий месяц, чтобы не было дублей
                 MainLog::deleteAll(['ecounter_id'=>$model->ecounter_id,'year'=>$model->year,'month'=>$model->month]);
-                $model->delta = $model->encount - $this->previous;
+                if($name == 'Главный'){} //$model->delta уже определили ранее
+                else
+                    $model->delta = $model->encount - $this->previous;
                 $model->price = $model->delta * $model->ecounter->tarif;
                 $msg = 'Данные счетчика <strong>'. $model->ecounter->name .'</strong> успешно добавлены.';
                 BaseModel::AddEventLog('info',$msg);
@@ -88,7 +104,7 @@ class MainCounterController extends BaseEcounterController
         $numrow = MainLog::find()->where(['ecounter_id'=>$id,'year'=>$y,'month'=>$m])->count();
         if($numrow) {
             $row = MainLog::find()->where(['ecounter_id'=>$id,'year'=>$y,'month'=>$m])->limit(1)->asArray()->all();
-            $this->previous = $row[0][encount];
+            $this->previous = $row[0]['encount'];
             if($this->previous > $val)
                 return self::MORE_VAL;
             else

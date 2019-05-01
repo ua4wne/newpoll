@@ -40,10 +40,10 @@ class Renter extends BaseModel
     public function rules()
     {
         return [
-            [['title', 'area', 'agent', 'encounter', 'place_id', 'division_id'], 'required'],
+            [['title', 'name', 'area', 'agent', 'encounter', 'place_id', 'division_id'], 'required'],
             [['koeff'], 'number'],
             [['place_id', 'status', 'division_id'], 'integer'],
-            [['title'], 'string', 'max' => 100],
+            [['title','name'], 'string', 'max' => 100],
             [['area', 'phone1', 'phone2', 'encounter'], 'string', 'max' => 20],
             [['agent'], 'string', 'max' => 50],
          //   [['encounter'], 'unique'],
@@ -59,7 +59,8 @@ class Renter extends BaseModel
     {
         return [
             'id' => 'ID',
-            'title' => 'Наименование',
+            'title' => 'Юрлицо',
+            'name' => 'Наименование',
             'area' => 'Участок',
             'agent' => 'Представитель',
             'phone1' => 'Телефон рабочий',
@@ -86,7 +87,7 @@ class Renter extends BaseModel
 
     /* Геттер для названия подразделения */
     public function getDivisionName() {
-        return $this->division_id->name;
+        return $this->division_id['name'];
     }
 
     public function getPlace()
@@ -96,7 +97,7 @@ class Renter extends BaseModel
 
     /* Геттер для названия территории */
     public function getPlaceName() {
-        return $this->place->name;
+        return $this->place['name'];
     }
 
     /**

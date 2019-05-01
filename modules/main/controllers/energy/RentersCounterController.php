@@ -175,7 +175,7 @@ class RentersCounterController extends BaseRcounterController
         $numrow = EnergyLog::find()->where(['renter_id'=>$id,'year'=>$y,'month'=>$m])->count();
         if($numrow) {
             $row = EnergyLog::find()->select('encount')->where(['renter_id'=>$id,'year'=>$y,'month'=>$m])->limit(1)->all();
-            $this->previous = $row[0][encount];
+            $this->previous = $row[0]['encount'];
             if($this->previous > $val)
                 return self::MORE_VAL;
             else

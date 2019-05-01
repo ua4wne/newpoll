@@ -1,4 +1,5 @@
 <?php
+
 use yii\helpers\Html;
 use yii\widgets\Breadcrumbs;
 use app\assets\AppAsset;
@@ -52,7 +53,7 @@ AppAsset::register($this);
                                     'method' => 'post'
                                 ],
                             ]
-                        );?>
+                        ); ?>
                     </li>
                     <li class="divider"></li>
                     <li><?= Html::a("<i class=\"fa fa-sign-out\"></i> Выход", '/user/default/logout', [
@@ -60,7 +61,7 @@ AppAsset::register($this);
                                     'method' => 'post'
                                 ],
                             ]
-                        );?>
+                        ); ?>
                     </li>
                 </ul>
                 <!-- /.dropdown-user -->
@@ -73,52 +74,55 @@ AppAsset::register($this);
                 <ul class="nav" id="side-menu">
                     <li>
                         <div class="user-panel">
-                            <div class="pull-left image"><img class="img-circle" src="<?= Yii::$app->user->identity->image ?>" alt="image"></div>
+                            <div class="pull-left image"><img class="img-circle"
+                                                              src="<?= Yii::$app->user->identity->image ?>" alt="image">
+                            </div>
 
                             <div class="pull-left info">
-                                <p><?= Yii::$app->user->identity->fname .' '.Yii::$app->user->identity->lname ?></p>
+                                <p><?= Yii::$app->user->identity->fname . ' ' . Yii::$app->user->identity->lname ?></p>
                                 <span class="label label-success">online</span>
                             </div>
                         </div>
                     </li>
-                    <?php if(Yii::$app->user->can('manager')) : ?>
-                    <li>
-                        <a href="/main/default/index"><i class="fa fa-tachometer"></i> Главная</a>
-                    </li>
-                    <li>
-                        <a href="#"><i class="fa fa-file-text-o"></i> Документы<span class="fa arrow"></span></a>
-                        <ul class="nav nav-second-level">
-                            <li>
-                                <a href="/main/energy/billing/calculate">Расчет по арендатору</a>
-                            </li>
-                            <li>
-                                <a href="/main/energy/billing/summary">Расчет за период</a>
-                            </li>
-                            <li>
-                                <a href="/main/inet/report">Подключения к интернет</a>
-                            </li>
-                        </ul>
-                        <!-- /.nav-second-level -->
-                    </li>
-                    <li>
-                        <a href="#"><i class="fa fa-book fa-fw"></i> Контакты<span class="fa arrow"></span></a>
-                        <ul class="nav nav-second-level">
-                            <li><a href="/main/renter">Арендаторы</a></li>
-                            <li ><a href="/main/division">Наши юрлица</a></li>
-                        </ul>
-                    </li>
+                    <?php if (Yii::$app->user->can('manager')) : ?>
+                        <li>
+                            <a href="/main/default/index"><i class="fa fa-tachometer"></i> Главная</a>
+                        </li>
+                        <li>
+                            <a href="#"><i class="fa fa-file-text-o"></i> Документы<span class="fa arrow"></span></a>
+                            <ul class="nav nav-second-level">
+                                <li>
+                                    <a href="/main/energy/billing/calculate">Расчет по арендатору</a>
+                                </li>
+                                <li>
+                                    <a href="/main/energy/billing/summary">Расчет за период</a>
+                                </li>
+                                <li>
+                                    <a href="/main/inet/report">Подключения к интернет</a>
+                                </li>
+                            </ul>
+                            <!-- /.nav-second-level -->
+                        </li>
+                        <li>
+                            <a href="#"><i class="fa fa-book fa-fw"></i> Контакты<span class="fa arrow"></span></a>
+                            <ul class="nav nav-second-level">
+                                <li><a href="/main/renter">Арендаторы</a></li>
+                                <li><a href="/main/division">Наши юрлица</a></li>
+                            </ul>
+                        </li>
                     <?php endif; ?>
                     <li>
                         <a href="#"><i class="fa fa-users fa-fw"></i> Маркетинг<span class="fa arrow"></span></a>
                         <ul class="nav nav-second-level">
-                            <?php if(Yii::$app->user->can('market')) : ?>
+                            <?php if (Yii::$app->user->can('market')) : ?>
                                 <li><a href="/main/market/form">Анкеты</a></li>
                             <?php endif; ?>
-                            <?php if(Yii::$app->user->can('guard')) : ?>
+                            <?php if (Yii::$app->user->can('guard')) : ?>
                                 <li><a href="/main/market/form/media">Источники медиарекламы</a></li>
                             <?php endif; ?>
-                            <?php if(Yii::$app->user->can('market')) : ?>
-                                <li ><a href="#"><i class="fa fa-book fa-fw"></i>Справочники<span class="fa arrow"></span></a>
+                            <?php if (Yii::$app->user->can('market')) : ?>
+                                <li><a href="#"><i class="fa fa-book fa-fw"></i>Справочники<span
+                                                class="fa arrow"></span></a>
                                     <ul class="nav nav-third-level">
                                         <li>
                                             <a href="/main/market/city">Справочник городов</a>
@@ -146,6 +150,11 @@ AppAsset::register($this);
                             <li>
                                 <a href="/main/control/work-report">Присутствие на выставке</a>
                             </li>
+                            <?php if (Yii::$app->user->can('director')) : ?>
+                                <li>
+                                    <a href="/main/it-report">Затраты ИТ</a>
+                                </li>
+                            <?php endif; ?>
                             <li>
                                 <a href="#">Потребление эл. энергии <span class="fa arrow"></span></a>
                                 <ul class="nav nav-third-level">
@@ -164,7 +173,7 @@ AppAsset::register($this);
                         </ul>
                         <!-- /.nav-second-level -->
                     </li>
-                    <?php if(Yii::$app->user->can('guard')) : ?>
+                    <?php if (Yii::$app->user->can('guard')) : ?>
                         <li>
                             <a href="#"><i class="fa fa-table fa-fw"></i> Посещение<span class="fa arrow"></span></a>
                             <ul class="nav nav-second-level">
@@ -178,60 +187,87 @@ AppAsset::register($this);
                             <!-- /.nav-second-level -->
                         </li>
                     <?php endif; ?>
-                    <?php if(Yii::$app->user->can('energy')) : ?>
-                    <li>
-                        <a href="#"><i class="fa fa-lightbulb-o fa-fw"></i> Энергоучет<span class="fa arrow"></span></a>
-                        <ul class="nav nav-second-level">
-                            <li>
-                                <a href="/main/energy/main-counter">Счетчики общие</a>
-                            </li>
-                            <li>
-                                <a href="/main/energy/renters-counter">Счетчики арендаторов</a>
-                            </li>
-                            <li>
-                                <a href="#">Начальные показания <span class="fa arrow"></span></a>
-                                <ul class="nav nav-third-level">
-                                    <li>
-                                        <a href="/main/energy/init-main">Счетчики общие</a>
-                                    </li>
-                                    <li>
-                                        <a href="/main/energy/init-counter">Счетчики арендаторов</a>
-                                    </li>
-                                </ul>
-                                <!-- /.nav-third-level -->
-                            </li>
-                            <li>
-                                <a href="/main/energy/billing">Расчет потребления</a>
-                            </li>
-                        </ul>
-                        <!-- /.nav-second-level -->
-                    </li>
+                    <?php if (Yii::$app->user->can('energy')) : ?>
+                        <li>
+                            <a href="#"><i class="fa fa-lightbulb-o fa-fw"></i> Энергоучет<span class="fa arrow"></span></a>
+                            <ul class="nav nav-second-level">
+                                <li>
+                                    <a href="/main/energy/main-counter">Счетчики общие</a>
+                                </li>
+                                <li>
+                                    <a href="/main/energy/own-ecounter">Собственные счетчики</a>
+                                </li>
+                                <li>
+                                    <a href="/main/energy/renters-counter">Счетчики арендаторов</a>
+                                </li>
+                                <li>
+                                    <a href="#">Начальные показания <span class="fa arrow"></span></a>
+                                    <ul class="nav nav-third-level">
+                                        <li>
+                                            <a href="/main/energy/init-main">Счетчики общие</a>
+                                        </li>
+                                        <li>
+                                            <a href="/main/energy/init-own">Собственные счетчики</a>
+                                        </li>
+                                        <li>
+                                            <a href="/main/energy/init-counter">Счетчики арендаторов</a>
+                                        </li>
+                                    </ul>
+                                    <!-- /.nav-third-level -->
+                                </li>
+                                <li>
+                                    <a href="/main/energy/billing">Расчет потребления</a>
+                                </li>
+                            </ul>
+                            <!-- /.nav-second-level -->
+                        </li>
                     <?php endif; ?>
-                    <?php if(Yii::$app->user->can('admin')) : ?>
-                    <li>
-                        <a href="#"><i class="fa fa-gear fa-fw"></i> Настройки<span class="fa arrow"></span></a>
-                        <ul class="nav nav-second-level">
-                            <li>
-                                <a href="/admin/ecounter">Счетчики общие</a>
-                            </li>
-                            <li>
-                                <a href="/admin/place">Территории</a>
-                            </li>
-                            <li>
-                                <a href="/admin/user">Пользователи</a>
-                            </li>
-                            <li>
-                                <a href="/admin/describer">Подписчики</a>
-                            </li>
-                            <li>
-                                <a href="/admin/catalog">Справочники</a>
-                            </li>
-                            <li>
-                                <a href="/main/inet">Подключения к интернет</a>
-                            </li>
-                        </ul>
-                        <!-- /.nav-second-level -->
-                    </li>
+                    <?php if (Yii::$app->user->can('admin')) : ?>
+                        <li>
+                            <a href="#"><i class="fa fa-gear fa-fw"></i> Настройки<span class="fa arrow"></span></a>
+                            <ul class="nav nav-second-level">
+                                <li>
+                                    <a href="/admin/ecounter">Счетчики общие</a>
+                                </li>
+                                <li>
+                                    <a href="/admin/own-ecounter">Собственные счетчики</a>
+                                </li>
+                                <li>
+                                    <a href="/admin/place">Территории</a>
+                                </li>
+                                <li>
+                                    <a href="/admin/user">Пользователи</a>
+                                </li>
+                                <li>
+                                    <a href="/admin/describer">Подписчики</a>
+                                </li>
+                                <li>
+                                    <a href="/admin/catalog">Справочники</a>
+                                </li>
+                                <li>
+                                    <a href="/main/inet">Подключения к интернет</a>
+                                </li>
+                            </ul>
+                            <!-- /.nav-second-level -->
+                        </li>
+                        <li>
+                            <a href="#"><i class="fa fa-calculator fa-fw"></i> Расходы ИТ<span class="fa arrow"></span></a>
+                            <ul class="nav nav-second-level">
+                                <li>
+                                    <a href="/admin/unit-group">Структурные подразделения</a>
+                                </li>
+                                <li>
+                                    <a href="/admin/expense">Статьи расходов</a>
+                                </li>
+                                <li>
+                                    <a href="/admin/supplier">Поставщики</a>
+                                </li>
+                                <li>
+                                    <a href="/admin/cost">Расходы</a>
+                                </li>
+                            </ul>
+                            <!-- /.nav-second-level -->
+                        </li>
                     <?php endif; ?>
                 </ul>
             </div>
@@ -249,19 +285,21 @@ AppAsset::register($this);
         </div>
         <div class="row">
             <div class="col-lg-12">
-                <?php echo Breadcrumbs::widget(['links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [], ]); ?>
-                <?php if( Yii::$app->session->hasFlash('success') ): ?>
+                <?php echo Breadcrumbs::widget(['links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],]); ?>
+                <?php if (Yii::$app->session->hasFlash('success')): ?>
                     <div class="alert alert-success alert-dismissible" role="alert">
-                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
+                                    aria-hidden="true">&times;</span></button>
                         <?php echo Yii::$app->session->getFlash('success'); ?>
                     </div>
-                <?php endif;?>
-                <?php if( Yii::$app->session->hasFlash('error') ): ?>
+                <?php endif; ?>
+                <?php if (Yii::$app->session->hasFlash('error')): ?>
                     <div class="alert alert-danger alert-dismissible" role="alert">
-                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
+                                    aria-hidden="true">&times;</span></button>
                         <?php echo Yii::$app->session->getFlash('error'); ?>
                     </div>
-                <?php endif;?>
+                <?php endif; ?>
                 <?= $content; ?>
             </div>
             <!-- /.col-lg-12 -->

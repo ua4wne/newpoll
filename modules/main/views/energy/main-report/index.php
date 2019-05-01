@@ -88,4 +88,3 @@ JS;
 
 $this->registerJs($js);
 ?>
-

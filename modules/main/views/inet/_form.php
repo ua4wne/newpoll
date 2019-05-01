@@ -2,7 +2,7 @@
 
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
-use kartik\datetime\DateTimePicker;
+use kartik\date\DatePicker;
 
 /* @var $this yii\web\View */
 /* @var $model \app\modules\main\models\Renter */
@@ -15,10 +15,9 @@ use kartik\datetime\DateTimePicker;
 
     <?= $form->field($model, 'renter_id')->dropDownList($rentsel, ['class'=>'select2 form-control','id'=>'renter_id']) ?>
 
-    <?= $form->field($model, 'connect')->widget(DateTimePicker::className(),[
+    <?= $form->field($model, 'connect')->widget(DatePicker::className(),[
         'name' => 'start',
-        'type' => DateTimePicker::TYPE_COMPONENT_PREPEND,
-        'options' => ['placeholder' => 'Ввод даты/времени...'],
+        'options' => ['placeholder' => 'Ввод даты'],
         'value'=> date("yyyy-MM-dd", strtotime($model->connect)),
         'convertFormat' => true,
         'pluginOptions' => [
@@ -30,10 +29,9 @@ use kartik\datetime\DateTimePicker;
         ]
     ]) ?>
 
-    <?= $form->field($model, 'disconnect')->widget(DateTimePicker::className(),[
+    <?= $form->field($model, 'disconnect')->widget(DatePicker::className(),[
         'name' => 'finish',
-        'type' => DateTimePicker::TYPE_COMPONENT_PREPEND,
-        'options' => ['placeholder' => 'Ввод даты/времени...'],
+        'options' => ['placeholder' => 'Ввод даты'],
         'value'=> date("yyyy-MM-dd", strtotime($model->disconnect)),
         'convertFormat' => true,
         'pluginOptions' => [

@@ -4,7 +4,7 @@ use yii\helpers\Html;
 use yii\grid\GridView;
 use yii\bootstrap\Modal;
 use yii\widgets\ActiveForm;
-use kartik\datetime\DateTimePicker;
+use kartik\date\DatePicker;
 
 /* @var $this yii\web\View */
 /* @var $dataProvider yii\data\ActiveDataProvider */
@@ -31,10 +31,9 @@ $this->params['breadcrumbs'][] = $this->title;
             'action' => ['index']
         ]); ?>
 
-        <?= $form->field($model, 'data')->widget(DateTimePicker::className(),[
+        <?= $form->field($model, 'data')->widget(DatePicker::className(),[
             'name' => 'data',
-            'type' => DateTimePicker::TYPE_COMPONENT_PREPEND,
-            'options' => ['placeholder' => 'Ввод даты/времени...'],
+            'options' => ['placeholder' => 'Ввод даты'],
             'value'=> date("yyyy-MM-dd",strtotime($model->data)),
             'convertFormat' => true,
             'pluginOptions' => [
@@ -54,7 +53,6 @@ $this->params['breadcrumbs'][] = $this->title;
 
         Modal::end();
         ?>
-        <?//= Html::a('<i class="fa fa-upload" aria-hidden="true"></i> Выгрузить шаблон', ['upload'], ['class' => 'btn btn-primary','id'=>'upload']) ?>
         <?= Html::a('<i class="fa fa-download" aria-hidden="true"></i> Загрузить из шаблона', ['download'], ['class' => 'btn btn-success','id'=>'download']) ?>
     </div>
     <hr>
