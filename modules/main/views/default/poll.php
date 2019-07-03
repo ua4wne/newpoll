@@ -24,7 +24,6 @@ $this->title = 'Анкетирование';
 
                 <div class="form-group">
                     <?= Html::submitButton('Выбрать', ['class' => 'btn-primary btn-lg', 'name' => 'poll-button']) ?>
-                    <?//= Html::a('<span class="fa  fa-bar-chart-o"></span> Выбрать', ['/main/poll','id'=>$model->form_id], ['class' => 'btn btn-primary btn-lg']) ?>
                 </div>
 
                 <?php ActiveForm::end(); ?>

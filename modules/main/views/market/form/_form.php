@@ -14,10 +14,8 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>
 
-    <?//= $form->field($model, 'is_active')->textInput() ?>
     <?= $form->field($model, 'is_active')->dropDownList($statsel) ?>
 
-    <?//= $form->field($model, 'is_work')->textInput() ?>
     <?= $form->field($model, 'is_work')->dropDownList($worksel) ?>
 
     <div class="form-group">
