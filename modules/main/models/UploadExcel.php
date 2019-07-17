@@ -70,6 +70,8 @@ class UploadExcel extends Model{
                 $model->period9 = $values['K'];
                 $model->period10 = $values['L'];
                 $model->period11 = $values['M'];
+                $dbl = RentLog::findOne(['renter_id'=>$model->renter_id,'data'=>$model->data]);
+                if(!empty($dbl)) $dbl->delete(); //удаляем дубли, если есть
                 $model->save();
                 $add++;
             }
