@@ -95,11 +95,11 @@ class Report extends Model {
             ->setCellValue('B2', $y)
             ->setCellValue('A3', 'Месяц')
             ->setCellValue('B3', $m)
-            ->setCellValue('A5', '№ п\п')
-            ->setCellValue('B5', 'Территория')
-            ->setCellValue('C5', 'За кем закреплен')
-            ->setCellValue('D5', 'Арендатор')
-            ->setCellValue('E5', 'К оплате, руб');
+            ->setCellValue('A5', '№ дома')
+            ->setCellValue('B5', 'Название организации')
+            ->setCellValue('C5', 'Сумма, руб')
+            ->setCellValue('D5', 'Территория')
+            ->setCellValue('E5', 'За кем закреплен');
 
         $objPHPExcel->getActiveSheet()->mergeCells('A1:E1');
         $objPHPExcel->getActiveSheet()->getStyle('A1:E1')->getFont()->setBold(true);
@@ -108,11 +108,11 @@ class Report extends Model {
         $objPHPExcel->getActiveSheet()->setTitle("billing");
 
         //выборка по арендаторам
-        $query="select p.name as pname, d.name as owner, r.title as rname, round(sum(l.price),2) as price from energy_log as l
+        $query="select r.area as rarea, p.name as pname, d.name as owner, r.title as rname, round(sum(l.price),2) as price from energy_log as l
                 join renter as r on r.id = l.renter_id
                 join division as d on d.id = r.division_id
                 join place as p on p.id = r.place_id
-                where l.year=$y and l.month=$period[1] GROUP BY rname ORDER BY pname, owner, rname";
+                where l.year=$y and l.month=$period[1] GROUP BY rname ORDER BY pname, convert(rarea,UNSIGNED)";
         // подключение к базе данных
         $connection = \Yii::$app->db;
         // Составляем SQL запрос
@@ -122,15 +122,15 @@ class Report extends Model {
     //    return print_r($rows);
 
         $k = 6;
-        $num = 1;
+        //$num = 1;
         $pay = 0;
         foreach($rows as $row){
             $objPHPExcel->setActiveSheetIndex(0)
-                ->setCellValue('A'.$k, $num)
-                ->setCellValue('B'.$k, $row['pname'])
-                ->setCellValue('C'.$k, $row['owner'])
-                ->setCellValue('D'.$k, $row['rname'])
-                ->setCellValue('E'.$k, $row['price']);
+                ->setCellValue('A'.$k, $row['rarea'])
+                ->setCellValue('B'.$k, $row['rname'])
+                ->setCellValue('C'.$k, $row['price'])
+                ->setCellValue('D'.$k, $row['pname'])
+                ->setCellValue('E'.$k, $row['owner']);
             $objPHPExcel->getActiveSheet()->getStyle('A'.$k)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
             $objPHPExcel->getActiveSheet()->getStyle('E'.$k)->getNumberFormat()->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_NUMBER_00);
             $objPHPExcel->getActiveSheet()->getStyle('A'.$k)->applyFromArray($styleCell);
@@ -139,7 +139,7 @@ class Report extends Model {
             $objPHPExcel->getActiveSheet()->getStyle('D'.$k)->applyFromArray($styleCell);
             $objPHPExcel->getActiveSheet()->getStyle('E'.$k)->applyFromArray($styleCell);
             $k++;
-            $num++;
+            //$num++;
             $pay+=$row['price'];
         }
 
